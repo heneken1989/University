@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>Male-Fashion</title>
+
+</head>
+
+<body class="form-v7">
+
+
+	</div>
+
+
+
+
+	<form th:action="@{/signup}" method="post" class="form-detail" id="myform">
+		<div class="form-row">
+			<label for="name">NAME</label> <input type="text" name="name" id="name" class="input-text">
+		</div>
+		<div class="form-row">
+			<label for="phone">Phone</label> <input type="text" name="phone" id="phone" class="input-text">
+		</div>
+		<div class="form-row">
+			<label for="username">E-MAIL</label> <input type="text" name="username" id="username" class="input-text"
+				required pattern="[^@]+@[^@]+.[a-zA-Z]{2,6}">
+		</div>
+
+		<!-- Hiển thị lỗi model thu được -->
+		<div th:if="${error}">
+			<p style="color: red;" th:text="${error}">NHap Lai Email Khac đi bạn</p>
+		</div>
+
+		<div class="form-row">
+			<label for="password">PASSWORD</label> <input type="password" name="password" id="password"
+				class="input-text" required>
+		</div>
+		<!-- Hiển thị lỗi model thu được  -->
+
+		<div class="form-row">
+			<label for="comfirm_password">CONFIRM PASSWORD</label> <input type="password" name="comfirm_password"
+				id="comfirm_password" class="input-text" required>
+		</div>
+		<div th:if="${errorSignUp != null}">
+			<p style="color: red;" th:text="${errorSignUp}"></p>
+		</div>
+		<div class="form-row-last">
+			<input type="submit" name="register" class="register" value="Register">
+			<p>
+				Or<a th:href="@{/signin}">Sign in</a>
+			</p>
+
+
+		</div>
+	</form>
+	</div>
+	</div>
+
+
+</body>
+
+</html>

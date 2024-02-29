@@ -1,0 +1,66 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+</head>
+
+<body>
+	<ul th:replace="fragments/header::navigate"></ul>
+
+
+	<!-- Nếu tổng tiền giỏ hàng =0 thì hiện thông báo chua mua ji hết  -->
+	<div th:if="${session.gioHang_useremail.total==0}">CHƯA MUA GÌ HẾT NHA BẠN</div>
+
+
+	<!-- Nếu Tổng giá trị giỏ hàng #0 thì hiển thị giỏ hàng  -->
+	<div th:if="${session.gioHang_useremail.total!=0}">
+
+		<!--Giỏ Hàng  -->
+		<h2>Tong:Rs. <span th:text="${session.gioHang_useremail.total}"></span></h2>
+		<table border="1">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>qty</th>
+					<th>Subtotal</th>
+					<th>Remove</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item : ${session.gioHang_useremail.items}">
+					<td th:text="${item.product.id}"></td>
+					<td th:text="${item.product.name}"></td>
+					<td>Rs.<span th:text="${item.product.price}"></span></td>
+
+
+					<td>
+						<form action="#" th:action="@{/Cart/update}" method="post">
+							<input type="hidden" th:value="${item.product.id}" name="id">
+							<input type="number" min="1" th:value="${item.quantity}" name="qty">
+							<button type="submit">Update</button>
+						</form>
+					</td>
+
+					<td>Rs.<span th:text="${item.subTotal}"></span></td>
+
+					<td>
+						<form action="#" th:action="@{/Cart/remove}" method="post">
+							<input type="hidden" th:value="${item.product.id}" name="id">
+
+							<button type="submit">Remove</button>
+						</form>
+					</td>
+
+
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+</body>
+
+</html>
