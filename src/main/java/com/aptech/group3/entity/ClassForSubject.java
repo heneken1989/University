@@ -2,7 +2,7 @@ package com.aptech.group3.entity;
 
 import java.sql.Date;
 
-import com.aptech.group3.model.User;
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

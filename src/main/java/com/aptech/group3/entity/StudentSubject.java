@@ -3,7 +3,7 @@ package com.aptech.group3.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import com.aptech.group3.model.User;
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

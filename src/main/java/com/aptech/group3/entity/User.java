@@ -1,4 +1,4 @@
-package com.aptech.group3.model;
+package com.aptech.group3.entity;
 
 import java.math.BigDecimal;
 
