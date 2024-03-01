@@ -6,11 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.aptech.group3.entity.User;
 
 
-
-
-
-
-@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUserid(Long id);
     User findByUsername(String username);

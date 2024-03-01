@@ -1,8 +1,7 @@
 package com.aptech.group3.entity;
 
 import java.sql.Date;
-
-
+import java.sql.Time;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +31,14 @@ public class ClassForSubject {
     Long id ;
 	private String name;
 	private Date time;
+	private Date dateStart;
+	private Date dateEnd;
+	private Time slotStart;
+	private Time slotEnd;
 	private int quantity;
+	private String description;
+	private String status;
+	
 	
 	@ManyToOne
 	@JoinColumn(name="teacher_id" , referencedColumnName="userid")
