@@ -38,10 +38,11 @@ public class ClassForSubject {
 	private int quantity;
 	private String description;
 	private String status;
+	private String weekDay;
 	
 	
 	@ManyToOne
-	@JoinColumn(name="teacher_id" , referencedColumnName="userid")
+	@JoinColumn(name="teacher_id" , referencedColumnName="id")
 	 private User user;
 	
 	

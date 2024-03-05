@@ -20,7 +20,7 @@ public class StudentSubjectService {
 	
 	public List<StudentSubject> findSubjectByStudentId(Long studentId)
 	{
-		return repo.findByUserUserid(studentId);
+		return repo.findByUserId(studentId);
 	}
 
 }

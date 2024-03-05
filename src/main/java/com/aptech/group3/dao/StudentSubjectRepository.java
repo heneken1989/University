@@ -9,5 +9,5 @@ import com.aptech.group3.entity.StudentSubject;
 
 
 public interface StudentSubjectRepository extends JpaRepository<StudentSubject ,Long> {
-      List<StudentSubject> findByUserUserid(Long studentId);
+      List<StudentSubject> findByUserId(Long studentId);
 }

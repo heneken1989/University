@@ -27,7 +27,7 @@ public class StudentSubject {
     Long id ;
 	
 	@ManyToOne
-	@JoinColumn(name="student_id" , referencedColumnName="userid")
+	@JoinColumn(name="student_id" , referencedColumnName="id")
 	 private User user;
 	
 	

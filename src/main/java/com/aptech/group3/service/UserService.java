@@ -24,18 +24,18 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String email) {
         // Kiểm tra xem user có tồn tại trong database không?
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(email);
         }
         return new CustomUserDetails(user);
     }
     
     public UserDetails loadUserByUserid(Long id) {
         // Kiểm tra xem user có tồn tại trong database không?
-        User user = userRepository.findByUserid(id);
+        Optional<User> user = userRepository.findById(id);
         if (user == null) {
             return null;
         }

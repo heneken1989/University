@@ -20,15 +20,17 @@ public class User    {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userid;
+    private Long id;
 	private String email;
-
 	private String name;
-	private String username;
-
 	private String password;
-
 	private String phone;
+	private String infomation;
+	private String role;
+	private String address;
+	private String avatar;
+	
+		
 
 
 	

@@ -20,20 +20,14 @@ public class UniversityApplication {
 		SpringApplication.run(UniversityApplication.class, args);
 	}
 	
-	@Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
-    public void run(String... args) throws Exception {
-        // Khi chương trình chạy
-        // Insert vào csdl một user.
-        User user = new User();
-        user.setUsername("loda");
-        user.setPassword(passwordEncoder.encode("loda"));
-        userRepository.save(user);
-        System.out.println(user);
-    }
+
+	/*
+	 * public void run(String... args) throws Exception { // Khi chương trình chạy
+	 * // Insert vào csdl một user. User user = new User();
+	 * user.setUsername("loda"); user.setPassword(passwordEncoder.encode("loda"));
+	 * userRepository.save(user); System.out.println(user); }
+	 */
 	
 
 
