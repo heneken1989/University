@@ -49,4 +49,16 @@ public class ClassForSubject {
 	@ManyToOne
 	@JoinColumn(name="subject_id" , referencedColumnName="id")
 	 private Subject subject;
+	
+	
+
+	  @ManyToOne
+	  @JoinColumn(name="room_id")
+	  private Room room;
+	  
+	  
+	  @ManyToOne
+	  @JoinColumn(name="semeter_id")
+	  private Semeter semeter;
+	
 }

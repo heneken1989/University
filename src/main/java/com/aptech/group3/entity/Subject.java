@@ -24,11 +24,15 @@ public class Subject {
 	
 	  private String name; // LomBok khong duoc viet hoa
 	  
-	  private String admin;
-
+	  private int credit;
+      
 	  
 	  @ManyToOne
 	  @JoinColumn(name="category_id")
 	  private Category category;
+	  
+	  @ManyToOne
+	  @JoinColumn(name="field_id")
+	  private Field field;
 	
 }

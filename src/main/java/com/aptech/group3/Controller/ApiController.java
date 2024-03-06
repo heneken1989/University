@@ -25,12 +25,14 @@ import com.aptech.group3.entity.Category;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.StudentSubject;
 import com.aptech.group3.entity.Subject;
+import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.model.LoginRequest;
 import com.aptech.group3.service.ClassForSubjectService;
 import com.aptech.group3.service.JwtTokenProvider;
 import com.aptech.group3.service.StudentSubjectService;
 import com.aptech.group3.service.SubjectService;
+import com.aptech.group3.service.UserService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +63,9 @@ public class ApiController {
 	    @Autowired
 	    private ClassForSubjectService classservice;
 	    
+	    @Autowired
+	    private UserService userservice;
+	    
 	    
 	    @PostMapping("/login")
 	    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -68,11 +73,10 @@ public class ApiController {
 	        // Xác thực từ username và password.
 	        Authentication authentication = authenticationManager.authenticate(
 	                new UsernamePasswordAuthenticationToken(
-	                        loginRequest.getUsername(),
+	                        loginRequest.getEmail(),
 	                        loginRequest.getPassword()
 	                )
 	        );
-
 	        // Nếu không xảy ra exception tức là thông tin hợp lệ
 	        // Set thông tin authentication vào Security Context
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -140,7 +144,7 @@ public class ApiController {
 	    @PostMapping("/update/{id}")
 	    public void updateRoom(@RequestBody  Subject room)
 	    {
-	    	 System.out.println("Room with ID " + room.getId() + room.getName() + room.getAdmin()  );
+	    	 System.out.println("Room with ID " + room.getId() + room.getName() + room.getCredit()  );
 	    	roomService.updateroom(room);
 	    }
 	    
@@ -177,6 +181,16 @@ public class ApiController {
 		    		}
 	    
 	    	}
+	    }
+	    
+	    
+	    
+	    
+	    @PostMapping("/loginThanh")
+	    public Optional<User> loginn(@RequestBody LoginRequest  data)
+	    {
+	    
+	    	return userservice.login(data.email, data.password);
 	    }
 	
 }

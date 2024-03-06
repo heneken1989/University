@@ -62,6 +62,23 @@ public class UserService implements UserDetailsService {
         return user;
     }
     
+    public Optional<User> login(String email,String password)
+    {
+    	System.out.print("emailllllllllllllll"+email);
+    	User user = userRepository.findByEmail(email);
+    	System.out.print("aaaaaaaaaaaaaaaa"+user);
+    	
+        if (user != null && user.getPassword().equals(password)) {
+            return Optional.of(user);
+        }
+        else
+        {
+        	return null;
+        }
+    	
+    	
+    }
+    
     
 
 
