@@ -28,7 +28,5 @@ public class UniversityApplication {
 	 * user.setUsername("loda"); user.setPassword(passwordEncoder.encode("loda"));
 	 * userRepository.save(user); System.out.println(user); }
 	 */
-	
-
 
 }
