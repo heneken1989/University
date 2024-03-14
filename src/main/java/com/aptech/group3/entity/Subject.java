@@ -28,8 +28,8 @@ public class Subject {
       
 	  
 	  @ManyToOne
-	  @JoinColumn(name="category_id")
-	  private Category category;
+	  @JoinColumn(name="subjectlevel_id")
+	  private SubjectLevel subjectlevel;
 	  
 	  @ManyToOne
 	  @JoinColumn(name="field_id")

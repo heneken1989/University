@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+
 public class DefaultController {
 
     @RequestMapping({"/","/index"})
@@ -14,7 +15,7 @@ public class DefaultController {
     	String variable ="Hello from Uni";
     	vari.addAttribute("data",variable);
     	
-    	return "test";
+    	return "page/test";
      }
     
     @RequestMapping({"/signup"})

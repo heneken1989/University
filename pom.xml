@@ -11,7 +11,7 @@
 	<groupId>aptech.group3</groupId>
 	<artifactId>University</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>University</name>
 	<description>Project for University App and Web Application</description>
 	<properties>
@@ -51,6 +51,19 @@
     <groupId>nz.net.ultraq.thymeleaf</groupId>
     <artifactId>thymeleaf-layout-dialect</artifactId>
       </dependency>
+      
+     <!-- automapper-->
+		     <dependency>
+		    <groupId>org.modelmapper</groupId>
+		    <artifactId>modelmapper</artifactId>
+		    <version>2.3.0</version>
+		</dependency>
+		
+			<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		
 
 
 		<dependency>
@@ -117,6 +130,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>springboot-mysql-docker</finalName>
 	</build>
 	<repositories>
 		<repository>
@@ -154,5 +168,5 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
-
+     
 </project>

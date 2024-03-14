@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aptech.group3.entity.Category;
+import com.aptech.group3.entity.SubjectLevel;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.StudentSubject;
 import com.aptech.group3.entity.Subject;
@@ -48,8 +48,7 @@ public class ApiController {
 	
 
 	    @Autowired
-	    private SubjectService roomService;
-	    
+	    private SubjectService subService;
 	    
 	    @Autowired
 	    AuthenticationManager authenticationManager;
@@ -96,9 +95,9 @@ public class ApiController {
 	    
 
 	    @GetMapping("/list")
-	    public List<Subject> listRoom()
+	    public List<Subject> listSubject()
 	    {
-	    	return  roomService.listRoom();
+	    	return  subService.listSubject();
 	    }
 	    
 	    @PostMapping("/listClass")
@@ -116,9 +115,9 @@ public class ApiController {
 	    
 	    
 	    @GetMapping("/listcate")
-	    public List<Category> listCate()
+	    public List<SubjectLevel> listCate()
 	    {
-	    	return roomService.listCate();
+	    	return subService.listSubjectLevel();
 	    }
 	    
 	    @GetMapping("/jwt")
@@ -132,20 +131,19 @@ public class ApiController {
 	    public Subject addRoom(@RequestBody Subject room) {
 	    	  System.out.println("Request Body: " + room.toString());
 	    
-	        return roomService.saveRoom(room);
+	        return subService.saveSubject(room);
 	    }
 	    
 	    @PostMapping("/delete/{id}")
 	    public void deleteRoom(@PathVariable Long id)  // @PathVariable  : parameter id get from URL
 	    {
-	    	roomService.deleteRoom(id);
+	    	subService.deleteSubject(id);
 	    }
 	    
 	    @PostMapping("/update/{id}")
-	    public void updateRoom(@RequestBody  Subject room)
+	    public void updateRoom(@RequestBody  Subject sub)
 	    {
-	    	 System.out.println("Room with ID " + room.getId() + room.getName() + room.getCredit()  );
-	    	roomService.updateroom(room);
+	    	subService.updateSubject(sub);
 	    }
 	    
 	    @PostMapping("/searchSubject")
@@ -157,7 +155,7 @@ public class ApiController {
 	    	if(value.matches("^\\d+$"))
 	    	{
 	    		Long Lvalue = Long.parseLong(value);
-	    		Optional<Subject> supject = roomService.findbyId(Lvalue);
+	    		Optional<Subject> supject = subService.findbyId(Lvalue);
 	    		
 	    		if(supject!=null)
 	    		{
@@ -171,7 +169,7 @@ public class ApiController {
 	    	// Search Value is Name of Subject
 	    	else
 	    	{
-	    			List<Subject> supjects = roomService.findBySubjectName(value);
+	    			List<Subject> supjects = subService.findBySubjectName(value);
 	    	  		if(supjects != null) {
 		    			return ResponseEntity.ok(supjects);
 		    		}

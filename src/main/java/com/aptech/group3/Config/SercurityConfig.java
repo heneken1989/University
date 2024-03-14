@@ -18,13 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.aptech.group3.service.JwtAuthenticationFilter;
 import com.aptech.group3.service.UserService;
 
-
-
-
-
-
-
-
 @Configuration
 @EnableWebSecurity
 public class SercurityConfig      {

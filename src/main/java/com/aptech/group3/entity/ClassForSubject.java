@@ -30,7 +30,6 @@ public class ClassForSubject {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id ;
 	private String name;
-	private Date time;
 	private Date dateStart;
 	private Date dateEnd;
 	private Time slotStart;

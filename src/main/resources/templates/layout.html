@@ -2,13 +2,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
-      
-      
          <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
-
-
     <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/assets/css/fontawesome.css}">
     <link rel="stylesheet" th:href="@{/assets/css/templatemo-style.css}">
     <link rel="stylesheet" th:href="@{/assets/css/owl.css}">
@@ -20,7 +16,6 @@
 </head>
 
    <body class="is-preload">
-
     <!-- Wrapper -->
     <div id="wrapper">
 
@@ -41,20 +36,10 @@
              </div>
 
       <!-- Sidebar -->
-        <div th:replace="sidebar :: sidebar"></div>
+      <div th:replace="sidebar :: sidebar"></div> 
 
     </div>
 
-  <!-- Scripts -->
-  <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <script src="assets/js/browser.min.js"></script>
-    <script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/transition.js"></script>
-    <script src="assets/js/owl-carousel.js"></script>
-    <script src="assets/js/custom.js"></script>
 </body>
 
   <!-- Scripts -->

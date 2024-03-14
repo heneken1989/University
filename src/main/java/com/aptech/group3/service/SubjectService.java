@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.aptech.group3.dao.CategoryRepository;
+import com.aptech.group3.dao.SubjectLevelRepository;
 import com.aptech.group3.dao.SubjectRepository;
-import com.aptech.group3.entity.Category;
+import com.aptech.group3.entity.SubjectLevel;
 import com.aptech.group3.entity.Subject;
 
 
@@ -19,18 +19,17 @@ import com.aptech.group3.entity.Subject;
 public class SubjectService {
 	
     @Autowired
-    private SubjectRepository roomRepository;
+    private SubjectRepository subjectRepo;
     @Autowired
-    private CategoryRepository cateRepo;
+    private SubjectLevelRepository LevelRepo;
     
-    public List<Category> listCate()
+    public List<SubjectLevel> listSubjectLevel()
     {
-    	return cateRepo.findAll();
+    	return LevelRepo.findAll();
     }
     
-    
 
-    public Subject saveRoom(Subject room) {
+    public Subject saveSubject(Subject sub) {
     	
     	  // Retrieve the Category object based on the provided category_id
         //Long categoryId = room.getCategory().getId();
@@ -40,52 +39,42 @@ public class SubjectService {
         // Set the retrieved Category object to the room's category field
     //    room.setCategory(category);
         
-        return roomRepository.save(room);
+        return subjectRepo.save(sub);
     }
     
-    public List<Subject> listRoom()
+    public List<Subject> listSubject()
     {
-    	return roomRepository.findAll();
+    	return subjectRepo.findAll();
     }
     
-    public void deleteRoom(Long id)
+    public void deleteSubject(Long id)
     {
-    	roomRepository.deleteById(id);
+    	subjectRepo.deleteById(id);
     }
     
-    public void updateroom(Subject room)
+    public void updateSubject(Subject sub)
     {
-    	Long RoomId = room.getId();
-    	if(roomRepository.existsById(RoomId))
+    	Long RoomId = sub.getId();
+    	if(subjectRepo.existsById(RoomId))
     	{
-    		roomRepository.save(room);
+    		subjectRepo.save(sub);
     	}
     	
     }
     
-    public List<Subject> findRoomByCategoryId(Long categoryName)
-    {
-    	return roomRepository.findByCategoryId(categoryName);
-    }
-    
-    public List<Subject> findRoomByCategoryIdGreaterThan(Long categoryId)
-    {
-    	return roomRepository.findByCategoryIdGreaterThan(categoryId);
-    }
-    
-    public List<Subject> findByCategoryIdGreaterThanAndCategoryIdLessThan(Long min,Long max)
-    {
-    	return roomRepository.findByCategoryIdGreaterThanAndCategoryIdLessThan(min,max);
-    }
-    
     public List<Subject> findBySubjectName(String name)
     {
-    	return roomRepository.findByNameContainingIgnoreCase(name);
+    	return subjectRepo.findByNameContainingIgnoreCase(name);
     }
     
     public Optional<Subject> findbyId(Long id)
     {
-    	return roomRepository.findById(id);
+    	return subjectRepo.findById(id);
+    }
+    
+    public List<Subject> findByLevel(Long levelId)
+    {
+    	return subjectRepo.findBySubjectlevelId(levelId);
     }
     
     

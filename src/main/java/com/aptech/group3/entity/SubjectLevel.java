@@ -18,12 +18,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-public class Category {
+public class SubjectLevel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	  private Long id;
 	  private String name;
-	  @OneToMany(mappedBy="category" , cascade = CascadeType.ALL)
+	  @OneToMany(mappedBy="subjectlevel" , cascade = CascadeType.ALL)
 	  @JsonIgnore
 	  private List<Subject> rooms;
 

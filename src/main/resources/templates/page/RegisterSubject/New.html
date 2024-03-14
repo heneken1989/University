@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+layout:decorate="~{/layout}">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>New Subject Register</title>
+   <style>
+        .subject-level {
+            cursor: pointer;
+            background-color: green;
+            color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .subject-level:hover {
+            background-color: darkgreen;
+        }
+
+        .subject-list {
+            display: none;
+            list-style-type: none;
+            padding-left: 20px;
+            border: 1px solid #ccc;
+            background-color: white;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        .subject-list li {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <article layout:fragment="content">
+  
+            <!-- Iterate over each subject level in the list -->
+            <div th:each="subjectLevel : ${subjectlevels}" th:id="'subjectLevel_' + ${subjectLevel.id}" class="subject-level">
+                <span th:text="${subjectLevel.name}"></span>
+                <ul class="subject-list" th:id="'subjectList_' + ${subjectLevel.id}" style="background-color: blue">
+                    <!-- This will be populated dynamically based on the selected subject level -->
+                </ul>
+            </div>
+      
+        
+            <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            var subjectLevels = document.querySelectorAll('.subject-level');
+            subjectLevels.forEach(function (subjectLevel) {
+                subjectLevel.addEventListener('click', function () {
+                    toggleSubjectList(subjectLevel);
+                });
+            });
+        });
+
+        function toggleSubjectList(subjectLevelElement) {
+            var subjectLevelId = subjectLevelElement.id.split('_')[1];
+            var subjectListElement = document.getElementById('subjectList_' + subjectLevelId);
+
+            // Check if the subject list is visible or not and toggle its visibility
+            if (subjectListElement.style.display === 'none') {
+                // If the list is hidden, show it
+                subjectListElement.style.display = 'block';
+                // Fetch and populate subjects for the clicked subject level
+                populateSubjectList(subjectLevelId, subjectListElement);
+            } else {
+                // If the list is visible, hide it
+                subjectListElement.style.display = 'none';
+            }
+        }
+
+        function populateSubjectList(subjectLevelId, subjectListElement) {
+            // Make AJAX call to fetch subjects for the selected subject level
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/getSubjectsByLevel?subjectLevelId=' + subjectLevelId, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var subjects = JSON.parse(xhr.responseText);
+                    // Clear existing content
+                    subjectListElement.innerHTML = '';
+                    // Populate the subject list with fetched subjects
+                    subjects.forEach(function (subject) {
+                        var listItem = document.createElement("li");
+                        listItem.textContent = subject.name;
+                        subjectListElement.appendChild(listItem);
+                    });
+                }
+            };
+            xhr.send();
+        }
+    </script>
+    </article>
+    
+
+</body>
+</html>
