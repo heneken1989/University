@@ -1,8 +1,13 @@
 package com.aptech.group3.Dto;
 
+import com.aptech.group3.entity.User;
+
+import lombok.Data;
+
+@Data
 public class MarkSubjectDto {
 
 	 private Long id;
-   	 private Long student_id;
-   	 private Long subject_id;
+   	 private User student;
+   	 private User subject;
 }

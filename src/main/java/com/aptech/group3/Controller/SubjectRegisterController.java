@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.aptech.group3.Dto.SubjectDto;
+import com.aptech.group3.entity.Field;
 import com.aptech.group3.entity.Subject;
 import com.aptech.group3.entity.SubjectLevel;
+import com.aptech.group3.entity.User;
 import com.aptech.group3.service.ClassForSubjectService;
 
 import com.aptech.group3.service.StudentSubjectService;
@@ -49,6 +52,18 @@ public class SubjectRegisterController {
 	    public List<Subject> getSubjectsByLevel(@RequestParam Long subjectLevelId) {
 	        return subService.findByLevel(subjectLevelId);
 	    }
+	  
+	     @GetMapping("/getSubjectByStudent")
+	     @ResponseBody
+		  public List<SubjectDto> listSubjectByStudent(User student,Field field )
+		  {
+		       student = userservice.getUserByUserEmail("admin");
+		       field = student.getField();
+		      List<SubjectDto>  listS = subService.findByStudent(student,field);
+		      return listS;
+		  }
+		 
+	  
 	
 
 }

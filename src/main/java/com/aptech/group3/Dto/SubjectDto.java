@@ -1,25 +1,22 @@
 package com.aptech.group3.Dto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import java.util.Set;
+
+import com.aptech.group3.entity.Field;
+import com.aptech.group3.entity.RequiredSubject;
+import com.aptech.group3.entity.SubjectLevel;
+
 import lombok.Data;
 
-
-
+@Data
 public class SubjectDto {
 	
 
-	  private Long id;
-	  private String name;
-	  private int credit;
-	  private Long subjectlevel_Id;
-	  private Long field_Id;
+    private Long id;
+    private String name;
+    private int credit;
+    private SubjectLevel subjectLevel;
+    private Field field;
+    private Set<RequiredSubject> requiredSubjects;
 	
 }

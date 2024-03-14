@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MarkSubject {
-       @Id
+         @Id
     	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	  private Long id;
+	    private Long id;
    	@ManyToOne
    	@JoinColumn(name="student_id" , referencedColumnName="id")
    	 private User user;
@@ -25,4 +25,6 @@ public class MarkSubject {
    	@ManyToOne
    	@JoinColumn(name="subject_id" , referencedColumnName="id")
    	 private Subject subject;
+   	
+   	private float mark;
 }

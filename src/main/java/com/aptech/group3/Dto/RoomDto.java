@@ -1,5 +1,8 @@
 package com.aptech.group3.Dto;
 
+import lombok.Data;
+
+@Data
 public class RoomDto {
 	
 

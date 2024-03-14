@@ -1,23 +1,17 @@
 package com.aptech.group3.Dto;
 
-import lombok.Getter;
-import lombok.Setter;
 
 
+import com.aptech.group3.entity.Subject;
+import com.aptech.group3.entity.User;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
+@Data
 public class StudentSubjectDto {
      private Long id ;
-	 private Long student_id;
-	 private Long subject_id;
+	 private User student;
+	 private Subject subject;
 	
     
 }

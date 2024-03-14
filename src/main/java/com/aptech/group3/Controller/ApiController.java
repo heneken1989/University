@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aptech.group3.entity.SubjectLevel;
+import com.aptech.group3.Dto.SubjectDto;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.StudentSubject;
 import com.aptech.group3.entity.Subject;
@@ -155,7 +156,7 @@ public class ApiController {
 	    	if(value.matches("^\\d+$"))
 	    	{
 	    		Long Lvalue = Long.parseLong(value);
-	    		Optional<Subject> supject = subService.findbyId(Lvalue);
+	    		SubjectDto supject = subService.findbyId(Lvalue);
 	    		
 	    		if(supject!=null)
 	    		{
@@ -180,10 +181,6 @@ public class ApiController {
 	    
 	    	}
 	    }
-	    
-	    
-	    
-	    
 	    @PostMapping("/loginThanh")
 	    public Optional<User> loginn(@RequestBody LoginRequest  data)
 	    {
