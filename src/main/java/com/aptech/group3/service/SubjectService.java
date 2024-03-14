@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.aptech.group3.dao.SubjectLevelRepository;
-import com.aptech.group3.dao.SubjectRepository;
 import com.aptech.group3.entity.SubjectLevel;
+import com.aptech.group3.Repository.SubjectLevelRepository;
+import com.aptech.group3.Repository.SubjectRepository;
 import com.aptech.group3.entity.Subject;
 
 

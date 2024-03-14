@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.aptech.group3.dao.StudentSubjectRepository;
+import com.aptech.group3.Repository.StudentSubjectRepository;
 import com.aptech.group3.entity.StudentSubject;
 
 

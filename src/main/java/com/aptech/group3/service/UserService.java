@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.aptech.group3.dao.UserRepository;
+import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 

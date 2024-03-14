@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.aptech.group3.dao.UserRepository;
+import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.User;
 
 

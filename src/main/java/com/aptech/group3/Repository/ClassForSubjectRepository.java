@@ -1,4 +1,4 @@
-package com.aptech.group3.dao;
+package com.aptech.group3.Repository;
 
 import java.util.List;
 
