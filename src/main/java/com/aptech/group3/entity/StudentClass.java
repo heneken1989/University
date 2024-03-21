@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentSubject {
+public class StudentClass {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +28,14 @@ public class StudentSubject {
 	
 	@ManyToOne
 	@JoinColumn(name="student_id" , referencedColumnName="id")
-	 private User user;
+	 private User student;
 	
 	
 	@ManyToOne
-	@JoinColumn(name="subject_id" , referencedColumnName="id")
-	 private Subject subject;
+	@JoinColumn(name="class_id" , referencedColumnName="id")
+	 private ClassForSubject classforSubject;
+	
+	 private String status;
 	
     
 }

@@ -3,6 +3,7 @@ package com.aptech.group3.service;
 import java.security.Key;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.aptech.group3.model.CustomUserDetails;
@@ -20,10 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class JwtTokenProvider {
+	
+	
+    @Value("${app.secretKey}")
+    private String secretKey1;
 
 
-	// Đoạn JWT_SECRET này là bí mật, chỉ có phía server biết
-	 private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     //Thời gian có hiệu lực của chuỗi jwt
     private final long JWT_EXPIRATION = 604800000L;
@@ -37,14 +40,14 @@ public class JwtTokenProvider {
                    .setSubject(Long.toString(userDetails.getUser().getId()))
                    .setIssuedAt(now)
                    .setExpiration(expiryDate)
-                   .signWith(secretKey)
+                   .signWith(SignatureAlgorithm.HS512,secretKey1)
                    .compact();
     }
 
     // Lấy thông tin user từ jwt
     public Long getUserIdFromJWT(String token) {
         Claims claims = Jwts.parser()
-                            .setSigningKey(secretKey)
+                            .setSigningKey(secretKey1)
                             .parseClaimsJws(token)
                             .getBody();
 
@@ -53,7 +56,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken);
+            Jwts.parser().setSigningKey(secretKey1).parseClaimsJws(authToken);
             return true;
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");

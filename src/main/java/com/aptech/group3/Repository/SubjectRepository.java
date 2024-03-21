@@ -19,18 +19,17 @@ public interface SubjectRepository extends JpaRepository<Subject,Long> {
 	List<Subject> findByNameContainingIgnoreCase(String name);
 	List<Subject> findBySubjectlevelId(Long id);
 	
-	 @Query("SELECT DISTINCT s FROM ClassForSubject cfs " +
-	            "JOIN cfs.subject s " +
-	            "WHERE " +
-	            "(s IN (" +
-	            "   SELECT rs.subject FROM RequiredSubject rs " +
-	            "   WHERE rs.requiredsubject IN (" +
-	            "       SELECT ms.subject FROM MarkSubject ms " +
-	            "       WHERE ms.user = :student AND ms.mark >= 5" +
-	            "   )" +
-	            ") OR NOT EXISTS (SELECT rs FROM RequiredSubject rs WHERE rs.subject = s))" +
-	            "AND s.field = :field")
-	    List<Subject> findSubjectsForStudent(@Param("student") User student, @Param("field") Field field);
-	
+	@Query("SELECT DISTINCT s FROM ClassForSubject cfs " +
+	        "JOIN cfs.subject s " +
+	        "WHERE " +
+	        "(s IN (" +
+	        "   SELECT rs.subject FROM RequiredSubject rs " +
+	        "   WHERE rs.requiredsubject IN (" +
+	        "       SELECT ms.subject FROM MarkSubject ms " +
+	        "       WHERE ms.user = :student AND ms.mark >= 5" +
+	        "   )" +
+	        ") OR NOT EXISTS (SELECT rs FROM RequiredSubject rs WHERE rs.subject = s))" +
+	        "AND (:fieldId IS NULL OR s.field.id = :fieldId OR :fieldId = '0')")
+	List<Subject> findSubjectsForStudent(@Param("student") User student, @Param("fieldId") Long fieldId);
 
 }

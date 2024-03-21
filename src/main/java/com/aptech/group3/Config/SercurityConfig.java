@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.aptech.group3.service.JwtAuthenticationFilter;
 import com.aptech.group3.service.UserService;
@@ -51,9 +52,9 @@ public class SercurityConfig      {
                 //   .cors()
                 //   .and()
                 .authorizeHttpRequests((requests) -> requests
-                             //   .requestMatchers("/list","/test","/listcate", "/login/**", "/Shop/**", "/signup", "/css/**", "/fonts/**", "/image/**", "/images/**", "/js/**", "/vendor/**").permitAll()
-                             //   .anyRequest().authenticated()
-                .anyRequest().permitAll()
+                               .requestMatchers("/test", "/login","/listCate", "/Shop/**", "/signup", "/css/**", "/fonts/**", "/image/**", "/images/**", "/js/**", "/vendor/**").permitAll()
+                               .anyRequest().permitAll()
+               // .anyRequest().permitAll()
             )
 
 
@@ -73,7 +74,7 @@ public class SercurityConfig      {
 			        // .cors();
 		
 		// Thêm một lớp Filter kiểm tra jwt
-      //  http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+       http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}

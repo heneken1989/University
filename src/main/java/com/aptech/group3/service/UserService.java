@@ -1,6 +1,7 @@
 package com.aptech.group3.service;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.aptech.group3.Repository.UserRepository;
+import com.aptech.group3.entity.Field;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 
@@ -34,12 +36,19 @@ public class UserService implements UserDetailsService {
     }
     
     public UserDetails loadUserByUserid(Long id) {
+        System.out.print("aaaaaaaaaaaaaaa"+id);
         // Kiểm tra xem user có tồn tại trong database không?
-        Optional<User> user = userRepository.findById(id);
-        if (user == null) {
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get(); // Retrieve the User object from Optional
+            CustomUserDetails userDetails = new CustomUserDetails(user);
+            
+            return userDetails;
+        } else {
+            System.out.println("User not found!");
             return null;
         }
-        return new CustomUserDetails(user);
     }
     
     
@@ -78,9 +87,5 @@ public class UserService implements UserDetailsService {
     	
     	
     }
-    
-    
-
-
 
 }

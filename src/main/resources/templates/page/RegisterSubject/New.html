@@ -4,94 +4,351 @@ layout:decorate="~{/layout}">
 <head>
     <meta charset="ISO-8859-1">
     <title>New Subject Register</title>
-   <style>
+     <style>
         .subject-level {
             cursor: pointer;
-            background-color: green;
-            color: white;
+            background-color:#d1e5f0;
+            color: Black;
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
         }
 
         .subject-level:hover {
-            background-color: darkgreen;
+            background-color: #d1e5f0;
         }
 
         .subject-list {
-            display: none;
             list-style-type: none;
+            display: none;
             padding-left: 20px;
-            border: 1px solid #ccc;
-            background-color: white;
-            border-radius: 5px;
             margin-top: 5px;
         }
 
-        .subject-list li {
+        .subject-box {
+            background-color: #D9D9D9;
+            border: 2px solid #6B4D12;
+            border-radius: 5px;
             padding: 5px;
+            margin-bottom: 5px;
+            font-size: 20px;
+            font-weight: bold;
+            display:flex;
+            justify-content: space-around;
+      
         }
+        
+        
+		        /* Modal style */
+		.modal {
+          border: 1px solid #ccc;
+		  display: none; /* Hidden by default */
+		  position: fixed; /* Stay in place */
+		  z-index: 1; /* Sit on top */
+		  left: 0;
+		  top: 0;
+		  width: 100%;
+		  height: 100%;
+		  overflow: auto; /* Enable scrolling if needed */
+		  background-color: rgb(0,0,0); /* Fallback color */
+		  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		  transform: translate(2%, 2%);
+		  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	
+		}
+		
+		.modal-content {
+		  background-color: #fefefe;
+		  margin: 15% auto; /* 15% from the top and centered */
+		  padding: 20px;
+		  border: 1px solid #888;
+		  width: 80%; /* Could be more or less, depending on screen size */
+		}
+		
+		/* Close button */
+		.close {
+		  color: red;
+		  float: right;
+		  font-size: 70px;
+		  font-weight: bold;
+		}
+		
+		.close:hover,
+		.close:focus {
+		  color: red;
+		  text-decoration: none;
+		  cursor: pointer;
+		}
+		
+		    .class-List {
+            list-style-type: none;
+      
+        }
+           .class-box {
+            background-color: #D9D9D9;
+            border: 2px solid #6B4D12;
+            border-radius: 5px;
+            padding: 5px;
+            margin-bottom: 5px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+   /*          display:flex;
+            justify-content: space-around; */
+        }
+        
+        .view-list-class-btn
+        {
+        background-color : orange;
+        
+        }
+        
+        .view-detail-class-btn
+        {
+	    background-color : orange;
+	    }
+
     </style>
 </head>
 <body>
     <article layout:fragment="content">
-  
-            <!-- Iterate over each subject level in the list -->
-            <div th:each="subjectLevel : ${subjectlevels}" th:id="'subjectLevel_' + ${subjectLevel.id}" class="subject-level">
-                <span th:text="${subjectLevel.name}"></span>
-                <ul class="subject-list" th:id="'subjectList_' + ${subjectLevel.id}" style="background-color: blue">
-                    <!-- This will be populated dynamically based on the selected subject level -->
-                </ul>
-            </div>
-      
+    
+            <form>
+            <!-- Select field dropdown -->
+            <select name="fieldId" id="fieldId">
+                <option value="" selected>All Field</option>
+                <!-- Iterate over each field in the list -->
+                <th:block th:each="field : ${fields}">
+                    <option th:value="${field.id}" th:text="${field.name}"></option>
+                </th:block>
+            </select>
+            <span>SELECT FIELD</span>
+        </form>
+       
+        <!-- Iterate over each subject level in the list -->
+        <div th:each="subjectLevel : ${subjectlevels}" th:id="'subjectLevel_' + ${subjectLevel.id}" class="subject-level">
+            <span th:text="${subjectLevel.name}"></span>
+            <ul class="subject-list" th:id="'subjectList_' + ${subjectLevel.id}" >
+                <!-- This will be populated dynamically based on the selected subject level -->
+            </ul>
+        </div>
+ 
+ 
+ 
+<!-- Class List Dialog Modal -->
+<div id="classListModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 style="text-align: center;font-size:60">CLASS LIST</h2>
+    <ul id="classList" class="class-List"></ul>
+  </div>
+</div>
         
-            <script th:inline="javascript">
-        document.addEventListener("DOMContentLoaded", function () {
-            var subjectLevels = document.querySelectorAll('.subject-level');
-            subjectLevels.forEach(function (subjectLevel) {
-                subjectLevel.addEventListener('click', function () {
-                    toggleSubjectList(subjectLevel);
-                });
-            });
-        });
 
-        function toggleSubjectList(subjectLevelElement) {
-            var subjectLevelId = subjectLevelElement.id.split('_')[1];
+<!-- Update your existing JavaScript code -->
+<script th:inline="javascript">
+document.addEventListener("DOMContentLoaded", function () {
+	
+    // Add event listeners to each subject level
+    var subjectLevels = document.querySelectorAll('.subject-level');
+    subjectLevels.forEach(function (subjectLevel) {
+        subjectLevel.addEventListener('click', function () {
+            var fieldId = document.getElementById('fieldId').value;
+            var subjectLevelId = subjectLevel.id.split('_')[1];
             var subjectListElement = document.getElementById('subjectList_' + subjectLevelId);
+    
+            toggleSubjectList(subjectLevelId, fieldId);
+        });
+    });
 
-            // Check if the subject list is visible or not and toggle its visibility
-            if (subjectListElement.style.display === 'none') {
-                // If the list is hidden, show it
-                subjectListElement.style.display = 'block';
-                // Fetch and populate subjects for the clicked subject level
-                populateSubjectList(subjectLevelId, subjectListElement);
+    // Add event listener to the Select Field
+    document.getElementById('fieldId').addEventListener('change', function () {
+        // Hide all expanded SubjectLevels
+        hideAllSubjectLevels();
+    });
+
+    // Close the modal when the close button is clicked
+    var closeModal = document.querySelector('.close');
+    closeModal.addEventListener('click', function() {
+        var modal = document.getElementById('classListModal');
+        modal.style.display = 'none';
+    });
+});
+
+function toggleSubjectList(subjectLevelId, fieldId) {
+    var subjectListElement = document.getElementById('subjectList_' + subjectLevelId);
+
+    // Check if the subject list is visible or not and toggle its visibility
+    if (subjectListElement.style.display === 'none' || subjectListElement.style.display === '') {    
+        // If the list is hidden, show it
+        subjectListElement.style.display = 'block';
+        // Fetch and populate subjects for the clicked subject level
+        populateSubjectList(fieldId, subjectLevelId, subjectListElement);
+
+        // Add event listener to the subject list to prevent hiding when clicking inside it
+        subjectListElement.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    } else {
+        // If the list is visible, hide it
+        subjectListElement.style.display = 'none';
+    }
+}
+
+function populateSubjectList(fieldId, subjectLevelId, subjectListElement) {
+    // Make AJAX call to fetch subjects for the selected field and subject level
+    var xhr = new XMLHttpRequest();
+    var url = '/listSubjectByStudentAndLevel?fieldId=' + (fieldId ? fieldId : '0') + '&subjectLevelId=' + subjectLevelId;
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var subjects = JSON.parse(xhr.responseText);
+
+            // Clear existing content
+            subjectListElement.innerHTML = '';
+            if (subjects.length === 0) {
+                // If the array is empty, show "No Subject" message
+                var noSubjectListItem = document.createElement("li");
+                noSubjectListItem.textContent = "No Subject";
+                subjectListElement.appendChild(noSubjectListItem);
             } else {
-                // If the list is visible, hide it
-                subjectListElement.style.display = 'none';
+                // Populate the subject list with fetched subjects
+                subjects.forEach(function (subject) {
+                    var listItem = document.createElement("li");
+                    listItem.textContent = subject.name;
+                    // Add subject-box class to each subject box
+                    listItem.classList.add("subject-box");
+
+                    var buttonContainer = document.createElement("div"); // Create a container for the button
+                    buttonContainer.classList.add("button-container"); // Add a class for styling
+
+                    var viewListClassBtn = document.createElement("button");
+                    viewListClassBtn.textContent = "View List of Classes";
+                    viewListClassBtn.classList.add("view-list-class-btn");
+
+                    // Add event listener to the ViewListClass button
+                    viewListClassBtn.addEventListener('click', function () {
+                        fetchAndDisplayClasses(subject.id);
+                    });
+                    buttonContainer.appendChild(viewListClassBtn); 
+                    listItem.appendChild(buttonContainer);
+                    subjectListElement.appendChild(listItem);
+                });
             }
         }
+    };
+    xhr.send();
+}
 
-        function populateSubjectList(subjectLevelId, subjectListElement) {
-            // Make AJAX call to fetch subjects for the selected subject level
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/getSubjectsByLevel?subjectLevelId=' + subjectLevelId, true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var subjects = JSON.parse(xhr.responseText);
-                    // Clear existing content
-                    subjectListElement.innerHTML = '';
-                    // Populate the subject list with fetched subjects
-                    subjects.forEach(function (subject) {
-                        var listItem = document.createElement("li");
-                        listItem.textContent = subject.name;
-                        subjectListElement.appendChild(listItem);
-                    });
-                }
-            };
-            xhr.send();
+function hideAllSubjectLevels() {
+    var subjectLevels = document.querySelectorAll('.subject-level');
+    subjectLevels.forEach(function (subjectLevel) {
+        var subjectLevelId = subjectLevel.id.split('_')[1];
+        var subjectListElement = document.getElementById('subjectList_' + subjectLevelId);
+        // Hide the subject list
+        subjectListElement.style.display = 'none';
+        // Clear the subject list contents
+        subjectListElement.innerHTML = '';
+    });
+}
+
+function fetchAndDisplayClasses(subjectId) {
+    // Make an AJAX call to fetch classes for the selected subject
+    var xhr = new XMLHttpRequest();
+    var url = '/listClassForSubject?subjectId=' + subjectId;
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var classes = JSON.parse(xhr.responseText);
+            // Get the modal and the class list element
+            console.log(xhr.responseText);
+            var modal = document.getElementById('classListModal');
+            var classList = document.getElementById('classList');
+            // Clear existing content
+            classList.innerHTML = '';
+            if (classes.length === 0) {
+                // If no classes are available, display a message
+                var noClassListItem = document.createElement("li");
+                noClassListItem.textContent = "No Classes Available";
+                classList.appendChild(noClassListItem);
+            } else {
+                // Populate the class list
+            	classes.forEach(function (classItem) {
+            	    // Create a container for each class item and its details
+            	    var container = document.createElement("div");
+            	    container.classList.add("class-container");
+
+            	    // Create the list item for the class details
+            	    var listItem = document.createElement("li");
+            	    listItem.textContent = classItem.name +', Start: ' + classItem.slotStart + ', End: ' + classItem.slotEnd + ', WeekDay: ' + classItem.weekDay + ', Teacher: ' + classItem.teacher.name;
+            	    container.appendChild(listItem);
+
+            	    // Create the button for showing details
+            	    var showDetailBtn = document.createElement("button");
+            	    showDetailBtn.textContent = "Show Detail";
+            	    showDetailBtn.classList.add("show-detail-btn");
+
+            	    // Add event listener to the show detail button
+            	    showDetailBtn.addEventListener('click', function () {
+            	        expandListItem(listItem, classItem);
+            	    });
+            	    container.appendChild(showDetailBtn);
+
+            	    // Append the container to the class list
+            	    classList.appendChild(container);
+            	});
+            }
+            // Show the modal
+            modal.style.display = 'block';
         }
-    </script>
+    };
+    xhr.send();
+}
+
+
+function expandListItem(listItem, classItem) {
+    // Remove any previously expanded content
+    var expandedContent = listItem.querySelector(".expanded-content");
+    if (expandedContent) {
+        expandedContent.remove();
+    }
+
+    // Create a container for the expanded content
+    expandedContent = document.createElement("div");
+    expandedContent.classList.add("expanded-content");
+
+    // Add details about the class
+    var detailsContainer = document.createElement("div");
+
+    var teacherDetail = document.createElement("p");
+    teacherDetail.textContent = "Teacher: " + classItem.teacher.name;
+    detailsContainer.appendChild(teacherDetail);
+
+    var weekDayDetail = document.createElement("p");
+    weekDayDetail.textContent = "Week Day: " + classItem.weekDay;
+    detailsContainer.appendChild(weekDayDetail);
+
+    var roomDetail = document.createElement("p");
+    roomDetail.textContent = "Room: " + classItem.room.name;
+    detailsContainer.appendChild(roomDetail);
+
+    expandedContent.appendChild(detailsContainer);
+
+    // Append the expanded content to the list item
+    listItem.appendChild(expandedContent);
+
+    // Set up CSS for columns
+    listItem.style.display = "inline-block";
+    expandedContent.style.display = "block";
+    expandedContent.style.marginTop = "10px";
+}
+</script>
+
     </article>
     
 

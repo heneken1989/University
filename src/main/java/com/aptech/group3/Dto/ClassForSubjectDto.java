@@ -19,15 +19,19 @@ public class ClassForSubjectDto {
 	private String name;
 	private Date dateStart;
 	private Date dateEnd;
-	private Time slotStart;
-	private Time slotEnd;
+	private int slotStart;
+	private int slotEnd;
 	private int quantity;
 	private String description;
 	private String status;
-	private String weekDay;
-	private User teacher;
+	private int weekDay;
+	private UserDto teacher;
 	private Subject subject;
 	private Room room;
 	private Semeter semeter;
+	private String style;
+	
+	private Boolean conflict;
+	private Boolean alreadyRegis;
 	
 }

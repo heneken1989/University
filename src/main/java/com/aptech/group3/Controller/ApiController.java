@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,16 +23,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aptech.group3.entity.SubjectLevel;
+import com.aptech.group3.Dto.ClassForSubjectDto;
 import com.aptech.group3.Dto.SubjectDto;
 import com.aptech.group3.entity.ClassForSubject;
-import com.aptech.group3.entity.StudentSubject;
+import com.aptech.group3.entity.StudentClass;
 import com.aptech.group3.entity.Subject;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.model.LoginRequest;
 import com.aptech.group3.service.ClassForSubjectService;
 import com.aptech.group3.service.JwtTokenProvider;
-import com.aptech.group3.service.StudentSubjectService;
+import com.aptech.group3.service.StudentClassService;
 import com.aptech.group3.service.SubjectService;
 import com.aptech.group3.service.UserService;
 
@@ -58,13 +60,27 @@ public class ApiController {
 	    private JwtTokenProvider tokenProvider;
 	    
 	    @Autowired
-	    private StudentSubjectService studentsubservice;
+	    private StudentClassService studentsubservice;
 	    
 	    @Autowired
 	    private ClassForSubjectService classservice;
 	    
 	    @Autowired
 	    private UserService userservice;
+	    
+	    @GetMapping("/check/{userId}")
+	    public ResponseEntity<UserDetails> getUserById(@PathVariable Long userId) {
+	        // Retrieve user information from the UserService based on the user ID
+	        UserDetails user = userservice.loadUserByUserid(userId);
+	        if (user != null) {
+	            // If user information is found, return it with HTTP status 200 OK
+	            return ResponseEntity.ok(user);
+	        } else {
+	            // If user information is not found, return HTTP status 404 Not Found
+	            return ResponseEntity.notFound().build();
+	        }
+	    }
+	        
 	    
 	    
 	    @PostMapping("/login")
@@ -101,16 +117,13 @@ public class ApiController {
 	    	return  subService.listSubject();
 	    }
 	    
-	    @PostMapping("/listClass")
-	    public List<ClassForSubject> listClass(@RequestBody Long id)
-	    {
-	    	return  classservice.findById(id);
-	    }
-	    
-	    @PostMapping("/listSS")
-	    public List<StudentSubject> listSB(@RequestBody Long userid){
-	    	return  studentsubservice.findSubjectByStudentId(userid);
-	    }
+		/*
+		 * @PostMapping("/listClass") public List<ClassForSubjectDto>
+		 * listClass(@RequestBody Long id) { return classservice.findById(id); }
+		 * 
+		 * @PostMapping("/listSS") public List<StudentClass> listSB(@RequestBody Long
+		 * userid){ return studentsubservice.findSubjectByStudentId(userid); }
+		 */
 	    
 
 	    
@@ -118,6 +131,7 @@ public class ApiController {
 	    @GetMapping("/listcate")
 	    public List<SubjectLevel> listCate()
 	    {
+	    	 System.out.print("categoryyyyyyyyyy");
 	    	return subService.listSubjectLevel();
 	    }
 	    

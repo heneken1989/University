@@ -27,8 +27,6 @@ public class CustomerUserDetailService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-
-	
 		List<User> listUser = (List<User>) uservice.loadUserByUserEmail(username);
 		 if(listUser.size()>0)
 		  {

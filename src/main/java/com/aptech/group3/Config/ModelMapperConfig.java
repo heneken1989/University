@@ -5,6 +5,10 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.aptech.group3.Dto.ClassForSubjectDto;
+import com.aptech.group3.entity.ClassForSubject;
+
+
 @Configuration
 public class ModelMapperConfig {
     @Bean
@@ -13,6 +17,13 @@ public class ModelMapperConfig {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT);
+        
+		/*
+		 * modelMapper.createTypeMap(ClassForSubject.class, ClassForSubjectDto.class)
+		 * .addMapping(src -> src.getUser(), ClassForSubjectDto::setTeacher);
+		 */
+        
+        
         return modelMapper;
     }
 }

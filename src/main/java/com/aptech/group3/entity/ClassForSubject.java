@@ -28,21 +28,22 @@ import lombok.Setter;
 public class ClassForSubject {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id ;
+    private Long id ;
 	private String name;
 	private Date dateStart;
 	private Date dateEnd;
-	private Time slotStart;
-	private Time slotEnd;
+	private int slotStart;
+	private int slotEnd;
 	private int quantity;
 	private String description;
 	private String status;
-	private String weekDay;
+	private int weekDay;
+	private String style;
 	
 	
 	@ManyToOne
 	@JoinColumn(name="teacher_id" , referencedColumnName="id")
-	 private User user;
+	 private User teacher;
 	
 	
 	@ManyToOne

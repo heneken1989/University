@@ -11,22 +11,11 @@ public class UserDto    {
     private Long id;
 	private String email;
 	private String name;
-	private String password;
 	private String phone;
 	private String infomation;
 	private String role;
 	private String address;
 	private String avatar;
 	private Field field;
-	
-		
-
-
-	
-	
-	
-
-
-	
 	
 }

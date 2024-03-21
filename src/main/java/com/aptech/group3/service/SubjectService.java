@@ -87,7 +87,7 @@ public class SubjectService {
     	return subjectRepo.findBySubjectlevelId(levelId);
     }
     
-    public List<SubjectDto> findByStudent(User student ,Field field)
+    public List<SubjectDto> findByStudent(User student ,Long field)
     {
     	List<Subject> listS = subjectRepo.findSubjectsForStudent(student, field);
     	return mapper.map(listS,  new TypeToken<List<SubjectDto>>() {}.getType());
