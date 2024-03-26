@@ -1,4 +1,4 @@
-package com.aptech.group3.service;
+package com.aptech.group3.serviceImpl;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenProvider tokenProvider;
 
     @Autowired
-    private UserService customUserDetailsService;
+    private UserServiceImpl customUserDetailsService;
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain)

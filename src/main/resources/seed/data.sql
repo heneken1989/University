@@ -16,10 +16,18 @@ VALUES
     (4, 'A104',60);
     
     
-    
-INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role,username) 
+    INSERT IGNORE INTO  subjectlevel (id, name) 
 VALUES 
-    (3, 'awda', 'awdadw', 'admin', 'ad', 'admin', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1','hiend ai ca', 'admin');
+    (1, 'Core'),
+    (2, 'Level 100'),
+    (3, 'Level 200'),
+    (4, 'Level 300');
+    
+    
+    
+INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role) 
+VALUES 
+    (2, 'awda', 'awdadw', 'admin', 'ad', 'admin', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'admin');
 
     
     
@@ -73,7 +81,7 @@ VALUES
     
     
     
-INSERT IGNORE INTO  classforsubject (id, dateEnd, dateStart, description, name, quantity, slotEnd, slotStart,status,style,weekDay,room_id,semeter_id,subject_id,teacher_id) 
+INSERT IGNORE INTO  class_subject (id, dateEnd, dateStart, description, name, quantity, slotEnd, slotStart,status,style,weekDay,room_id,semeter_id,subject_id,teacher_id) 
 VALUES 
     (1, NULL, NULL, 'Class Info', 'Class 1', '30', '3', '1', 'Opened', 'FullSemester', '1', '1', NULL, '1', '2'),
     (2, NULL, NULL, 'Class Info', 'Class 2', '30', '8', '6', 'Opened', 'FirstHaftSemester', '1', '1', NULL, '2', '2'),

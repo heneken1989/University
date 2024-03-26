@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.aptech.group3.entity.User;
-import com.aptech.group3.service.UserService;
+import com.aptech.group3.serviceImpl.UserServiceImpl;
 
 
 
@@ -17,7 +17,7 @@ import com.aptech.group3.service.UserService;
 @Service
 public class Detail {
 	@Autowired 
-	UserService service;
+	UserServiceImpl service;
 	
 	   public User logindetail()
 	   {

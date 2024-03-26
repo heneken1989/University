@@ -24,11 +24,10 @@ public class Subject {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	  private Long id;
-	
 	  private String name; // LomBok khong duoc viet hoa
-	  
 	  private int credit;
-      
+	  private String style;
+	  private Integer creditAction;
 	  
 	  @ManyToOne
 	  @JoinColumn(name="subjectlevel_id")

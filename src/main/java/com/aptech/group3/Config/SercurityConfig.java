@@ -3,10 +3,13 @@ package com.aptech.group3.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -14,18 +17,26 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.aptech.group3.service.JwtAuthenticationFilter;
-import com.aptech.group3.service.UserService;
+import com.aptech.group3.serviceImpl.CustomAccessDeniedHandler;
+import com.aptech.group3.serviceImpl.CustomerUserDetailService;
+import com.aptech.group3.serviceImpl.JwtAuthenticationFilter;
+import com.aptech.group3.serviceImpl.UserServiceImpl;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SercurityConfig      {
   
     
     @Autowired
-    UserService userService;
+    UserServiceImpl userService;
+    
+    @Autowired
+    CustomerUserDetailService customerUserDetailService;
     
     @Bean
      BCryptPasswordEncoder passwordEncoder() {
@@ -45,52 +56,60 @@ public class SercurityConfig      {
     }
 
 
+    @Bean
+    @Order(1)
+    public SecurityFilterChain app(HttpSecurity http) throws Exception {
+        return http
+                .securityMatcher("/**")
+                .authorizeHttpRequests(au -> {
+                    au.requestMatchers(HttpMethod.GET, "/login", "/logout").permitAll();
+                    au.requestMatchers(HttpMethod.POST, "/login").permitAll();
+                    au.anyRequest().permitAll();
+                })
+                .formLogin(frm -> {
+                    frm.loginPage("/login") // Custom login page
+                      .permitAll()
+                      .defaultSuccessUrl("/index") // Redirect after successful login
+                      .failureUrl("/login?success=false") // Redirect after login failure
+                      .loginProcessingUrl("/j_spring_security_check"); // Login processing URL
+                })
+                .logout(lo -> {
+                    lo.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                      .logoutSuccessUrl("/login"); // Redirect after logout
+                })
+                .exceptionHandling(handling -> handling
+                    .accessDeniedHandler(new CustomAccessDeniedHandler()) // Custom access denied handler
+                )
+                .csrf(csrf -> csrf.disable()) // CSRF protection as per your requirement
+                .build();
+    }
+    
 	@Bean
-	 SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                //  .csrf().disable()  // b? x?c th?c token ?? d? test
-                //   .cors()
-                //   .and()
-                .authorizeHttpRequests((requests) -> requests
-                               .requestMatchers("/test", "/login","/listCate", "/Shop/**", "/signup", "/css/**", "/fonts/**", "/image/**", "/images/**", "/js/**", "/vendor/**").permitAll()
-                               .anyRequest().permitAll()
-               // .anyRequest().permitAll()
-            )
-
-
-                .formLogin((form) -> form
-                                .loginPage("/login")      //lay from login tu tao ra
-                                .permitAll()
-                                .defaultSuccessUrl("/index")    // neu ??ng nh?p ??ng th? tr? v? trang index
-                                .failureUrl("/login?sucess=false")  // n?u ??ng nh?p sai th? ...
-                                .loginProcessingUrl("/j_spring_security_check")    // d?ng n?y pase l?n from th:action
-                )
-                .logout((logout) -> logout
-                                .permitAll()
-                )
-                .csrf(csrf -> csrf.disable()); // Enable CSRF protection
-			        //  .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())  // Store CSRF token in a cookie
-			        // .and()
-			        // .cors();
-		
-		// Thêm một lớp Filter kiểm tra jwt
-       http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
-		return http.build();
+	@Order(2)
+	public SecurityFilterChain api(HttpSecurity http) throws Exception {
+	    return http
+                .securityMatcher("/api/**")
+                .authorizeHttpRequests(au -> {
+                    au.requestMatchers(HttpMethod.GET, "/api/login", "/api/logout").permitAll();
+                    au.requestMatchers(HttpMethod.POST, "/api/login").permitAll();
+                    au.requestMatchers("/api//admin/**").hasAuthority("ADMIN");
+                    au.requestMatchers("/api/teacher/**").hasAuthority("TEACHER");
+                    au.requestMatchers("/api/student/**").hasAuthority("STUDENT");
+                    au.anyRequest().authenticated();
+                })
+                // Adding JWT filter before UsernamePasswordAuthenticationFilter
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .csrf(csrf -> csrf.disable()) // Often, CSRF is disabled for APIs
+                .build();
 	}
 	
-//      @Autowired
-//	protected void configure(AuthenticationManagerBuilder auth) throws Exception
-//	{
-//		 auth.userDetailsService(customerUserDetailService).passwordEncoder(passwordEncoder());
-//	}
-//      
+	
+	
+
 	 @Autowired
 	    void configureGlobal(AuthenticationManagerBuilder builder) throws Exception {
-	        builder.userDetailsService(userService)
+	        builder.userDetailsService(customerUserDetailService)
 	                .passwordEncoder(new BCryptPasswordEncoder());
 	    }
-      
-  
 
 }

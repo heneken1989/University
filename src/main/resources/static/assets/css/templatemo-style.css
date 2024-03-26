@@ -431,7 +431,7 @@ section.tables .container-fluid {
 }
 
 .alternate-table table td {
-    border-right: 2px solid #f7f7f7;
+    
 }
 
 .alternate-table table td:last-child {
@@ -446,7 +446,7 @@ table {
 table tbody tr {
     border-left: 0;
     border-right: 0;
-    border-bottom: 10px solid #f7f7f7;
+ 
 }
 
 table td {
@@ -497,7 +497,7 @@ table.alt tfoot {
 }
 
 table tbody tr {
-    background-color: #e7e7e7;
+  
 }
 
     table tbody tr:nth-child(2n + 1) {

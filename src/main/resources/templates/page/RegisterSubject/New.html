@@ -5,6 +5,10 @@ layout:decorate="~{/layout}">
     <meta charset="ISO-8859-1">
     <title>New Subject Register</title>
      <style>
+     .swal2-container {
+  z-index: 20000 !important;
+}
+
         .subject-level {
             cursor: pointer;
             background-color:#d1e5f0;
@@ -47,7 +51,7 @@ layout:decorate="~{/layout}">
           border: 1px solid #ccc;
 		  display: none; /* Hidden by default */
 		  position: fixed; /* Stay in place */
-		  z-index: 1; /* Sit on top */
+		  z-index: 10001; /* Sit on top */
 		  left: 0;
 		  top: 0;
 		  width: 100%;
@@ -55,18 +59,34 @@ layout:decorate="~{/layout}">
 		  overflow: auto; /* Enable scrolling if needed */
 		  background-color: rgb(0,0,0); /* Fallback color */
 		  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-		  transform: translate(2%, 2%);
 		  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	
 		}
 		
 		.modal-content {
 		  background-color: #fefefe;
-		  margin: 15% auto; /* 15% from the top and centered */
-		  padding: 20px;
+		  margin: 1% auto; /* 15% from the top and centered */
+		  padding: 10px;
 		  border: 1px solid #888;
-		  width: 80%; /* Could be more or less, depending on screen size */
+		    display: flex; /* Enables flexbox */
+            flex-direction: column; /* Stack children vertically */
+            justify-content: center; /* Center children vertically */
 		}
+		
+			    .class-container
+	    {
+	        margin-left :8%;
+	        background-color:#fafcfc;
+            border: 2px solid #6B4D12;
+            border-radius: 5px;
+            padding: 5px;
+            margin-bottom: 5px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            width: 85%;
+	    }
+	    
 		
 		/* Close button */
 		.close {
@@ -87,18 +107,7 @@ layout:decorate="~{/layout}">
             list-style-type: none;
       
         }
-           .class-box {
-            background-color: #D9D9D9;
-            border: 2px solid #6B4D12;
-            border-radius: 5px;
-            padding: 5px;
-            margin-bottom: 5px;
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-   /*          display:flex;
-            justify-content: space-around; */
-        }
+
         
         .view-list-class-btn
         {
@@ -110,6 +119,31 @@ layout:decorate="~{/layout}">
         {
 	    background-color : orange;
 	    }
+	    
+
+
+	    
+	    .expanded-content	    {
+	        background-color: #ccecfc;
+
+            border-radius: 5px;
+            padding: 5px;
+            margin-bottom: 5px;
+            font-size: 20px;
+            font-weight: bold;
+            display:flex;
+            justify-content: space-around;
+            
+	    }
+	    
+	    .subject-name {
+		  flex-grow: 1;
+		  margin-right: 10px;
+         }
+	    
+	
+
+
 
     </style>
 </head>
@@ -147,11 +181,18 @@ layout:decorate="~{/layout}">
   </div>
 </div>
         
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Update your existing JavaScript code -->
 <script th:inline="javascript">
+
 document.addEventListener("DOMContentLoaded", function () {
-	
+
+    var storedSubjectId = localStorage.getItem('reopenModalSubjectId');
+    if (storedSubjectId) {
+        fetchAndDisplayClasses(storedSubjectId);
+        localStorage.removeItem('reopenModalSubjectId');
+    }
+    
     // Add event listeners to each subject level
     var subjectLevels = document.querySelectorAll('.subject-level');
     subjectLevels.forEach(function (subjectLevel) {
@@ -167,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add event listener to the Select Field
     document.getElementById('fieldId').addEventListener('change', function () {
         // Hide all expanded SubjectLevels
-        hideAllSubjectLevels();
+        hideAllSubjectLevels();      
     });
 
     // Close the modal when the close button is clicked
@@ -175,7 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
     closeModal.addEventListener('click', function() {
         var modal = document.getElementById('classListModal');
         modal.style.display = 'none';
-    });
+    }); 
 });
 
 function toggleSubjectList(subjectLevelId, fieldId) {
@@ -217,27 +258,31 @@ function populateSubjectList(fieldId, subjectLevelId, subjectListElement) {
                 subjectListElement.appendChild(noSubjectListItem);
             } else {
                 // Populate the subject list with fetched subjects
-                subjects.forEach(function (subject) {
-                    var listItem = document.createElement("li");
-                    listItem.textContent = subject.name;
-                    // Add subject-box class to each subject box
-                    listItem.classList.add("subject-box");
+            	subjects.forEach(function (subject) {
+            	    var listItem = document.createElement("li");
+            	    listItem.classList.add("subject-box");
+            	    
+            	    var subjectNameSpan = document.createElement("span"); // Create a span for the subject name
+            	    subjectNameSpan.classList.add("subject-name");
+            	    subjectNameSpan.textContent = subject.name;
+            	    listItem.appendChild(subjectNameSpan); // Append the span to the list item
+            	    
+            	    var buttonContainer = document.createElement("div");
+            	    buttonContainer.classList.add("button-container");
 
-                    var buttonContainer = document.createElement("div"); // Create a container for the button
-                    buttonContainer.classList.add("button-container"); // Add a class for styling
+            	    var viewListClassBtn = document.createElement("button");
+            	    viewListClassBtn.textContent = "View List of Classes";
+            	    viewListClassBtn.classList.add("view-list-class-btn");
 
-                    var viewListClassBtn = document.createElement("button");
-                    viewListClassBtn.textContent = "View List of Classes";
-                    viewListClassBtn.classList.add("view-list-class-btn");
+            	    // Add event listener to the ViewListClass button
+            	    viewListClassBtn.addEventListener('click', function () {
+            	        fetchAndDisplayClasses(subject.id);
+            	    });
+            	    buttonContainer.appendChild(viewListClassBtn);
+            	    listItem.appendChild(buttonContainer);
 
-                    // Add event listener to the ViewListClass button
-                    viewListClassBtn.addEventListener('click', function () {
-                        fetchAndDisplayClasses(subject.id);
-                    });
-                    buttonContainer.appendChild(viewListClassBtn); 
-                    listItem.appendChild(buttonContainer);
-                    subjectListElement.appendChild(listItem);
-                });
+            	    subjectListElement.appendChild(listItem);
+            	});
             }
         }
     };
@@ -265,11 +310,8 @@ function fetchAndDisplayClasses(subjectId) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             var classes = JSON.parse(xhr.responseText);
-            // Get the modal and the class list element
-            console.log(xhr.responseText);
             var modal = document.getElementById('classListModal');
             var classList = document.getElementById('classList');
-            // Clear existing content
             classList.innerHTML = '';
             if (classes.length === 0) {
                 // If no classes are available, display a message
@@ -285,7 +327,12 @@ function fetchAndDisplayClasses(subjectId) {
 
             	    // Create the list item for the class details
             	    var listItem = document.createElement("li");
-            	    listItem.textContent = classItem.name +', Start: ' + classItem.slotStart + ', End: ' + classItem.slotEnd + ', WeekDay: ' + classItem.weekDay + ', Teacher: ' + classItem.teacher.name;
+            	    listItem.textContent = classItem.name +', Start: ' + classItem.slotStart + ', End: ' + classItem.slotEnd + ', WeekDay: ' + classItem.weekDay;
+            	    if(classItem.conflict || classItem.isSameSubject)
+                	    {
+            	    	listItem.textContent += "Conflict Available";
+            	    	container.style.backgroundColor = "red";
+                	    }
             	    container.appendChild(listItem);
 
             	    // Create the button for showing details
@@ -295,8 +342,21 @@ function fetchAndDisplayClasses(subjectId) {
 
             	    // Add event listener to the show detail button
             	    showDetailBtn.addEventListener('click', function () {
-            	        expandListItem(listItem, classItem);
+
+            	    	  var expandedContent = listItem.querySelector(".expanded-content");
+            	    	    if (expandedContent) {
+            	    	        // If already expanded, hide details and change button text to "Show Detail"
+            	    	        collapseListItem(listItem);
+            	    	        showDetailBtn.textContent = "Show Detail";
+            	    	    } else {
+            	    	        // If not expanded, expand details and change button text to "Hide Detail"
+            	    	        expandListItem(listItem, classItem);
+            	    	        showDetailBtn.textContent = "Hide Detail";
+            	    	    }
+            	    	    
             	    });
+
+            	    
             	    container.appendChild(showDetailBtn);
 
             	    // Append the container to the class list
@@ -321,31 +381,167 @@ function expandListItem(listItem, classItem) {
     // Create a container for the expanded content
     expandedContent = document.createElement("div");
     expandedContent.classList.add("expanded-content");
+    expandedContent.style.display = "flex";
+    expandedContent.style.flexDirection = "column";
 
-    // Add details about the class
-    var detailsContainer = document.createElement("div");
+    // Part 1: Info about the class (Teacher, Week Day, Slot Start, Slot End)
+    var infoContainer1 = document.createElement("div");
+    infoContainer1.style.display = "flex";
+    infoContainer1.style.justifyContent = "space-evenly";
+    infoContainer1.style.marginBottom = "10px";
 
-    var teacherDetail = document.createElement("p");
-    teacherDetail.textContent = "Teacher: " + classItem.teacher.name;
-    detailsContainer.appendChild(teacherDetail);
+    var detail1 = document.createElement("p");
+    detail1.innerHTML = "Teacher: " + classItem.teacher.name + "<br><br>Week Day: " 
+    + getWeekdayString(classItem.weekDay) + "<br><br>Slot Start: " + classItem.slotStart + "<br><br>Slot End: " +  classItem.slotEnd ;
+    detail1.style.fontSize = "25px";
+    infoContainer1.appendChild(detail1);
 
-    var weekDayDetail = document.createElement("p");
-    weekDayDetail.textContent = "Week Day: " + classItem.weekDay;
-    detailsContainer.appendChild(weekDayDetail);
+    var detail2 = document.createElement("p");
+    detail2.innerHTML  = "Quantity: " + classItem.quantity + "<br><br>Week Day: " 
+    + getWeekdayString(classItem.weekDay) + "<br><br>Slot Start: " + classItem.slotStart + "<br><br>Slot End: " +  classItem.slotEnd ;
+    detail2.style.fontSize = "25px";
+    infoContainer1.appendChild(detail2);
 
-    var roomDetail = document.createElement("p");
-    roomDetail.textContent = "Room: " + classItem.room.name;
-    detailsContainer.appendChild(roomDetail);
+    expandedContent.appendChild(infoContainer1);
 
-    expandedContent.appendChild(detailsContainer);
+ // Part 2: Table
+    var infoContainer2 = document.createElement("div");
+    infoContainer2.style.marginBottom = "10px";
+
+    // Create and populate the table
+    var table = document.createElement("table");
+    table.style.borderCollapse = "collapse"; // Ensure borders are collapsed
+
+    // Create table headers
+    var tr1 = document.createElement("tr");
+    var slotHeader = document.createElement("th");
+    slotHeader.textContent = "Slot";
+    slotHeader.style.border = "1px solid black"; // Add border
+    tr1.appendChild(slotHeader);
+
+    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]; // Array of days
+    daysOfWeek.forEach(function(day) {
+        var th = document.createElement("th");
+        th.textContent = day;
+        th.style.border = "1px solid black"; // Add border
+        tr1.appendChild(th);
+    });
+    table.appendChild(tr1);
+
+    // Populate the table rows with slot data
+    for (var i = classItem.slotStart; i <= classItem.slotEnd; i++) {
+        var tr = document.createElement("tr");
+
+        // Slot column
+        var slotCell = document.createElement("td");
+        slotCell.textContent = "Slot " + i;
+        slotCell.style.border = "1px solid black"; // Add border
+        tr.appendChild(slotCell);
+
+        // Weekday columns
+        for (var j = 1; j <= 6; j++) { // Assuming weekdays are numbered from 1 to 6
+            var td = document.createElement("td");
+            td.style.border = "1px solid black"; // Add border
+            if (j === classItem.weekDay) { // Check if current column is the weekday column
+                td.style.backgroundColor = "blue"; // Change background color to blue
+            }
+            tr.appendChild(td);
+        }
+
+        table.appendChild(tr);
+    }
+
+    infoContainer2.appendChild(table);
+    expandedContent.appendChild(infoContainer2);
+
+    // Part 3: Register button
+    var registerButton = document.createElement("button");
+    registerButton.textContent = "Register";
+    registerButton.classList.add("register-button");
+    registerButton.style.backgroundColor ="orange";
+    if (classItem.isSameClass || classItem.conflict ) {
+        registerButton.disabled = true;
+        registerButton.style.filter = "blur(1px)";
+    }
+
+    // Add event listener to the register button
+    registerButton.addEventListener('click', function () {
+    	RegisterFunction(classItem);
+    });
+
+    expandedContent.appendChild(registerButton);
 
     // Append the expanded content to the list item
     listItem.appendChild(expandedContent);
+}
 
-    // Set up CSS for columns
-    listItem.style.display = "inline-block";
-    expandedContent.style.display = "block";
-    expandedContent.style.marginTop = "10px";
+
+function RegisterFunction(classItem) {
+    var xhr = new XMLHttpRequest();
+    var url = '/ClassRegister';
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Register Successfully!",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    // Refresh the page after the success message
+  
+                   localStorage.setItem('reopenModalSubjectId', classItem.subject.id);
+                    location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Can't Add to Register List",
+                    text: "Please Try Later",
+                    footer: '<a href="#">Why do I have this issue?</a>',
+                    timer: 1500
+                }).then(() => {
+                        // Refresh the page after the success message
+                        location.reload();
+                });
+            }
+        }
+    };
+    var jsonData = JSON.stringify(classItem);
+    xhr.send(jsonData);
+}
+
+
+function getWeekdayString(weekday) {
+    switch (weekday) {
+        case 1:
+            return "Monday";
+        case 2:
+            return "Tuesday";
+        case 3:
+            return "Wednesday";
+        case 4:
+            return "Thursday";
+        case 5:
+            return "Friday";
+        case 6:
+            return "Saturday";
+        case 7:
+            return "Sunday";
+        default:
+            return "Invalid Weekday";
+    }
+}
+
+function collapseListItem(listItem) {
+    // Your collapseListItem function implementation here
+    var expandedContent = listItem.querySelector(".expanded-content");
+    if (expandedContent) {
+        expandedContent.remove();
+    }
 }
 </script>
 

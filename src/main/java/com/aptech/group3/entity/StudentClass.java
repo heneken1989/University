@@ -3,7 +3,7 @@ package com.aptech.group3.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-
+import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,6 +36,7 @@ public class StudentClass {
 	 private ClassForSubject classforSubject;
 	
 	 private String status;
+	 private Date createDate;
 	
     
 }

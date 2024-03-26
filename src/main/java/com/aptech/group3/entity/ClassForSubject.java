@@ -1,7 +1,8 @@
 package com.aptech.group3.entity;
 
-import java.sql.Date;
-import java.sql.Time;
+
+
+import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,9 +23,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
 @Data
-
+@Entity(name="class_subject")
 public class ClassForSubject {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +34,16 @@ public class ClassForSubject {
 	private Date dateEnd;
 	private int slotStart;
 	private int slotEnd;
-	private int quantity;
+
 	private String description;
 	private String status;
 	private int weekDay;
 	private String style;
+	
+	private int quantity;
+	private int maxQuantity;
+	private int minQuantity;
+	
 	
 	
 	@ManyToOne
@@ -46,19 +51,19 @@ public class ClassForSubject {
 	 private User teacher;
 	
 	
-	@ManyToOne
-	@JoinColumn(name="subject_id" , referencedColumnName="id")
+	 @ManyToOne
+	 @JoinColumn(name="subject_id" , referencedColumnName="id")
 	 private Subject subject;
 	
 	
 
 	  @ManyToOne
-	  @JoinColumn(name="room_id")
+	  @JoinColumn(name="room_id",referencedColumnName="id")
 	  private Room room;
 	  
 	  
 	  @ManyToOne
-	  @JoinColumn(name="semeter_id")
+	  @JoinColumn(name="semeter_id",referencedColumnName="id")
 	  private Semeter semeter;
 	
 }

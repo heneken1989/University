@@ -1,4 +1,4 @@
-package com.aptech.group3.service;
+package com.aptech.group3.serviceImpl;
 
 import java.util.Optional;
 import java.util.Set;
@@ -20,7 +20,7 @@ import com.aptech.group3.model.CustomUserDetails;
 
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;

@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name="semeter")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +22,7 @@ public class Semeter {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	private String name;
+	private int name;
 	private int year;
 	private Date day_start;
 	private Date day_end;

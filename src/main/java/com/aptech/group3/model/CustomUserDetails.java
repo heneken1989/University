@@ -17,7 +17,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    User user;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

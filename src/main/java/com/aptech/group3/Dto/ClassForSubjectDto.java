@@ -32,6 +32,11 @@ public class ClassForSubjectDto {
 	private String style;
 	
 	private Boolean conflict;
-	private Boolean alreadyRegis;
+	private Boolean isSameSubject;
+	private Boolean isSameClass;
+	
+	
+	
+
 	
 }
