@@ -45,7 +45,6 @@ const aTag = document.querySelectorAll(".change_page_href");
 const urlParams = new URLSearchParams(window.location.search);
 const myParam = urlParams.get('semester');
 const subject_list = urlParams.get('subject');
-console.log(myParam,subject_list)
 
 aTag.forEach(a => {
     let text = a.innerHTML;

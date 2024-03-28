@@ -225,7 +225,7 @@ public class SubjectRegisterController {
 			int slotStart = classForSubject.getSlotStart();
 			int slotEnd = classForSubject.getSlotEnd();
 			int weekday = classForSubject.getWeekDay();
-			String semesterType = classForSubject.getStyle();
+			String semesterType = classForSubject.getType();
 			String subjectInfo = classForSubject.getSubject().getName() + " " + classForSubject.getRoom().getName();
 
 			for (int slot = slotStart; slot <= slotEnd; slot++) {

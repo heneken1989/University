@@ -26,7 +26,7 @@ public class Subject {
 	  private Long id;
 	  private String name; // LomBok khong duoc viet hoa
 	  private int credit;
-	  private String style;
+	  private String type;
 	  private Integer creditAction;
 	  
 	  @ManyToOne

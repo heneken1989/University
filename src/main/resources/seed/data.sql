@@ -81,7 +81,7 @@ VALUES
     
     
     
-INSERT IGNORE INTO  class_subject (id, dateEnd, dateStart, description, name, quantity, slotEnd, slotStart,status,style,weekDay,room_id,semeter_id,subject_id,teacher_id) 
+INSERT IGNORE INTO  class_subject (id, dateEnd, dateStart, description, name, quantity, slotEnd, slotStart,status,type,weekDay,room_id,semeter_id,subject_id,teacher_id) 
 VALUES 
     (1, NULL, NULL, 'Class Info', 'Class 1', '30', '3', '1', 'Opened', 'FullSemester', '1', '1', NULL, '1', '2'),
     (2, NULL, NULL, 'Class Info', 'Class 2', '30', '8', '6', 'Opened', 'FirstHaftSemester', '1', '1', NULL, '2', '2'),

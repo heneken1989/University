@@ -1,18 +1,19 @@
 package com.aptech.group3.Dto;
-import java.sql.Date;
 
 
-import java.sql.Time;
+
+import java.util.Date;
 
 import com.aptech.group3.entity.Room;
 import com.aptech.group3.entity.Semeter;
 import com.aptech.group3.entity.Subject;
-import com.aptech.group3.entity.User;
+
 
 import lombok.Data;
 
 
 @Data
+
 public class ClassForSubjectDto {
 
     Long id ;
@@ -29,7 +30,7 @@ public class ClassForSubjectDto {
 	private Subject subject;
 	private Room room;
 	private Semeter semeter;
-	private String style;
+	private String type;
 	
 	private Boolean conflict;
 	private Boolean isSameSubject;

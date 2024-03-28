@@ -31,7 +31,7 @@
 			
 			<select class="custom-select select_subject_create" id="inputGroupSelect01">
     <option th:value="0" th:selected="${data.subject_id == 0}">select subject</option>
-    <option th:each="s : ${subjects}" th:data-id="${s.id}" th:data-check="${s.style}"
+    <option th:each="s : ${subjects}" th:data-id="${s.id}" th:data-check="${s.type}"
             th:selected="${s.id == data.subject_id}" th:value="${s.id}" th:text="${s.name}"
             th:data-credit="${s.credit}" th:data-creditac="${s.creditAction}"></option>
 </select>
@@ -66,12 +66,12 @@
 					<label style="width: 100%" class="input-group-text"
 						for="inputGroupSelect01">Select type</label>
 				</div>
-				<select class="custom-select" th:field="*{style}"
+				<select class="custom-select" th:field="*{type}"
 					id="select_classtype_create">
 					<option th:value="0">Select Subject</option>
-					<option value="FullSemester">all year</option>
-					<option value="FirstHalf">first half year</option>
-					<option value="SecondHalf">last half year</option>
+					<option value="all">all year</option>
+					<option value="fhalf">first half year</option>
+					<option value="lhalf">last half year</option>
 				</select>
 			</div>
 
@@ -178,20 +178,20 @@
 					<label style="width: 100%" class="input-group-text"
 						for="inputGroupSelect01">Select type</label>
 				</div>
-				<select class="custom-select" th:field="*{theory.style}"
+				<select class="custom-select" th:field="*{theory.type}"
 					id="select_classtype_create_theory">
 					<option th:value="0">Select Subject</option>
-				<option value="FullSemester">all year</option>
-					<option value="FirstHalf">first half year</option>
-					<option value="SecondHalf">last half year</option>
+					<option value="all">all year</option>
+					<option value="fhalf">first half year</option>
+					<option value="lhalf">last half year</option>
 				</select>
 				
-				<select class="custom-select" th:field="*{action.style}"
+				<select class="custom-select" th:field="*{action.type}"
 					id="select_classtype_create_action">
 					<option th:value="0">Select Subject</option>
-					<option value="FullSemester">all year</option>
-					<option value="FirstHalf">first half year</option>
-					<option value="SecondHalf">last half year</option>
+					<option value="all">all year</option>
+					<option value="fhalf">first half year</option>
+					<option value="lhalf">last half year</option>
 				</select>
 			</div>
 

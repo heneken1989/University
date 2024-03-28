@@ -15,5 +15,5 @@ public class ClassSubjectBasicDto {
 	private int weekDay;
 	private Long teacher_id;
 	private Long room_id;
-	private String style;
+	private String type;
 }

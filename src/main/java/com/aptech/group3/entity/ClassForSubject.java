@@ -38,7 +38,7 @@ public class ClassForSubject {
 	private String description;
 	private String status;
 	private int weekDay;
-	private String style;
+	private String type;
 	
 	private int quantity;
 	private int maxQuantity;

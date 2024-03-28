@@ -14,19 +14,18 @@ let select_subject = document.querySelector(".select_subject_create");
  let dendTheory;
  let dendAction;
  
+
  
  if($(".select_subject_create").val()!= 0){
 	  let selectedOption = select_subject.options[select_subject.selectedIndex];
 	   let checkType = selectedOption.getAttribute("data-check");
-	    if(checkType=="FullSemester"){
-	   $("#form_create_both").hide()
-	   $("#form_create_one").hide()
-	   
+	    if(checkType=="both"){
+	  oneForm.hide()
 	   $("#form_create_both").show();
    }else{   
 	  
-	   $("#form_create_one").hide()
-	    $("#form_create_one").show();
+	    $("#form_create_both").hide
+	    oneForm.show();
    }
  }
  
@@ -34,6 +33,7 @@ let select_subject = document.querySelector(".select_subject_create");
  let smId=$("#semester_start_create").attr("data-id"); 
  $("#semester_value_create").val(smId);
  // handle after select subject
+ 
 select_subject.addEventListener('change', function(e) {
   let selectedOption = select_subject.options[select_subject.selectedIndex];
   let selectedId = selectedOption.getAttribute("data-id");
@@ -41,21 +41,20 @@ select_subject.addEventListener('change', function(e) {
  credit=selectedOption.getAttribute("data-credit");
  creditAction= selectedOption.getAttribute("data-creditac");
  
- 
- 
- $("#semester_value_create").val(e.target.value)
   $("#subject_value_create").val(e.target.value)
  $("#subject_hidden_creaet_both").val(e.target.value)
- 
-   if(checkType=="FullSemester"){
+ console.log(checkType)
+   if(checkType=="both"){
 	   $("#form_create_both").hide()
 	   $("#form_create_one").hide()
-	   
+	   console.log(1)
+	 
 	   $("#form_create_both").show();
-   }else{   
+   }else{  
+ console.log(2)
 	     $("#form_create_both").hide()
-	   $("#form_create_one").hide()
 	    $("#form_create_one").show();
+	
    }
   $("#subject_hidden_creaet").val(selectedId);
   subject=selectedId
@@ -66,17 +65,14 @@ select_subject.addEventListener('change', function(e) {
   $("#select_classtype_create").parent().show();
   $("#input_capacity_create").parent().show();
   
-   $("#select_startslot_create").attr("data-id",data)
+/*   $("#select_startslot_create").attr("data-id",data)*/
   
 });
 
 //handle onchange capacity
 $("#input_capacity_create").on('change',(e)=>{
 	capacity=e.target.value 
-
-
 })
-
 $("#input_capacity_create_both").on('change',(e)=>{
 	capacity=e.target.value 
 

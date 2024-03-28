@@ -33,6 +33,6 @@ public class ClassSubjectCreateDto {
 	private Long subject_id;
 	private Long room_id;
 	private Long semeter_id;
-	private String style;
+	private String type;
 	
 }
