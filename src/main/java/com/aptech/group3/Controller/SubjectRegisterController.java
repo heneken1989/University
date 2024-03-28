@@ -148,7 +148,7 @@ public class SubjectRegisterController {
 			int newSlotStart = i.getSlotStart();
 			int newSlotEnd = i.getSlotEnd();
 			int newWeekday = i.getWeekDay();
-			String newSemesterType = i.getStyle();
+			String newSemesterType = i.getType();
 			// check conflict SLot
 			boolean hasConflict = checkForScheduleConflict(scheduleTable, newSlotStart, newSlotEnd, newWeekday,
 					newSemesterType);
