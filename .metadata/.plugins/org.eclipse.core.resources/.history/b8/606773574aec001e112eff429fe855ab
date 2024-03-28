@@ -1,0 +1,221 @@
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+layout:decorate="~{/layout}">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Quiz Show</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .question, .question span {
+            font-size: 1.5em;
+
+            padding: 2px;
+            display: block;
+            background-color: #f9f9f9;
+        }
+
+        .answer label {
+            font-size: 1em;
+            padding: 5px;
+            display: block;
+            margin: 5px 0px;
+            border: 1px solid #ddd;
+            background-color: #f1f1f1;
+            cursor: pointer;
+            color: green;
+        }
+
+
+
+        .pagination {
+            margin-top: 20px;
+            font-size: 1em;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+ 
+            font-size: 2em;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+        
+
+/* Custom style for checkbox */
+.answer input[type="checkbox"] {
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+
+/* Pagination and submit button styling */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+  .quiz-container ol {
+    counter-reset: question-counter;  /* Reset the counter for question numbering */
+    list-style: none;                 /* Remove default list style */
+    padding-left: 0;                  /* Remove default padding */
+  }
+
+  .quiz-container li {
+    counter-increment: question-counter; /* Increment the counter */
+    margin-bottom: 10px;                  /* Add some space between the questions */
+    display: flex;                        /* Align checkbox and question text */
+    align-items: center;                  /* Center items vertically */
+  }
+
+  .quiz-container li::before {
+    content: counter(question-counter) "."; /* Add the question number before the label */                   /* Add space after the number */
+    font-weight: bold;                      /* Make the number bold */
+    width: 1em;                             /* Fix width for alignment */
+  }
+
+  .quiz-container .answer input[type="checkbox"] {
+      margin-left: 10px;
+    transform: scale(3); /* Increase the size of the checkboxes */
+  /* Space between the checkbox and the text */
+    cursor: pointer;
+  }
+
+  .quiz-container .answer label {
+    display: flex;                  /* Use flex to position label text next to checkbox */
+    align-items: center;            /* Align items vertically */
+    width: 100%;                    /* Ensure the label takes full width for the click area */
+  }
+
+  .quiz-container .answer label span {
+    flex-grow: 1;                   /* Allow the text to fill the available space */
+  }
+  
+    /* Pagination container styling */
+  .pagination-container {
+    text-align: center; /* Center-align the pagination */
+    margin-top: 20px;  /* Space above the pagination */
+    font-size: 1.2em;  /* Increase the font size for better visibility */
+  }
+
+  .pagination-link {
+    display: inline-block; /* Allows you to set margins and padding */
+    margin: 0 10px; /* Horizontal space between 'Previous', page numbers, and 'Next' */
+    padding: 5px 10px; /* Padding inside the links */
+    text-decoration: none; /* Remove the underline from the links */
+    color: #007bff; /* Bootstrap primary color for links */
+    border: 1px solid #007bff; /* Border to look like a button */
+    border-radius: 5px; /* Rounded corners for the border */
+    transition: background-color 0.2s ease-in-out; /* Smooth transition for hover effect */
+  }
+
+  .pagination-link:hover {
+    background-color: #007bff; /* Background color on hover */
+    color: white; /* Text color on hover */
+  }
+
+  .current-page {
+    font-weight: bold; /* Make the current page number bold */
+  }
+
+  .total-pages {
+    color: #666; /* A subtle color for the total pages */
+  }
+
+
+        
+        
+    </style>
+</head>
+<body>
+<article layout:fragment="content" class="quiz-container">
+    <h2>Quiz Questions</h2>
+    <form th:action="@{/submitQuiz}" method="post">
+        <div th:each="question : ${quizQuestions}" class="question">
+         <input th:value="${question.id}" th:name="questionIds" type="hidden">
+            <span th:text="${question.content}"></span>
+            <div class="answers">
+                <ol>
+                    <li th:each="answer : ${question.quizAnswers}" class="answer">
+                     <label>
+               
+  <input type="checkbox" th:if="${question.type == 'Multi'}" th:name="|answers_${question.id}|" th:value="${answer.id}" data-question-id="${question.id}" />
+  <input type="checkbox" th:if="${question.type == 'Single'}" th:name="|answers_${question.id}|" th:value="${answer.id}" data-question-id="${question.id}" onclick="handleSingleCheckbox(this)" /> 
+                  <span th:text="${answer.content}"></span>
+                    </label>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        
+        
+        
+<div class="pagination-container">
+  <!-- Previous Page Button -->
+  <button type="submit" name="action" value="previous" 
+          th:disabled="${currentPage == 0}" class="pagination-link">Previous</button>
+  
+  <!-- Current Page Indicator -->
+  <span class="current-page" th:text="${currentPage + 1}">1</span> /
+  <span class="total-pages" th:text="${totalPages}">3</span>
+  
+  <!-- Next Page Button -->
+  <button type="submit" name="action" value="next" 
+          th:disabled="${currentPage + 1 >= totalPages}" class="pagination-link">Next</button>
+</div>
+        
+        <!-- Conditionally display the submit button on the last page -->
+        <div th:if="${currentPage +1  == totalPages}">
+     <button type="submit" name="action" value="submitQuiz" class="submit-quiz">Submit Quiz</button>
+        </div>
+    </form>
+    
+<script th:inline="javascript">
+    window.onload = function() {
+        var savedAnswers = /*[[${savedAnswers}]]*/ {};
+        Object.keys(savedAnswers).forEach(function(questionId) {
+            savedAnswers[questionId].forEach(function(answerId) {
+                var checkboxes = document.querySelectorAll('input[type="checkbox"][value="' + answerId + '"]');    
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = true;
+                });
+            });
+        });
+    };
+
+    function handleSingleCheckbox(checkbox) {
+        var questionId = checkbox.dataset.questionId;
+        var checkboxes = document.querySelectorAll('input[type="checkbox"][data-question-id="' + questionId + '"]');
+        checkboxes.forEach(function(otherCheckbox) {
+            if (otherCheckbox !== checkbox) {
+                otherCheckbox.checked = false;
+            }
+        });
+    }
+</script>
+
+
+
+</article>
+</body>
+</html>

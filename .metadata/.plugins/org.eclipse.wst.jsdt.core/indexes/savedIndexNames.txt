@@ -1,0 +1,12 @@
+INDEX VERSION 1.4+C:\Users\huyhi\Desktop\University-main\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+2331978104.index
+1017519065.index
+1897550823.index
+1907879070.index
+2744803431.index
+3126091454.index
+3926367759.index
+1889448014.index
+1770881098.index
+361631813.index
+3835106644.index

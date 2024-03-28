@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>University Planner - UniHub</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>UNIHUB</h1>
+        <div class="module-count">88 Modules</div>
+    </header>
+    <div class="module-grid">
+        <div class="module" style="background-color: #c2ded1;">Cell & Molecular Biology</div>
+        <div class="module" style="background-color: #e0e3d2;">Organic Chemistry</div>
+        <div class="module" style="background-color: #f7d9c4;">Introduction to Accounting</div>
+        <div class="module" style="background-color: #f3d6e4;">Developmental Psychology</div>
+        <div class="module" style="background-color: #f3d6e4;">Macroeconomics</div>
+        <div class="module" style="background-color: #fae8e0;">Marketing</div>
+    </div>
+</div>
+</body>
+</html>
