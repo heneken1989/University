@@ -234,11 +234,11 @@ public class SubjectRegisterController {
 					scheduleTable[slot - 1][2 * (weekday - 1)] = subjectInfo;
 					scheduleTable[slot - 1][2 * (weekday - 1) + 1] = subjectInfo;
 
-				} else if (semesterType.equals("FirstHalf")) {
+				} else if (semesterType.equals("FirstHaftSemester")) {
 					// Populate only the first half of the day
 					scheduleTable[slot - 1][2 * (weekday - 1)] = subjectInfo;
 
-				} else if (semesterType.equals("SecondHalf")) {
+				} else if (semesterType.equals("SecondHalfSemester")) {
 					// Populate only the second half of the day
 					scheduleTable[slot - 1][2 * (weekday - 1) + 1] = subjectInfo;
 

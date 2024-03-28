@@ -27,8 +27,10 @@ VALUES
     
 INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role) 
 VALUES 
-    (2, 'awda', 'awdadw', 'admin', 'ad', 'admin', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'admin');
-
+    (2, 'awda', 'awdadw', 'admin', 'ad', 'admin', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'ADMIN'),
+    (3, 'awda', 'awdadw', 'student', 'ad', 'student', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT'),
+    (4, 'awda', 'awdadw', 'student1', 'ad', 'student1', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT'),
+    (5, 'awda', 'awdadw', 'student2', 'ad', 'student2', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT');
     
     
 INSERT IGNORE INTO  subject (id, name, credit, field_id, subjectlevel_id) 

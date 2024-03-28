@@ -30,8 +30,7 @@ import com.aptech.group3.serviceImpl.UserServiceImpl;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SercurityConfig      {
-  
-    
+
     @Autowired
     UserServiceImpl userService;
     
@@ -67,11 +66,12 @@ public class SercurityConfig      {
                     au.anyRequest().permitAll();
                 })
                 .formLogin(frm -> {
-                    frm.loginPage("/login") // Custom login page
-                      .permitAll()
-                      .defaultSuccessUrl("/index") // Redirect after successful login
-                      .failureUrl("/login?success=false") // Redirect after login failure
-                      .loginProcessingUrl("/j_spring_security_check"); // Login processing URL
+                    frm.loginPage("/login")    
+                    .usernameParameter("email")
+                    .passwordParameter("password")
+                    .permitAll()
+                    .defaultSuccessUrl("/index")   
+                    .failureUrl("/login?sucess=false") ;
                 })
                 .logout(lo -> {
                     lo.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

@@ -51,6 +51,9 @@ public class UserServiceImpl implements UserDetailsService {
         }
     }
     
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
     
     public UserDetails loadUserByUserEmail(String email) {
         // Kiểm tra xem user có tồn tại trong database không?

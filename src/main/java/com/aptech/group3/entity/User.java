@@ -35,7 +35,7 @@ public class User {
 	private String role;
 	private String address;
 	private String avatar;
-
+	private String resetPasswordToken;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
