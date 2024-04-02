@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +23,7 @@ import com.aptech.group3.Dto.ClassSubjectCreateDto;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.Semeter;
 import com.aptech.group3.entity.Subject;
+import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.service.ClassForSubjectService;
 
 import com.aptech.group3.service.SemesterService;
@@ -50,7 +52,7 @@ public class ClassSubjectController {
 	}
 
 	@GetMapping("/list")
-	public String showByField(Model model, 
+	public String showByField(Model model, @AuthenticationPrincipal CustomUserDetails currentUser, 
 			@RequestParam(name = "subject", required = false) Integer sj,
 			@RequestParam(name = "semester", required = false) Integer se,
 			@RequestParam(name = "page", defaultValue = "1") int page) {
@@ -62,7 +64,7 @@ public class ClassSubjectController {
 		model.addAttribute("semesters", SemesterService.findAll());
 		model.addAttribute("currentSemester", selectSemester);
 		model.addAttribute("currentSubject", subjectId);
-		model.addAttribute("subjects",subjectService.getByField(2));
+		model.addAttribute("subjects",subjectService.getByField(currentUser.getUser().getFields().get(0).getId()));
 		
 	
 

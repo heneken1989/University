@@ -45,7 +45,8 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 	@Autowired
 	private ModelMapper mapper;
 
-	
+
+
 	public Page<ClassForSubject> getSubjectByFieldAndSemester(int fieldId, int semesterId,Integer subjectId,Pageable pageable){
 		Page<ClassForSubject> data =classRepository.findByFieldIdAndSubjectId(semesterId,fieldId,  subjectId,  pageable);
 				

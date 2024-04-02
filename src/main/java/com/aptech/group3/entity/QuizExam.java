@@ -1,5 +1,6 @@
 package com.aptech.group3.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -42,5 +43,7 @@ public class QuizExam {
 	    @ManyToOne
 	    @JoinColumn(name = "quiz_id")
 	    private Quiz quiz;
+
+
 	   
 }

@@ -23,11 +23,16 @@ public class CustomUserDetails implements UserDetails {
 	 */
 	private static final long serialVersionUID = 1L;
 	User user;
+	
+	private Long userId;
+	
+
+	
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Mặc định mình sẽ để tất cả là ROLE_USER. Để demo cho đơn giản.
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+        return Collections.singleton(new SimpleGrantedAuthority(user.getRole()));
     }
 
     @Override
@@ -60,7 +65,7 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
-	public CustomUserDetails(Optional<User> user2) {
+	public CustomUserDetails(User user2) {
 		// TODO Auto-generated constructor stub
 	}
 }

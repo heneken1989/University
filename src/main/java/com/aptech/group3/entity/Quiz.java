@@ -32,7 +32,9 @@ public class Quiz {
 	  private float totalMark;
 	  private Date createDate;
 	  
-	
+		@ManyToOne
+		@JoinColumn(name="subject_id")
+		 private Subject subject;
 	   
 	   @OneToMany(mappedBy="quiz", cascade = CascadeType.ALL)
 	   @JsonIgnore

@@ -16,11 +16,12 @@ public interface SubjectService {
 	 public List<Subject> searchSubject(String name, Integer fieldId, Integer levelId);
 	 public List<Subject> findAll();
 	 public int getCredit(int id);
-	 public List<Subject> getByField(int id);
+	 public List<Subject> getByField(Long id);
 	 public Subject saveSubject(Subject sub);
 	 public List<Subject> listSubject();
 	 public void updateSubject(Subject sub);
 	 public List<SubjectDto> findByStudent(User student ,Long field);
     
+
 
 }

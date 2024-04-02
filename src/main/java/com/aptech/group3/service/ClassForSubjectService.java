@@ -22,11 +22,18 @@ public interface ClassForSubjectService {
 	
 	public ClassForSubject findByClassId(int id);
 
-	public Page<ClassForSubject> getSubjectByFieldAndSemester(int fieldId, int semesterId,Integer subjectId,Pageable pageable);
 	
 	
-	// hien
 	public List<ClassForSubjectDto> findBySubjectId(Long id);
+
+		
+	
+
+
+	public Page<ClassForSubject> getSubjectByFieldAndSemester(int fieldId, int semesterId,Integer subjectId,Pageable pageable);
+
+
+
 	
 	
 }

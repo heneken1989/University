@@ -152,6 +152,7 @@ layout:decorate="~{/layout}">
     <h2>Quiz Questions</h2>
     <form th:action="@{/submitQuiz}" method="post">
         <div th:each="question : ${quizQuestions}" class="question">
+        <input  th:value="${question.Quiz.id}" type="hidden" th:name="quizId" >
          <input th:value="${question.id}" th:name="questionIds" type="hidden">
             <span th:text="${question.content}"></span>
             <div class="answers">
@@ -184,7 +185,7 @@ layout:decorate="~{/layout}">
           th:disabled="${currentPage + 1 >= totalPages}" class="pagination-link">Next</button>
 </div>
         
-        <!-- Conditionally display the submit button on the last page -->
+        
         <div th:if="${currentPage +1  == totalPages}">
      <button type="submit" name="action" value="submitQuiz" class="submit-quiz">Submit Quiz</button>
         </div>

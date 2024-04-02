@@ -33,8 +33,6 @@ public interface SubjectRepository extends JpaRepository<Subject,Long> {
 	List<Subject> findSubjectsForStudent(@Param("student") User student, @Param("fieldId") Long fieldId);
 	
 	
-	
-	// Duong
 	 @Query("SELECT s FROM Subject s WHERE " +
 	           "(:name IS NULL OR LOWER(s.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
 	           "(:subjectlevelId IS NULL OR s.subjectlevel.id = :subjectlevelId) AND " +
@@ -44,6 +42,11 @@ public interface SubjectRepository extends JpaRepository<Subject,Long> {
 	 @Query("SELECT s.credit FROM Subject s WHERE s.id= :id ")
 	 int getCreditById(int id);
 	 
-	 List<Subject> findByFieldId(int fieldId);
+	 List<Subject> findByFieldId(Long fieldId);
 
+
+
+//eeee
+	 
+	
 }

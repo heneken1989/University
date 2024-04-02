@@ -104,6 +104,56 @@ VALUES
     (17, NULL, NULL, 'Class Info', 'Class 17 ', '30', '4', '1', 'Opened', 'FullSemester', '1', '1', NULL, '37', '2'),
     (18, NULL, NULL, 'Class Info', 'Class 18 ', '30', '4', '1', 'Opened', 'FullSemester', '1', '1', NULL, '37', '2');
     
+INSERT IGNORE INTO  quiz (duration, totalMark, createDate, id, name, type) 
+VALUES 
+    (NULL, 100, NULL, 1, 'FinalTest', 'Midle');
     
+    
+    INSERT IGNORE INTO  quizexam (totalMark, endDate, id, quiz_id, startDate, user_id) 
+VALUES 
+    (0, NULL, 1, 1, NULL, 3);
+    
+    
+    INSERT IGNORE INTO  quizquestion (mark, id, quiz_id, content, type) 
+VALUES 
+    (20, 1, 1, 'Question 1 Content','Multi'),
+    (20, 2, 1, 'Question 2 Content','Multi'),
+    (20, 3, 1, 'Question 3 Content','Multi'),
+    (20, 4, 1, 'Question 4 Content','Multi'),
+    (20, 5, 1, 'Question 5 Content','Multi');
+    
+    
+    
+        INSERT IGNORE INTO  quizanswer (isTrue, id, quiz_question_id, content) 
+VALUES 
+    (1, 1, 1, 'Answer 1 Content'),
+    (0, 2, 1, 'Answer 2 Content'),
+    (1, 3, 1, 'Answer 3 Content'),
+    (0, 4, 1, 'Answer 4 Content'),
+    
+    (1, 5, 2, 'Answer 1 Content'),
+    (0, 6, 2, 'Answer 2 Content'),
+    (1, 7, 2, 'Answer 3 Content'),
+    (0, 8, 2, 'Answer 4 Content'),
+    
+    (1, 9, 3, 'Answer 1 Content'),
+    (0, 10, 3, 'Answer 2 Content'),
+    (1, 11, 3, 'Answer 3 Content'),
+    (0, 12, 3, 'Answer 4 Content'),
+    
+    
+    (1, 13, 4, 'Answer 1 Content'),
+    (0, 14, 4, 'Answer 2 Content'),
+    (1, 15, 4, 'Answer 3 Content'),
+    (0, 16, 4, 'Answer 4 Content'),
+    
+    (1, 17, 5, 'Answer 1 Content'),
+    (0, 18, 5, 'Answer 2 Content'),
+    (1, 19, 5, 'Answer 3 Content'),
+    (0, 20, 5, 'Answer 4 Content');
+
+
+
+
 
     

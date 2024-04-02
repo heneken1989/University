@@ -1,7 +1,6 @@
 package com.aptech.group3.entity;
 
 import java.util.List;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -40,12 +39,13 @@ public class User {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 	    name = "user_field", 
-	    joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
 	    inverseJoinColumns = @JoinColumn(name = "field_id", referencedColumnName = "id")
 	)
-	  
 	@JsonIgnore
 	  private List<Field> fields;
+	
+	
+
 	
 
 }

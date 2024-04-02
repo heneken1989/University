@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.User;
+import com.aptech.group3.model.CustomUserDetails;
 
 
 
@@ -43,7 +44,7 @@ public class CustomerUserDetailService implements UserDetailsService {
 				  GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
 	              grantList.add(authority);
 				 
-				  UserDetails userDetails = new org.springframework.security.core.userdetails.User(username, user.getPassword(), grantList);
+	              CustomUserDetails userDetails = new CustomUserDetails(user, user.getId());
 				  System.out.println(userDetails);
 				  return userDetails;
 	     		  

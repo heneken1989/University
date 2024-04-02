@@ -1,5 +1,6 @@
 package com.aptech.group3.Controller;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -12,14 +13,18 @@ import java.util.Set;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.auditing.CurrentDateTimeProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.aptech.group3.Repository.ExamQuestionAnswerRepository;
 import com.aptech.group3.Repository.QuizAnswerRepository;
 import com.aptech.group3.Repository.QuizExamRepository;
@@ -29,13 +34,18 @@ import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.ExamQuestionAnswer;
 import com.aptech.group3.entity.Quiz;
 import com.aptech.group3.entity.QuizAnswer;
+import com.aptech.group3.entity.QuizClass;
 import com.aptech.group3.entity.QuizExam;
 import com.aptech.group3.entity.QuizQuestion;
+import com.aptech.group3.entity.StudentClass;
 import com.aptech.group3.entity.User;
+import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.service.ExamQuestionAnswerService;
 import com.aptech.group3.service.QuizAnswerService;
+import com.aptech.group3.service.QuizClassService;
 import com.aptech.group3.service.QuizExamService;
 import com.aptech.group3.service.QuizQuestionService;
+import com.aptech.group3.service.StudentClassService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -72,14 +82,40 @@ public class QuizController {
 	 
 	 @Autowired
 	 private QuizExamService quizExamService;
+	 
+	 @Autowired
+	 private StudentClassService studentClassService;
+	 
+	 @Autowired
+	 private QuizClassService quizClassService;
           
 	@GetMapping("/quiz")
 	@Transactional
-	public String QuizShow(Model model,@RequestParam(defaultValue = "0") int page,HttpSession session) {
-		int pageSize = 1;
-		  Page<QuizQuestion> questionPage = quizQuestionService.findPaginatedQuestionsByQuizId(1L, page, pageSize);
-		  List<Quiz> quizlist = quizRepository.findAll();		 
-		  List<ExamQuestionAnswer>  listexamExamQuestionAnswers = examQuestionAnswerService.findByExamID(2L);
+	public String QuizShow(Model model,@RequestParam(defaultValue = "0") int page,HttpSession session,@RequestParam Long quizId,@AuthenticationPrincipal CustomUserDetails currentUser) {
+	
+		
+		  int pageSize = 1;
+		  Quiz quiz = quizRepository.getById(quizId);
+		  Page<QuizQuestion> questionPage = quizQuestionService.findPaginatedQuestionsByQuizId(quizId, page, pageSize);	 
+		  System.out.print("adadwawdawdawd"+questionPage);
+		  QuizExam quizExam = quizExamService.findExamByStudentId(currentUser.getUserId(), quizId);
+		  
+		   model.addAttribute("quizQuestions", questionPage.getContent());	   
+	       model.addAttribute("currentPage", page);
+	       model.addAttribute("totalPages", questionPage.getTotalPages());
+	       
+		  if(quizExam==null)
+		  {
+			   quizExam = new QuizExam();
+			   quizExam.setQuiz(quiz);
+			   quizExam.setStudent(currentUser.getUser());
+			   quizExam.setTotalMark(0);
+			   quizExamRepository.save(quizExam);
+
+			   return "page/Quiz/index";
+		  }
+
+		  List<ExamQuestionAnswer>  listexamExamQuestionAnswers = examQuestionAnswerService.findByExamID(quizExam.getId());
 		  Map<Long, Set<Long>> savedAnswerss = new HashMap<>();
 		    for (ExamQuestionAnswer examQuestionAnswer : listexamExamQuestionAnswers) {
 		    	   Long questionId = examQuestionAnswer.getQuizQuestion().getId();
@@ -92,47 +128,51 @@ public class QuizController {
 		            answerIds.add(answerId);
 		            savedAnswerss.put(questionId, answerIds);
 		        }
-		    }
-		    
-		    System.out.print("aaaaaaaddwdwdwdwd"+savedAnswerss);		   
-	        model.addAttribute("quizQuestions", questionPage.getContent());
-	        model.addAttribute("currentPage", page);
-	        model.addAttribute("totalPages", questionPage.getTotalPages());
-	     	model.addAttribute("quizlist",quizlist);
+		    }		    		   
+	 
 	     	model.addAttribute("savedAnswers", savedAnswerss);
+	    
 
 		return "page/Quiz/index";
 	}
 	
 	
 	@GetMapping("/result")
-	public String showResult(Model model,@AuthenticationPrincipal UserDetails currentUser) {
-		User u = userRepository.findByEmail(currentUser.getUsername());
-		QuizExam exam = quizExamService.findExamByStudentId(u.getId());
+	public String showResult(Model model,@AuthenticationPrincipal CustomUserDetails currentUser,@RequestParam  Long quizId) {
+
+		QuizExam exam = quizExamService.findExamByStudentId(currentUser.getUserId(),quizId);
+		System.out.print("quiz exam:"+currentUser.getUserId());
+		System.out.print("quiz exam:"+quizId);
 		model.addAttribute("exam", exam);
 		return "/page/Quiz/Result";
 	}
 	
-	
-	
 	@GetMapping("/listQuiz")
-	public String showListQuiz(Model model,@AuthenticationPrincipal UserDetails currentUser) {
-	
+	public String showListQuiz(Model model,@AuthenticationPrincipal CustomUserDetails currentUser) {
+
+		List<StudentClass> listClass = studentClassService.findSubjectByStudentId(currentUser.getUserId());
+		model.addAttribute("listClass",listClass);
 		return "/page/Quiz/QuizList";
 	}
 	
 	
+	@GetMapping("/listQuizByClass")
+	@ResponseBody
+	public List<QuizClass> showListQuizByClass(@RequestParam Long classId) {
+		return  quizClassService.FindQuizByCLassId(classId);
+		
+	}
+	
 	@PostMapping("/submitQuiz")
 	public String handleQuizAction(HttpServletRequest request,
-	                               @RequestParam String action, @RequestParam String questionIds,
+	                               @RequestParam String action, @RequestParam String questionIds,@RequestParam Long quizId,
 	                               HttpSession session) {
 
 	         Map<Integer, Set<String>> answersMap = new HashMap<>();
 	         Integer a = Integer.parseInt(questionIds);
 	         answersMap.put(a, new HashSet<>());
 	         Enumeration<String> paramNames = request.getParameterNames();
-			  QuizExam exam =  quizExamRepository.findById(2L).orElse(null);
-	         
+			  QuizExam exam =  quizExamRepository.findById(1L).orElse(null);	         
              Long questionIdLong = Long.parseLong(questionIds);
              List<ExamQuestionAnswer> listneedtodelete = examQuestionAnswerService.findByQuestionID(questionIdLong);
               for(ExamQuestionAnswer aa :listneedtodelete )
@@ -165,7 +205,7 @@ public class QuizController {
 	        }	        
 
 	        if ("submitQuiz".equals(action)) {
-	        	List<ExamQuestionAnswer> listExamQuestionAnswer = examQuestionAnswerService.findByExamID(2L);
+	        	List<ExamQuestionAnswer> listExamQuestionAnswer = examQuestionAnswerService.findByExamID(1L);
 	        	   Float mark = (float) 0;
 	        	for(ExamQuestionAnswer l :listExamQuestionAnswer )
 	        	{
@@ -223,17 +263,14 @@ public class QuizController {
 	        	
 	        	exam.setTotalMark(mark);
 	        	quizExamRepository.save(exam);
-	        	
-	        	
-	        	
 	        	System.out.print("markkkkkkkkkkkkkkk:  " + mark);
 	         session.removeAttribute("currentPage");
 	         session.removeAttribute("totalPages");
-		        return "redirect:/result";
+	         return "redirect:/result?quizId=" + quizId;
 		    } else {
 	        int nextPage = determineNextPage(action, getCurrentPage(session));
 	        session.setAttribute("currentPage", nextPage);
-	        return "redirect:/quiz?page=" + nextPage;
+	        return "redirect:/quiz?page=" + nextPage+"&quizId=" + quizId;
 	    }
 	}
 	

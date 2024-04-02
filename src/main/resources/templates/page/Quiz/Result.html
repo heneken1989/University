@@ -77,7 +77,7 @@ layout:decorate="~{/layout}">
     </div>
     <div class="overall-score">
         Overall Score
-        <div class="score" th:text="${exam.totalMark}">5.5</div>
+        <div class="score" th:text="${exam.totalMark} + '/100' "></div>
     </div>
     <div class="score-explained">
         Your score explained

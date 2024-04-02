@@ -30,6 +30,7 @@ import com.aptech.group3.entity.StudentClass;
 import com.aptech.group3.entity.Subject;
 import com.aptech.group3.entity.SubjectLevel;
 import com.aptech.group3.entity.User;
+import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.service.ClassForSubjectService;
 import com.aptech.group3.service.StudentClassService;
 import com.aptech.group3.service.SubjectService;
@@ -65,10 +66,11 @@ public class SubjectRegisterController {
 	private ClassForSubjectRepository classForSubjectRepository;
 
 	@GetMapping("/SubjectRegister")
-	public String SubjectRegister(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+	public String SubjectRegister(Model model, @AuthenticationPrincipal CustomUserDetails currentUser) {
 		User user = userservice.getUserByUserEmail(currentUser.getUsername());
 		List<SubjectLevel> subjectLevels = subService.listSubjectLevel();
 		List<Field> fields = user.getFields();
+
 		model.addAttribute("fields", fields);
 		model.addAttribute("subjectlevels", subjectLevels);
 		return "page/RegisterSubject/New";

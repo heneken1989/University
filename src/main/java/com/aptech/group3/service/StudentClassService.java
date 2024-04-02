@@ -12,7 +12,11 @@ import com.aptech.group3.entity.StudentClass;
 @Service
 public interface StudentClassService {
 	public List<StudentClass> findSubjectByStudentId(Long studentId);
+	
 	public List<StudentClass> findEarliestByStatus(String status);
+	
 	public void RegisterClass(ClassForSubjectDto dto, Long userId);
+	
+	public boolean CheckStuentInClass(Long stuentId, Long ClassId);
 	
 }

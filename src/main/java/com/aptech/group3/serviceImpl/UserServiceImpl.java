@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) {
+    public CustomUserDetails loadUserByUsername(String email) {
         // Kiểm tra xem user có tồn tại trong database không?
         User user = userRepository.findByEmail(email);
         if (user == null) {
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserDetailsService {
         return new CustomUserDetails(user);
     }
     
-    public UserDetails loadUserByUserid(Long id) {
+    public CustomUserDetails loadUserByUserid(Long id) {
         System.out.print("aaaaaaaaaaaaaaa"+id);
         // Kiểm tra xem user có tồn tại trong database không?
         Optional<User> userOptional = userRepository.findById(id);
