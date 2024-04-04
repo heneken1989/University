@@ -14,6 +14,8 @@ import com.aptech.group3.entity.Field;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 
+import jakarta.transaction.Transactional;
+
 
 
 
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
+    @Transactional
     public CustomUserDetails loadUserByUsername(String email) {
         // Kiểm tra xem user có tồn tại trong database không?
         User user = userRepository.findByEmail(email);
@@ -34,10 +37,10 @@ public class UserServiceImpl implements UserDetailsService {
         }
         return new CustomUserDetails(user);
     }
-    
+   
     public CustomUserDetails loadUserByUserid(Long id) {
-        System.out.print("aaaaaaaaaaaaaaa"+id);
-        // Kiểm tra xem user có tồn tại trong database không?
+
+
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
@@ -55,6 +58,7 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
     
+    @Transactional
     public UserDetails loadUserByUserEmail(String email) {
         // Kiểm tra xem user có tồn tại trong database không?
         User user = userRepository.findByEmail(email);
@@ -64,7 +68,7 @@ public class UserServiceImpl implements UserDetailsService {
         return new CustomUserDetails(user);
     }
     
-    
+    @Transactional
     public User getUserByUserEmail(String email) {
         // Kiểm tra xem user có tồn tại trong database không?
         User user = userRepository.findByEmail(email);

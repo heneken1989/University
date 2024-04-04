@@ -27,7 +27,7 @@ public class Quiz {
     	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	  private Long id;
 	   private String name;
-	  private Time duration;
+	  private int duration;
 	  private String type;
 	  private float totalMark;
 	  private Date createDate;

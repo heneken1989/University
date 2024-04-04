@@ -15,10 +15,7 @@ import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 
-
-
-
-
+import jakarta.transaction.Transactional;
 
 
 @Service
@@ -31,6 +28,7 @@ public class CustomerUserDetailService implements UserDetailsService {
 	UserRepository userRepository;
 	
 	@Override
+	 @Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		
@@ -39,23 +37,16 @@ public class CustomerUserDetailService implements UserDetailsService {
 	     	  if(user!=null)
 	     	  {
 
-				   System.out.println("aadwawddddddddddd"+user);
 				  List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
 				  GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
-	              grantList.add(authority);
-				 
+	              grantList.add(authority);				 
 	              CustomUserDetails userDetails = new CustomUserDetails(user, user.getId());
-				  System.out.println(userDetails);
 				  return userDetails;
 	     		  
 	     	  }
 	     	  else {
 	           return null;
 			}
-
-
-		
-
 	}
   
 }

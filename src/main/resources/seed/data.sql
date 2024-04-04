@@ -108,11 +108,7 @@ INSERT IGNORE INTO  quiz (duration, totalMark, createDate, id, name, type)
 VALUES 
     (NULL, 100, NULL, 1, 'FinalTest', 'Midle');
     
-    
-    INSERT IGNORE INTO  quizexam (totalMark, endDate, id, quiz_id, startDate, user_id) 
-VALUES 
-    (0, NULL, 1, 1, NULL, 3);
-    
+   
     
     INSERT IGNORE INTO  quizquestion (mark, id, quiz_id, content, type) 
 VALUES 

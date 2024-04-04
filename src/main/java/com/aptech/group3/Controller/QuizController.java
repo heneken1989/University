@@ -1,8 +1,10 @@
 package com.aptech.group3.Controller;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -96,10 +98,9 @@ public class QuizController {
 		
 		  int pageSize = 1;
 		  Quiz quiz = quizRepository.getById(quizId);
-		  Page<QuizQuestion> questionPage = quizQuestionService.findPaginatedQuestionsByQuizId(quizId, page, pageSize);	 
-		  System.out.print("adadwawdawdawd"+questionPage);
+		  Page<QuizQuestion> questionPage = quizQuestionService.findPaginatedQuestionsByQuizId(quizId, page, pageSize);	 		
 		  QuizExam quizExam = quizExamService.findExamByStudentId(currentUser.getUserId(), quizId);
-		  
+	       model.addAttribute("duration", quiz.getDuration());	   
 		   model.addAttribute("quizQuestions", questionPage.getContent());	   
 	       model.addAttribute("currentPage", page);
 	       model.addAttribute("totalPages", questionPage.getTotalPages());
@@ -110,10 +111,22 @@ public class QuizController {
 			   quizExam.setQuiz(quiz);
 			   quizExam.setStudent(currentUser.getUser());
 			   quizExam.setTotalMark(0);
+			   LocalDateTime now = LocalDateTime.now();
+			   quizExam.setStartDate(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
+			   
+			   int duration = quiz.getDuration();
+			   LocalDateTime endDate = now.plusMinutes(duration);
+			   quizExam.setEndDate(Date.from(endDate.atZone(ZoneId.systemDefault()).toInstant()));
+
 			   quizExamRepository.save(quizExam);
 
 			   return "page/Quiz/index";
 		  }
+		  else {
+			  model.addAttribute("quizExamId",quizExam.getId() );
+		        }
+		   
+		  
 
 		  List<ExamQuestionAnswer>  listexamExamQuestionAnswers = examQuestionAnswerService.findByExamID(quizExam.getId());
 		  Map<Long, Set<Long>> savedAnswerss = new HashMap<>();
@@ -141,8 +154,6 @@ public class QuizController {
 	public String showResult(Model model,@AuthenticationPrincipal CustomUserDetails currentUser,@RequestParam  Long quizId) {
 
 		QuizExam exam = quizExamService.findExamByStudentId(currentUser.getUserId(),quizId);
-		System.out.print("quiz exam:"+currentUser.getUserId());
-		System.out.print("quiz exam:"+quizId);
 		model.addAttribute("exam", exam);
 		return "/page/Quiz/Result";
 	}
@@ -165,14 +176,14 @@ public class QuizController {
 	
 	@PostMapping("/submitQuiz")
 	public String handleQuizAction(HttpServletRequest request,
-	                               @RequestParam String action, @RequestParam String questionIds,@RequestParam Long quizId,
+	                               @RequestParam String action, @RequestParam String questionIds,@RequestParam Long quizId,@RequestParam Long quizExamId,
 	                               HttpSession session) {
 
 	         Map<Integer, Set<String>> answersMap = new HashMap<>();
 	         Integer a = Integer.parseInt(questionIds);
 	         answersMap.put(a, new HashSet<>());
 	         Enumeration<String> paramNames = request.getParameterNames();
-			  QuizExam exam =  quizExamRepository.findById(1L).orElse(null);	         
+			 QuizExam exam =  quizExamRepository.findById(quizExamId).orElse(null);	         
              Long questionIdLong = Long.parseLong(questionIds);
              List<ExamQuestionAnswer> listneedtodelete = examQuestionAnswerService.findByQuestionID(questionIdLong);
               for(ExamQuestionAnswer aa :listneedtodelete )
@@ -205,7 +216,7 @@ public class QuizController {
 	        }	        
 
 	        if ("submitQuiz".equals(action)) {
-	        	List<ExamQuestionAnswer> listExamQuestionAnswer = examQuestionAnswerService.findByExamID(1L);
+	        	List<ExamQuestionAnswer> listExamQuestionAnswer = examQuestionAnswerService.findByExamID(quizExamId);
 	        	   Float mark = (float) 0;
 	        	for(ExamQuestionAnswer l :listExamQuestionAnswer )
 	        	{
@@ -233,8 +244,7 @@ public class QuizController {
 	        				   countOrigin += 1;
 	        			   }
 	        		   }
-	        		   float markEachAnswer = (float)(maxMarkPerQuestion/countOrigin);
-	        		   System.out.print("mark each answer:"+ markEachAnswer );
+	        		   float markEachAnswer = (float)(maxMarkPerQuestion/countOrigin);	       
 	        		   for(ExamQuestionAnswer bb: ListAnswers )
 	        		   {
 	        			   if(bb.getQuizAnswer().getIsTrue()==1)
@@ -242,10 +252,6 @@ public class QuizController {
 	        				   countAnswer +=1;
 	        			   }
 	        		   }
-	        		   
-	        		   System.out.print("count :"+ countAnswer + countOrigin );
-	        
-	        		   
 	        		   if((ListAnswers.size()-countAnswer) >= countAnswer ) 
 	        		        {
 						       mark +=0;
@@ -255,15 +261,13 @@ public class QuizController {
 				          	{
 	        			       int totalCorrectAnswer = (countAnswer - (ListAnswers.size()-countAnswer));
 				          		mark += totalCorrectAnswer*markEachAnswer/(ListAnswers.size())   ;
-				          	   System.out.print("countAnswer :" + countAnswer + "ListAnswers.size() :"+ ListAnswers.size() );
-				         	   System.out.print("totalCorrectAnswer :"+ totalCorrectAnswer);
+
 	                    	  }
 	        	     }
 	        	}
 	        	
 	        	exam.setTotalMark(mark);
-	        	quizExamRepository.save(exam);
-	        	System.out.print("markkkkkkkkkkkkkkk:  " + mark);
+	        	quizExamRepository.save(exam);	
 	         session.removeAttribute("currentPage");
 	         session.removeAttribute("totalPages");
 	         return "redirect:/result?quizId=" + quizId;
