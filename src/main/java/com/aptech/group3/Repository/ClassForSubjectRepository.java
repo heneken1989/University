@@ -19,11 +19,6 @@ public interface ClassForSubjectRepository extends JpaRepository<ClassForSubject
 
 	Page<ClassForSubject> findByFieldIdAndSubjectId(int semesterId, int fieldId, Integer subjectId, Pageable pageable);
 	
+	
 	public ClassForSubject findById(int id);
-
-	/*
-	 * ClassForSubject findByIdAndStudents_Id( Long classId, Long studentId);
-	 */	
-
-
 }

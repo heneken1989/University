@@ -20,6 +20,9 @@ public class QuizAnswerServiceImpl implements QuizAnswerService {
 
 	@Autowired
     private QuizAnswerRepository quizAnswerRepository;
+	
+	@Autowired
+    private QuizQuestionRepository questionRepository;
 
 
     
@@ -28,4 +31,9 @@ public class QuizAnswerServiceImpl implements QuizAnswerService {
   
         return quizAnswerRepository.findByQuizQuestionId(quizId);
     }
+    
+    
+ 
+    
+    
 }

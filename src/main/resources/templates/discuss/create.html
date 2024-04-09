@@ -73,45 +73,24 @@
 			<p th:if="${#fields.hasErrors('type')}" th:errors="*{type}"
 				class="text-danger">Name Error</p>
 
-			<div class="input-group  mt-5" id="minuteInput"
-				style="display: none;">
-				<div class="input-group-prepend">
-					<span class="input-group-text" th:text="#{discuss.expired}">Time
-						expired</span>
-				</div>
-				<input type="number" max="60" th:field="*{expried_date}"
-					class="form-control" aria-label="Amount (to the nearest dollar)">
-				<div class="input-group-append">
-					<span class="input-group-text" th:text="#{discuss.minute}">By
-						minute</span>
-				</div>
-			</div>
+		<div class="input-group  mt-5" id="minuteInput" style="display:none;" >
+  <div class="input-group-prepend">
+    <span class="input-group-text" th:text="#{discuss.expired}">Time expired</span>
+  </div>
+  <input  th:field="*{expried_date}"
+  type="number" max="60" 
+  class="form-control"
+   aria-label="Amount (to the nearest dollar)">
+  <div class="input-group-append">
+    <span class="input-group-text" id="span_show_type_edit_minute" th:text="#{discuss.minute}">By minute</span>
+     <span class="input-group-text" id="span_show_type_edit_day" th:text="#{discuss.day}">By day</span>
+      <span class="input-group-text" id="span_show_type_edit_hour" th:text="#{discuss.hour}">By hour</span>
+  </div>
+</div>
 
-			<div class="input-group mt-5" id="hourInput" style="display: none;">
-				<div class="input-group-prepend">
-					<span class="input-group-text" th:text="#{discuss.expired}">Time
-						expired</span>
-				</div>
-				<input type="number" max="60" th:field="*{expried_date}"
-					class="form-control" aria-label="Amount (to the nearest dollar)">
-				<div class="input-group-append">
-					<span class="input-group-text" th:text="#{discuss.hour}">By
-						hour</span>
-				</div>
-			</div>
+	
 
-			<div class="input-group  mt-5" id="dayInput" style="display: none;">
-				<div class="input-group-prepend">
-					<span class="input-group-text" th:text="#{discuss.expired}">Time
-						expired</span>
-				</div>
-				<input type="number" max="60" th:field="*{expried_date}"
-					class="form-control" aria-label="Amount (to the nearest dollar)">
-				<div class="input-group-append">
-					<span class="input-group-text" th:text="#{discuss.day}">By
-						day</span>
-				</div>
-			</div>
+	
 			<p th:if="${#fields.hasErrors('expried_date')}"
 				th:errors="*{expried_date}" class="text-danger mb-4">Name Error</p>
 

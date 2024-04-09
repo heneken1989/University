@@ -67,9 +67,6 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 		return classRepository.findById(id);
 	}
 	
-	
-	
-
 	public void create(ClassSubjectCreateDto data) {
 		try {
 			ClassForSubject sclass = mapper.map(data, ClassForSubject.class);

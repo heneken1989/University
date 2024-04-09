@@ -18,6 +18,7 @@ public interface SubjectRepository extends JpaRepository<Subject,Long> {
 	Optional<Subject> findById(Long id);
 	List<Subject> findByNameContainingIgnoreCase(String name);
 	List<Subject> findBySubjectlevelId(Long id);
+	List<Subject> findBySubjectlevelIdAndFieldId(Long id,Long fieldId);
 	
 	@Query("SELECT DISTINCT s FROM class_subject cfs " +
 	        "JOIN cfs.subject s " +

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aptech.group3.Dto.ClassForSubjectDto;
+import com.aptech.group3.Dto.TimeTableShowDto;
 import com.aptech.group3.Repository.ClassForSubjectRepository;
 import com.aptech.group3.Repository.StudentClassRepository;
 import com.aptech.group3.Repository.UserRepository;
@@ -34,8 +35,31 @@ public class StudentClassServiceImpl implements StudentClassService {
 
 	@Autowired
 	private ModelMapper mapper;
+	
+	public List<TimeTableShowDto> getCurrentTimeTable(Long studentId, Date dateStart, Date dateEnd, Long semesterId) {
+
+		List<TimeTableShowDto> data = repo.getcalendar(studentId, dateStart, dateEnd, semesterId).stream().map(e->{
+			TimeTableShowDto dto = new TimeTableShowDto();
+			dto.setEndSlot(e.getClassforSubject().getSlotEnd());
+			dto.setStartSlot(e.getClassforSubject().getSlotStart());
+			dto.setName(e.getClassforSubject().getName());
+			dto.setRoom(e.getClassforSubject().getRoom().getName());
+			dto.setWeekDay(e.getClassforSubject().getWeekDay());
+			return dto;
+			
+		}).toList();
+
+		return data;
+	}
+	
+	
 
 	public boolean CheckStuentInClass(Long stuentId, Long ClassId) {
+		
+
+		
+		
+		
 
 		StudentClass check = repo.findByStudent_IdAndClassforSubject_Id(stuentId, ClassId);
 		if (check == null) {

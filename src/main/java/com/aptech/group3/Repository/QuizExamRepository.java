@@ -10,4 +10,6 @@ import com.aptech.group3.entity.QuizExam;
 public interface QuizExamRepository extends JpaRepository<QuizExam, Long> {
          
 	 public QuizExam findByStudentIdAndQuizId(Long studentId, Long quizId);
+	 
+	 public List<QuizExam> findByStudentIdAndClassForSubjectId(Long studentId, Long classId);
 }

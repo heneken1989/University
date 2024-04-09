@@ -8,19 +8,21 @@ layout:decorate="~{/layout}">
 <link rel="stylesheet" href="styles.css">
 <style type="text/css">
 
-body, h1 {
+body, h1, h2, h3, p {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .container {
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
-    text-align: center;
+    text-align: center; /* Align text to the left for a more traditional look */
+    border: 1px solid #ddd; /* Subtle border */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06); /* Soft shadow for depth */
+    background-color:#FFE7C3;
 }
-
 header h1 {
     color: #333;
     margin-bottom: 10px;
@@ -29,24 +31,29 @@ header h1 {
 .module-count {
     color: #666;
     margin-bottom: 20px;
+    font-size: 16px; /* Slightly larger font size */
 }
 
 .module-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .module {
-    border-radius: 15px;
-    padding: 20px;
-    font-size: 14px;
-    color: #333;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100px;
+    height:100px;
+    background-color:#C1D8C3;
+    border-radius: 5px; /* Less pronounced border-radius */
+    padding: 15px; /* Adequate padding */
+    font-size: 30px; /* Readable font size */
+    color: #333; /* Darker text for better readability */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow */
+    transition: transform 0.2s ease; /* Smooth transition for hover effect */
+}
+
+.module:hover {
+    transform: translateY(-3px); /* Slight lift on hover */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Shadow increases on hover */
 }
 
 /* For responsive design */
@@ -55,22 +62,21 @@ header h1 {
         margin: 10px;
         padding: 10px;
     }
+    /* Adjust font sizes for smaller screens as needed */
 }
 
+
     .content-container {
+           background-color:#C1D8C3;
         display: flex;
         justify-content: space-between;
         gap: 20px;
     }
 
-    .quiz-list-container {
-        max-width: 600px;
-        padding: 20px;
-        text-align: center;
-        display: none; /* Initially hidden */
-    }
+
 
     .quiz-list {
+    
         border-radius: 15px;
         padding: 20px;
         font-size: 14px;
@@ -95,31 +101,51 @@ header h1 {
     }
 
     .quiz-list-container {
-        background-color: #fff; /* For visibility */
+        background-color:#FFE7C3; /* For visibility */
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        border-radius: 15px;
+        border-radius: 5px;
+  
+        width: 500px; /* Adjust width as needed */
+        border: 2px solid #000;
+        max-width: 900px;
+        padding: 20px;
+        text-align: center;
         display: none; /* Initially hidden */
-        width: 300px; /* Adjust width as needed */
     }
 
     .quiz-item {
-        background-color: #f9f9f9; /* Light grey background */
-        border: 1px solid #ddd; /* Light grey border */
-        margin-bottom: 10px; /* Space between items */
+        background-color: #f9f9f9; 
+        border: 1px solid #ddd;
+        margin-bottom: 10px; 
         padding: 15px;
-        border-radius: 5px; /* Rounded corners for the quiz items */
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Slight shadow for each item */
+        border-radius: 5px; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    
+    .time-ended {
+    background-color: #ff6347; /* Red color */
+    color: white; /* Text color */
+}
+
+.active-module {
+    background-color: #4CAF50; /* or any color you like */
+}
 
 </style>
 </head>
 <body layout:fragment="content">
+
+<!-- Error Message here  -->
+<div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+    <p th:text="${errorMessage}"></p>
+</div>
+
 <div class="flex-container">
     <!-- Class List Container -->
     <div class="container">
         <header>
-            <h1>LIST CLASS THIS SEMESTER</h1>
-            <div class="module-count">88 Modules</div>
+            <h3>LIST CLASS THIS SEMESTER</h3>
+            <div class="module-count"></div>
         </header>
         <div class="module-grid">
             <!-- Class modules here -->
@@ -131,7 +157,7 @@ header h1 {
 
     <!-- Quiz List Container, now to the right of the Class List Container -->
     <div class="quiz-list-container" id="quizListContainer">
-        <!-- Quiz list items will be populated here -->
+      
     </div>
 </div>
 
@@ -139,6 +165,19 @@ header h1 {
 <script>
 // Function to show the quiz list for the selected class
 function showQuizList(classId) {
+
+    var modules = document.querySelectorAll('.module');
+    modules.forEach(function(module) {
+        module.classList.remove('active-module');
+    });
+
+    modules.forEach(function(module) {
+        if (module.getAttribute('data-class-id') === classId.toString()) {
+            module.classList.add('active-module');
+        }
+    });
+
+    
     var xhr = new XMLHttpRequest();
     var url = '/listQuizByClass?classId=' + classId;
     xhr.open('GET', url, true);
@@ -147,17 +186,34 @@ function showQuizList(classId) {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log(xhr.responseText);
             var quizzes = JSON.parse(xhr.responseText);
+            if (quizzes.length > 0)
+                {
 
-            // Generate the quiz list HTML only after the data has been fetched
-            var quizListHtml = quizzes.map(function(quiz) {
-                return `
-                    <div class="quiz-item">
-                        <h3>${quiz.classForSubject.name} - ${quiz.quiz.name}</h3>
-                        <p>Quiz details: ${quiz.quiz.details}</p>
-                        <button onclick="startQuiz('${quiz.quiz.id}')">Start Quiz</button>
-                    </div>
-                `;
-            }).join('');
+                var quizListHtml = quizzes.map(function(quiz) {
+                    
+                    var currentTime = new Date().getTime();
+                  
+                    var endTime = new Date(quiz.endDate);
+                    var endTimeMilliseconds = endTime.getTime(); 
+                    var disabled = currentTime > endTimeMilliseconds;
+                    var buttonText = disabled ? 'Time Ended' : 'Start Quiz';
+                    var buttonClass = disabled ? 'time-ended' : '';
+                    return `
+                        <div class="quiz-item"
+                  
+                            <h3>${quiz.classForSubject.name} - ${quiz.classForSubject.subject.name}</h3>
+                            <p>Type Exam: ${quiz.quiz.type} TEST </p>
+                            <p>Quiz Durtion: ${quiz.quiz.duration} Minute </p>
+                            <button onclick="startQuiz('${quiz.quiz.id}')" ${disabled ? 'disabled' : ''} class="${buttonClass}">${buttonText}</button>
+                        </div>
+                    `;
+                }).join('');
+                }
+
+            else
+            {
+            	  quizListHtml = '<div class="no-quiz-message">YOU DONT HAVE ANY QUIZ!!!</div>';
+            }
 
             // Update the quiz list container with the fetched quizzes
             var quizListContainer = document.getElementById('quizListContainer');

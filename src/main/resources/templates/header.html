@@ -1,5 +1,37 @@
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<title>Create</title>
+ <meta charset="utf-8">
+</head>
+<body>  
+   
+   
     <header id="header" style="margin-bottom:10px">
+    
+
+    
               <div class="logo">
                 <a href="index.html">Ramayana</a>
+                
               </div>
+              
+                                <div class="dropdown-menu">
+  <h6 class="dropdown-header">Dropdown header</h6>
+ 
+</div>
+
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+   Language
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+     <a class="dropdown-item"href="?lang=en" th:text="#{label.lang.en}">eng</a>
+  <a class="dropdown-item" href="?lang=vi" th:text="#{label.lang.vi}">Another vi</a>
+  </div>
+</div>
             </header>
+</body>
+</html>

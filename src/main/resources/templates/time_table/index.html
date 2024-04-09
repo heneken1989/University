@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{/layout}">
+<head>
+<title>Content</title>
+<style>
+.schedule-table th, .schedule-table td {
+	text-align: center;
+	vertical-align: middle;
+}
+</style>
+</head>
+<body>
+	<div layout:fragment="content" class="card ml-4" style="width: 100%">
+		<div class="mt-3">
+			<h2 class="text-center" th:text="#{schedule.head}">Weekly Schedule</h2>
+			<form th:action="@{/time_table/show}" method="get"
+				id="form_search_time_table"
+				class="d-flex align-items-center justify-content-between pl-2 pr-2 mb-3 mt-3">
+				<div>
+					<span th:text="#{label.semester}">Semester :</span> 
+					<select name="semester" id="slect_semester_time_table">
+		
+						<option id="slect_semester_time_table" th:each="s : ${semester}"
+							th:selected="${s.id==currentSemester.id}" th:value="${s.id}"
+							th:text="#{label.semester} +' '+ ${s.name} + ' ' + ${s.year} + '-' + (${s.year} + 1)">Senester
+							1 2024-2025</option>
+
+					</select>
+				</div>
+
+				<div>
+					<span th:text="#{label.week} + ':'"> week :</span> 
+					<select id="select_week_search_time_table" name="week">
+						<option th:each=" w : ${weeks}"
+						th:value="${w.week}"
+							th:selected="${currentweek.week==w.week}"
+							th:text="#{label.week} + ' ' +${w.week}" th:object="${w}">week 1</option>	
+					</select> 
+					
+					<span th:text="#{label.from}"  class="ml-3"> From :</span> 
+					<input class="text-center"
+						th:value="${#dates.format(currentweek.start_day, 'dd-MM-yyyy')}"
+						readonly> 
+						
+						<span class="ml-2" th:text="#{label.to}"> to :</span>
+						<input
+						class="text-center" 
+						th:value="${#dates.format(currentweek.end_day, 'dd-MM-yyyy')}"
+						readonly>
+
+				</div>
+			</form>
+			<table class="table table-bordered schedule-table "
+				style="height: 60vh">
+				<thead>
+					<tr>
+						<th scope="col" th:text="#{schedule.day.slot}">Tiết</th>
+						<th scope="col" th:text="#{schedule.day.2}">Thứ Hai</th>
+						<th scope="col" th:text="#{schedule.day.3}">Thứ Ba</th>
+						<th scope="col" th:text="#{schedule.day.4}">Thứ Tư</th>
+						<th scope="col" th:text="#{schedule.day.5}">Thứ Năm</th>
+						<th scope="col" th:text="#{schedule.day.6}">Thứ Sáu</th>
+						<th scope="col" th:text="#{schedule.day.7}">Thứ Bảy</th>
+						<th scope="col" th:text="#{schedule.day.8}">Chủ Nhật</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					<tr th:each="i, rowStat : ${#numbers.sequence(1, 12)}">
+						<th scope="row" style="padding: 0" th:text="#{schedule.day.slot}+ ' ' + ${i}">Tiết1</th>
+							
+						<td style="padding: 0" th:each="index,day : ${#numbers.sequence(1, 7)}" ></td>
+						
+						
+						
+					
+						
+						
+						
+						
+						
+						
+					
+
+
+					</tr>
+
+				</tbody>
+			</table>
+
+			<div style="width: 100%" class="d-flex justify-content-center">
+				<button th:text="#{schedule.week.first}" class="mr-3">first week</button>
+				<button th:text="#{schedule.week.previous}" class="mr-3">Previous week</button>
+				<button th:text="#{schedule.week.next}" class="mr-3">next week</button>
+				<button th:text="#{schedule.week.last}">last week</button>
+			</div>
+		</div>
+
+		<!--  th:if="${i == listsubject.get(it-1).startSlot && index==listsubject.get(it-1).weekDay}"  -->
+	</div>
+</body>
+</html>
+
+
+
+
+<!-- <tr th:each="i, rowStat : ${#numbers.sequence(1, 12)}">
+    <th scope="row" style="padding:0" th:text="'Tiết ' + ${i}">Tiết 1</th>
+   <div th:each="it,test : ${#numbers.sequence(1, listsubject.size())}" >
+
+  <td th:each="index,day : ${#numbers.sequence(1, 7)}" style="padding:0" 
+      th:if="${i==1 && index==3}"
+    th:rowspan="${listsubject.get(it-1).endSlot - listsubject.get(it-1).startSlot +1}">
+</td>
+</div>
+<td th:each="day,index : ${#numbers.sequence(1, 7)}" style="padding:0" 
+    th:if="${index != 1}">
+</td>
+    
+
+</tr> -->

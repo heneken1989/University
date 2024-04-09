@@ -9,6 +9,8 @@ import com.aptech.group3.entity.Semeter;
 
 public interface SemesterRepository extends JpaRepository<Semeter, Long> {
     
+	public Semeter findById(int id);
+    
 	@Query("SELECT s FROM semeter s where s.year= :year and s.name= :name")
     public Semeter currentSemester( int year, int name);
 }

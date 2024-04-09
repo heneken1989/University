@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.aptech.group3.Dto.DiscussRoomDto;
+import com.aptech.group3.Dto.DiscussRoomEditDto;
+import com.aptech.group3.Dto.RoleList;
 import com.aptech.group3.entity.DiscussRoom;
 import com.aptech.group3.entity.Semeter;
 import com.aptech.group3.entity.TeacherRegisted;
@@ -55,19 +59,17 @@ public class DiscussController {
 	public String list(Model model, @PathVariable(name = "id") Long id ,@AuthenticationPrincipal CustomUserDetails currentUser) {
 	
 		model.addAttribute("data", service.getList(id));
-		model.addAttribute("role",currentUser.getAuthorities().toString() );
+		model.addAttribute("role",currentUser.getUser().getRole() );
 	
-		
+	
 		return "discuss/list";
 	}
 	
-	@GetMapping("/room/edit/{id}")
-	public String showEdit(Model model, @PathVariable(name = "id") Long id ,
+	@GetMapping("/edit/{id}")
+	public String showEdit(Model model,  
+			@PathVariable(name = "id") Long id ,
 			@AuthenticationPrincipal CustomUserDetails currentUser) {
-	
-		
-		
-		if(currentUser.getAuthorities().toString()!="TEACHER") {
+		if(!currentUser.getUser().getRole().equals(RoleList.TEACHER.toString())) {
 			return "redirect:/discuss/room";
 		}else {
 			boolean checkTeacher = service.checkTeacherInRoom(id, currentUser.getUserId());
@@ -75,9 +77,23 @@ public class DiscussController {
 				return "redirect:/discuss/room";
 			}
 		}
-		model.addAttribute("data",service.getById(id.intValue()));
+		DiscussRoomEditDto data=service.createEditDto(id);
+		model.addAttribute("data",data);	
+		
 		return "discuss/edit";
 	}
+	
+	@PostMapping("/edit/{id}")
+	public String edit(Model model, @PathVariable(name = "id") Long id,@AuthenticationPrincipal CustomUserDetails currentUser,
+			@ModelAttribute("data") @Valid DiscussRoomEditDto data, BindingResult bindingResult) {
+		
+	
+	Long result=	service.edit(data, id);
+		
+	return "redirect:/discuss/list/"+result;
+	}
+	
+	
 
 	@GetMapping("/create")
 	public String showCreate(Model model, @AuthenticationPrincipal CustomUserDetails currentUser) {
@@ -122,7 +138,7 @@ public class DiscussController {
 		model.addAttribute("topic",data.getTopic());
 		model.addAttribute("room", id);
 		model.addAttribute("messages",messageService.getMessageByRoomId((long)id));
-		if (currentUser.getAuthorities().toString() == "TEACHER") {
+		if (currentUser.getUser().getRole().equals(RoleList.TEACHER.toString())) {
 			boolean checkTeacher = service.checkTeacherInRoom((long)id, currentUser.getUserId());
 			if (checkTeacher) {
 				return "discuss/chat";

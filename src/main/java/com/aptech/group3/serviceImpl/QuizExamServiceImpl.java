@@ -24,8 +24,16 @@ public class QuizExamServiceImpl implements QuizExamService {
 	@Autowired
     private QuizExamRepository quizExamRepository;
       
-	public QuizExam findExamByStudentId(Long id ,Long quizId)
+	public QuizExam findExamByStudentIdAndQuizId(Long id ,Long quizId)
 	{
 		return quizExamRepository.findByStudentIdAndQuizId(id, quizId);
 	}
+	
+	
+	public List<QuizExam> findExamByStudentIdAndClassId(Long studentId ,Long classId)
+	{
+		return quizExamRepository.findByStudentIdAndClassForSubjectId(studentId, classId);
+	}
+	
+	
 }

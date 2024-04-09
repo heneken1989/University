@@ -45,7 +45,7 @@ layout:decorate="~{/layout}">
             padding: 10px 20px;
  
             font-size: 2em;
-            background-color: #5cb85c;
+            background-color:#25705f;
             color: white;
             border: none;
             cursor: pointer;
@@ -53,7 +53,7 @@ layout:decorate="~{/layout}">
         }
 
         button[type="submit"]:hover {
-            background-color: #4cae4c;
+            background-color:#afc9c3;
         }
 
         a {
@@ -62,7 +62,6 @@ layout:decorate="~{/layout}">
         }
         
 
-/* Custom style for checkbox */
 .answer input[type="checkbox"] {
     margin-right: 20px;
     cursor: pointer;
@@ -96,42 +95,44 @@ layout:decorate="~{/layout}">
 
   .quiz-container .answer input[type="checkbox"] {
       margin-left: 10px;
-    transform: scale(3); /* Increase the size of the checkboxes */
-  /* Space between the checkbox and the text */
+    transform: scale(3); 
     cursor: pointer;
   }
 
   .quiz-container .answer label {
-    display: flex;                  /* Use flex to position label text next to checkbox */
-    align-items: center;            /* Align items vertically */
-    width: 100%;                    /* Ensure the label takes full width for the click area */
+    display: flex;                
+    align-items: center;          
+    width: 100%;                   
   }
 
   .quiz-container .answer label span {
-    flex-grow: 1;                   /* Allow the text to fill the available space */
+    flex-grow: 1;          
   }
   
     /* Pagination container styling */
   .pagination-container {
-    text-align: center; /* Center-align the pagination */
-    margin-top: 20px;  /* Space above the pagination */
-    font-size: 1.2em;  /* Increase the font size for better visibility */
+    text-align: center; 
+    margin-top: 20px; 
+    font-size: 0.9em;  
+     display: flex; 
+    justify-content: center;
+    align-items: center; 
   }
 
   .pagination-link {
-    display: inline-block; /* Allows you to set margins and padding */
-    margin: 0 10px; /* Horizontal space between 'Previous', page numbers, and 'Next' */
-    padding: 5px 10px; /* Padding inside the links */
-    text-decoration: none; /* Remove the underline from the links */
-    color: #007bff; /* Bootstrap primary color for links */
-    border: 1px solid #007bff; /* Border to look like a button */
-    border-radius: 5px; /* Rounded corners for the border */
-    transition: background-color 0.2s ease-in-out; /* Smooth transition for hover effect */
+    display: inline-block; 
+    margin: 0 10px; 
+    padding: 5px 10px; 
+    text-decoration: none; 
+    color: #007bff;
+    border: 1px solid #007bff; 
+    border-radius: 5px; 
+    transition: background-color 0.2s ease-in-out;
   }
 
   .pagination-link:hover {
-    background-color: #007bff; /* Background color on hover */
-    color: white; /* Text color on hover */
+    background-color: #007bff; 
+    color: white; 
   }
 
   .current-page {
@@ -196,7 +197,7 @@ layout:decorate="~{/layout}">
 
 <body>
 <article layout:fragment="content" class="quiz-container">
-    <h2>Quiz Questions</h2>
+
     
    <div id="timer">
     <div class="timer-part">
@@ -238,23 +239,26 @@ layout:decorate="~{/layout}">
         
         
 <div class="pagination-container">
-  <!-- Previous Page Button -->
-  <button type="submit" name="action" value="previous" 
-          th:disabled="${currentPage == 0}" class="pagination-link">Previous</button>
+    <!-- Previous Page Button -->
+    <button type="submit" name="action" value="previous" 
+            th:disabled="${currentPage == 0}" class="pagination-link">Previous</button>
   
-  <!-- Current Page Indicator -->
-  <span class="current-page" th:text="${currentPage + 1}">1</span> /
-  <span class="total-pages" th:text="${totalPages}">3</span>
+    <!-- Current Page Indicator -->
+    <span class="current-page" th:text="${currentPage + 1}">1</span> /
+    <span class="total-pages" th:text="${totalPages}">3</span>
   
-  <!-- Next Page Button -->
-  <button type="submit" name="action" value="next" 
-          th:disabled="${currentPage + 1 >= totalPages}" class="pagination-link">Next</button>
+    <!-- Next Page Button -->
+    <button type="submit" name="action" value="next" 
+            th:disabled="${currentPage + 1 >= totalPages}" class="pagination-link">Next</button>
+    
+    <!-- Submit Quiz Button -->
+    <!-- Conditionally display the button using inline style for visibility -->
+    <button type="submit" name="action" value="submitQuiz" 
+            class="pagination-link submit-quiz" 
+            th:style="${currentPage + 1 == totalPages} ? 'visibility:visible;' : 'visibility:hidden;'">
+        Submit Quiz
+    </button>
 </div>
-        
-        
-        <div th:if="${currentPage +1  == totalPages}">
-     <button type="submit" name="action" value="submitQuiz" class="submit-quiz" >Submit Quiz</button>
-        </div>
         
         
     </form>

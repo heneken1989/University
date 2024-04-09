@@ -43,15 +43,11 @@ select_subject.addEventListener('change', function(e) {
  
   $("#subject_value_create").val(e.target.value)
  $("#subject_hidden_creaet_both").val(e.target.value)
- console.log(checkType)
    if(checkType=="both"){
 	   $("#form_create_both").hide()
 	   $("#form_create_one").hide()
-	   console.log(1)
-	 
 	   $("#form_create_both").show();
    }else{  
- console.log(2)
 	     $("#form_create_both").hide()
 	    $("#form_create_one").show();
 	
@@ -65,7 +61,7 @@ select_subject.addEventListener('change', function(e) {
   $("#select_classtype_create").parent().show();
   $("#input_capacity_create").parent().show();
   
-/*   $("#select_startslot_create").attr("data-id",data)*/
+ $("#select_startslot_create").attr("data-id",credit)
   
 });
 

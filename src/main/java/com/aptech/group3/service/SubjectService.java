@@ -21,6 +21,8 @@ public interface SubjectService {
 	 public List<Subject> listSubject();
 	 public void updateSubject(Subject sub);
 	 public List<SubjectDto> findByStudent(User student ,Long field);
+	 
+		public List<Subject> getByFieldAndLevel(Long id,Long fieldId);
     
 
 

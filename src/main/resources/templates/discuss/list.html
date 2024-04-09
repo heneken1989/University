@@ -29,7 +29,7 @@
 		</div>
 		<div>
 			<a th:href="@{'/discuss/room/'+*{id}}" class="btn btn-info">join</a>
-		<a th:if="${role=='TEACHER'}" th:href="@{'/discuss/room/edit/'+*{id}}" class="btn btn-warning ml-4">edit</a>
+		<a th:if="${role=='TEACHER'}" th:href="@{'/discuss/edit/'+*{id}}" class="btn btn-warning ml-4">edit</a>
 		</div>
 	
 		</div>

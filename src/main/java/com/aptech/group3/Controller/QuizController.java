@@ -17,22 +17,31 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.auditing.CurrentDateTimeProvider;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.aptech.group3.Dto.ClassSubjectCreateDto;
+import com.aptech.group3.Dto.QuizCreateDto;
+import com.aptech.group3.Dto.QuizQuestionCreateDto;
 import com.aptech.group3.Repository.ExamQuestionAnswerRepository;
 import com.aptech.group3.Repository.QuizAnswerRepository;
 import com.aptech.group3.Repository.QuizExamRepository;
 import com.aptech.group3.Repository.QuizQuestionRepository;
 import com.aptech.group3.Repository.QuizRepository;
 import com.aptech.group3.Repository.UserRepository;
+import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.ExamQuestionAnswer;
 import com.aptech.group3.entity.Quiz;
 import com.aptech.group3.entity.QuizAnswer;
@@ -47,17 +56,23 @@ import com.aptech.group3.service.QuizAnswerService;
 import com.aptech.group3.service.QuizClassService;
 import com.aptech.group3.service.QuizExamService;
 import com.aptech.group3.service.QuizQuestionService;
+import com.aptech.group3.service.QuizService;
 import com.aptech.group3.service.StudentClassService;
 
+import groovyjarjarantlr4.v4.parse.ANTLRParser.action_return;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 
 @Controller
 public class QuizController {
 	
 	@Autowired
 	private QuizRepository quizRepository;
+	@Autowired
+	private QuizService quizService;
 	@Autowired
 	private QuizQuestionRepository quizQuestionRepository;
 	@Autowired
@@ -90,44 +105,43 @@ public class QuizController {
 	 
 	 @Autowired
 	 private QuizClassService quizClassService;
+	 
+
           
 	@GetMapping("/quiz")
 	@Transactional
-	public String QuizShow(Model model,@RequestParam(defaultValue = "0") int page,HttpSession session,@RequestParam Long quizId,@AuthenticationPrincipal CustomUserDetails currentUser) {
-	
-		
-		  int pageSize = 1;
-		  Quiz quiz = quizRepository.getById(quizId);
-		  Page<QuizQuestion> questionPage = quizQuestionService.findPaginatedQuestionsByQuizId(quizId, page, pageSize);	 		
-		  QuizExam quizExam = quizExamService.findExamByStudentId(currentUser.getUserId(), quizId);
+	public String QuizShow(Model model,@RequestParam(defaultValue = "0") int page,RedirectAttributes redirectAttributes,HttpSession session,@RequestParam Long quizId,@AuthenticationPrincipal CustomUserDetails currentUser) {
+
+		   int pageSize = 1;
+		   Quiz quiz = quizRepository.getById(quizId);
+		   Page<QuizQuestion> questionPage = quizQuestionService.findPaginatedQuestionsByQuizId(quizId, page, pageSize);	 		
+		   QuizExam quizExam = quizExamService.findExamByStudentIdAndQuizId(currentUser.getUserId(), quizId);
+		   
+		    LocalDateTime now = LocalDateTime.now();
+		    Date endTimeDate = quizExam.getEndDate();
+		   // System.out.print("endTimeDate:"+endTimeDate);
+		         if(endTimeDate!=null)
+		         {
+		 		    LocalDateTime endTime = endTimeDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+				    System.out.print("now.isAfter(endTime):"+now.isAfter(endTime));
+				    if(now.isAfter(endTime))
+				    {
+				    	 redirectAttributes.addFlashAttribute("errorMessage", "The quiz has ended.");
+				    	 return "redirect:/listQuiz";
+				    } 
+		         }
 	       model.addAttribute("duration", quiz.getDuration());	   
 		   model.addAttribute("quizQuestions", questionPage.getContent());	   
 	       model.addAttribute("currentPage", page);
-	       model.addAttribute("totalPages", questionPage.getTotalPages());
-	       
-		  if(quizExam==null)
-		  {
-			   quizExam = new QuizExam();
-			   quizExam.setQuiz(quiz);
-			   quizExam.setStudent(currentUser.getUser());
-			   quizExam.setTotalMark(0);
-			   LocalDateTime now = LocalDateTime.now();
-			   quizExam.setStartDate(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
-			   
+	       model.addAttribute("totalPages", questionPage.getTotalPages());	   	       
+	       // Set Time Start exam  and Time end		  
+			   quizExam.setStartDate(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));			   
 			   int duration = quiz.getDuration();
 			   LocalDateTime endDate = now.plusMinutes(duration);
 			   quizExam.setEndDate(Date.from(endDate.atZone(ZoneId.systemDefault()).toInstant()));
-
 			   quizExamRepository.save(quizExam);
-
-			   return "page/Quiz/index";
-		  }
-		  else {
-			  model.addAttribute("quizExamId",quizExam.getId() );
-		        }
-		   
-		  
-
+			   model.addAttribute("quizExamId",quizExam.getId() );			   
+		// Set Answers 	   
 		  List<ExamQuestionAnswer>  listexamExamQuestionAnswers = examQuestionAnswerService.findByExamID(quizExam.getId());
 		  Map<Long, Set<Long>> savedAnswerss = new HashMap<>();
 		    for (ExamQuestionAnswer examQuestionAnswer : listexamExamQuestionAnswers) {
@@ -141,11 +155,9 @@ public class QuizController {
 		            answerIds.add(answerId);
 		            savedAnswerss.put(questionId, answerIds);
 		        }
-		    }		    		   
-	 
+		    }		    		   	 
 	     	model.addAttribute("savedAnswers", savedAnswerss);
 	    
-
 		return "page/Quiz/index";
 	}
 	
@@ -153,15 +165,17 @@ public class QuizController {
 	@GetMapping("/result")
 	public String showResult(Model model,@AuthenticationPrincipal CustomUserDetails currentUser,@RequestParam  Long quizId) {
 
-		QuizExam exam = quizExamService.findExamByStudentId(currentUser.getUserId(),quizId);
+		QuizExam exam = quizExamService.findExamByStudentIdAndQuizId(currentUser.getUserId(),quizId);
 		model.addAttribute("exam", exam);
 		return "/page/Quiz/Result";
 	}
 	
 	@GetMapping("/listQuiz")
 	public String showListQuiz(Model model,@AuthenticationPrincipal CustomUserDetails currentUser) {
-
+           
 		List<StudentClass> listClass = studentClassService.findSubjectByStudentId(currentUser.getUserId());
+
+			
 		model.addAttribute("listClass",listClass);
 		return "/page/Quiz/QuizList";
 	}
@@ -169,9 +183,9 @@ public class QuizController {
 	
 	@GetMapping("/listQuizByClass")
 	@ResponseBody
-	public List<QuizClass> showListQuizByClass(@RequestParam Long classId) {
-		return  quizClassService.FindQuizByCLassId(classId);
-		
+	public List<QuizExam> showListQuizByClass(@RequestParam Long classId,@AuthenticationPrincipal CustomUserDetails currentUser ) {
+	         
+		return  quizExamService.findExamByStudentIdAndClassId(currentUser.getUserId(), classId)	;
 	}
 	
 	@PostMapping("/submitQuiz")
@@ -294,4 +308,121 @@ public class QuizController {
 	    }
 	    return currentPage; 
 	}
+	
+	
+	@GetMapping("/quiz/create")
+	public String create(Model model) {
+		QuizCreateDto quiz = new QuizCreateDto();
+		model.addAttribute("quiz",quiz);
+		return "page/Quiz/create";
+	}
+	
+	
+	@GetMapping("/quiz/createQuestion")
+	public String createQuestion(Model model,@RequestParam Long quizId) {
+	     List<QuizQuestion> listQuestions = quizQuestionService.findListQuestionByQuizId(quizId);
+	     
+	      float currentMark = 0;
+	     if(!listQuestions.isEmpty())
+	     {
+		     for(QuizQuestion a :listQuestions )
+		     {
+		    	float mark= a.getMark();
+		    	currentMark += mark;
+		     }	 
+	     }
+	     
+
+	     Quiz quiz =quizRepository.getById(quizId);
+	     model.addAttribute("quizQuestions",listQuestions);
+		 model.addAttribute("quiz",quiz);
+		 model.addAttribute("quizId",quizId);
+		 model.addAttribute("currentMark",currentMark);
+		return  "page/Quiz/Question";
+	}
+	
+	
+	@PostMapping("/quiz/create")
+	public String create(Model model, @ModelAttribute("quiz") @Valid QuizCreateDto quiz,
+			BindingResult bindingResult) {
+		if (bindingResult.hasErrors())
+		{
+			model.addAttribute("quiz",quiz);
+			return "page/Quiz/create";
+		}
+		
+		else
+		{
+			 Quiz createdQuiz = quizService.create(quiz);
+			 model.addAttribute("quizId",createdQuiz.getId());
+			 return "redirect:/quiz/createQuestion?quizId=" + createdQuiz.getId();
+			
+		}
+	}
+	
+	@GetMapping("/quiz/questionDetail")
+	public String CreateQuestionDetail(@RequestParam("quizId") Long quizId, Model model) {
+	    model.addAttribute("quizId", quizId);
+	    QuizQuestionCreateDto questionCreateDto = new QuizQuestionCreateDto();
+	    model.addAttribute("questionDto",questionCreateDto);	    
+	    return "page/quiz/QuestionDetailCreate";
+	}
+	
+	@PostMapping("/quiz/createQuestion")
+	public String createQuestion(@ModelAttribute("questionDto") @Valid QuizQuestionCreateDto questionDto,@RequestParam("quizId") Long quizId,BindingResult bindingResult,Model model) {
+		     questionDto.setQuizId(quizId);
+		     
+		 	if (bindingResult.hasErrors())
+			{
+				model.addAttribute("questionDto",questionDto);
+				model.addAttribute("quizId", quizId);
+				return "redirect:/quiz/questionDetail";
+			}
+		 	else {
+		     QuizQuestion question=quizQuestionService.create(questionDto);
+
+		     
+		     // create answer list
+		     if(question!=null) 
+		     {  
+		  
+		    	 List<String> listCorrects= questionDto.getCorrectAnswers();
+		    	 for(String answer:listCorrects)
+		    	 {
+		    		 System.out.print("aaaaaa"+ answer);
+		        	 QuizAnswer quizAnswer  = new QuizAnswer();
+		        	 quizAnswer.setIsTrue(1);
+		        	 quizAnswer.setContent(answer);
+		        	 quizAnswer.setQuizQuestion(question);
+		        	 quizAnswerRepository.save(quizAnswer);
+		        			
+		    	 }
+		    	 
+		    	 List<String> listIncorrects= questionDto.getIncorrectAnswers();
+		    	 for(String answer:listIncorrects)
+		    	 {
+		        	 QuizAnswer quizAnswer  = new QuizAnswer();
+		        	 quizAnswer.setIsTrue(0);
+		        	 quizAnswer.setContent(answer);
+		        	 quizAnswer.setQuizQuestion(question);		
+		        	 quizAnswerRepository.save(quizAnswer);
+		    	 }
+		     }				
+		 		 return "redirect:/quiz/createQuestion?quizId=" + quizId;
+			}
+		     
+			
+	}
+	
+	@GetMapping("/question/delete/{id}")
+	public String deleteQuestion(@PathVariable Long id)
+	{
+		    QuizQuestion question = quizQuestionRepository.getById(id);
+		    Long quizId=  question.getQuiz().getId();
+			quizQuestionRepository.delete(question);
+			return "redirect:/quiz/createQuestion?quizId=" + quizId ;
+	}
+	
+	
+	
 }

@@ -12,5 +12,9 @@ import com.aptech.group3.entity.QuizClass;
 
 
 public interface QuizClassRepository extends JpaRepository<QuizClass, Long> {
+	
                  List<QuizClass> findByClassForSubjectId(Long id);
+        
+                 
+           
 }

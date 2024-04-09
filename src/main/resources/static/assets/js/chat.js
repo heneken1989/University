@@ -1,28 +1,32 @@
 const radioButtons = document.querySelectorAll(".input_by_radio");
 
 // Adding event listener to each radio button
-radioButtons.forEach(radioButton => {
+
+if(radioButtons !=null){
+	radioButtons.forEach(radioButton => {
     radioButton.addEventListener('change', function(e) {
         const selectedValue = e.target.value
-        console.log(selectedValue)
-        // Displaying corresponding input based on selected radio button
+          $("#minuteInput").show();
         if (selectedValue === 'minute') {
-         $("#minuteInput").show();
-          $("#hourInput").hide();
-           $("#dayInput").hide();
-        
-         
+         $("#span_show_type_edit_minute").show();
+          $("#span_show_type_edit_day").hide();
+           $("#span_show_type_edit_hour").hide();
+
         } else if (selectedValue === 'hour') {
-           $("#minuteInput").hide()
-          $("#hourInput").show()
-           $("#dayInput").hide();
+       $("#span_show_type_edit_minute").hide();
+          $("#span_show_type_edit_day").hide();
+           $("#span_show_type_edit_hour").show();
+     
         } else if (selectedValue === 'day') {
-          $("#minuteInput").hide();
-          $("#hourInput").hide();
-           $("#dayInput").show();
+        $("#span_show_type_edit_minute").hide();
+          $("#span_show_type_edit_day").show();
+           $("#span_show_type_edit_hour").hide();
+      
         }
     });	
 });
+
+}
 
 
 

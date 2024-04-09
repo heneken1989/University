@@ -35,6 +35,11 @@ public class SubjectServiceImpl implements SubjectService {
 	public List<Subject> getByField(Long id) {
 		return subjectRepo.findByFieldId(id);
 	}
+	
+	public List<Subject> getByFieldAndLevel(Long id,Long fieldId) {
+		return subjectRepo.findBySubjectlevelIdAndFieldId(id, fieldId);
+	}
+	
 
 	public List<Subject> findAll() {
 		return subjectRepo.findAll();

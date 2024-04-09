@@ -1,11 +1,17 @@
 package com.aptech.group3.serviceImpl;
 
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
+import com.aptech.group3.Dto.QuizQuestionCreateDto;
 import com.aptech.group3.Repository.QuizQuestionRepository;
+import com.aptech.group3.Repository.QuizRepository;
 import com.aptech.group3.entity.QuizQuestion;
 import com.aptech.group3.service.QuizQuestionService;
 
@@ -15,6 +21,12 @@ public class QuizQuestionServiceImpl implements QuizQuestionService {
 
 	@Autowired
     private QuizQuestionRepository quizQuestionRepository;
+	
+	@Autowired
+    private QuizRepository quizRepository;
+	
+	@Autowired
+	ModelMapper mapper; 
 
     public Page<QuizQuestion> findPaginatedQuestions(int page, int pageSize) {
         PageRequest pageRequest = PageRequest.of(page, pageSize);
@@ -26,4 +38,26 @@ public class QuizQuestionServiceImpl implements QuizQuestionService {
         PageRequest pageRequest = PageRequest.of(page, pageSize);
         return quizQuestionRepository.findByQuizId(quizId, pageRequest);
     }
+    
+    public QuizQuestion create(QuizQuestionCreateDto dto)
+    {
+    	try {
+    	  	QuizQuestion question = mapper.map(dto, QuizQuestion.class);
+    		quizRepository.findById(dto.getQuizId()).ifPresent(question::setQuiz);
+    		return quizQuestionRepository.save(question);
+			
+		} catch (Exception e) {
+			 throw e;
+		}
+  
+    	
+    }
+    
+    public List<QuizQuestion> findListQuestionByQuizId(Long quizId)
+    {
+    	 return quizQuestionRepository.findByQuizId(quizId);
+    }
+    
+    
+    
 }
