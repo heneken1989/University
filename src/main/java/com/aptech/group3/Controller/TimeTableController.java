@@ -57,7 +57,6 @@ public class TimeTableController {
 		 weeks=semesterService.getListWeek(se.intValue());	
 		
 	}
-
 	TimeTableDto currentWeek= new TimeTableDto();
 	 Date date = new Date();
 	 if(se != null) {
@@ -99,10 +98,10 @@ Long id=currentUser.getUserId();
  
 		List<TimeTableShowDto>	data= service.getCurrentTimeTable(id, 
 			currentWeek.getStart_day(), currentWeek.getEnd_day(), currentSemester.getId());
-		
-		System.out.print("time table: "+ data.toString());
+		    
+		System.out.print("time table: "+ data.size()+ "currentWeek:" +currentWeek + "currentSemester" + currentSemester.getId());
 	
-model.addAttribute("listsubject",data);
+    model.addAttribute("listsubject",data);
 
 	return "time_table/index";
 }

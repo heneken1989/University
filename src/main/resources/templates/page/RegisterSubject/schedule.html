@@ -110,7 +110,7 @@ layout:decorate="~{/layout}">
         function mergeCells(table, columnIndex) {
             let headerCell = null;
             let headerText = null;
-
+            console.log(columnIndex);
             for (let i = 1; i < table.rows.length; i++) { // Start from the second row
                 const row = table.rows[i];
                 const firstCell = row.cells[columnIndex];
@@ -128,36 +128,13 @@ layout:decorate="~{/layout}">
             }
         }
 
-        function mergeColumns(table, rowIndex) {
-            let headerCell = null;
-            let headerText = null;
-
-            const row = table.rows[rowIndex];
-            for (let i = row.cells.length - 1; i >= 0; i--) { // Start from the last column
-                const cell = row.cells[i];
-
-                if (cell.innerText.trim() !== '') { // Check if cell has content
-                    if (headerText === null || cell.innerText !== headerText) {
-                        headerText = cell.innerText;
-                        headerCell = cell;
-                    } else {
-                        headerCell.colSpan++;
-                        cell.remove();
-                        headerCell.classList.add('merged-cell'); // Apply the CSS class to merged cells
-                    }
-                }
-            }
-        }
 
         let table = document.getElementById("scheduleTable");
         // Merge cells for each day of the week
         for (let i = 12; i >= 0; i--) {
             mergeCells(table, i);
         }
-        // Merge cells for each row
-        for (let i = 12; i >= 0; i--) { // Start from the first row
-            mergeColumns(table, i);
-        }
+        
     });
 </script>
 </body>

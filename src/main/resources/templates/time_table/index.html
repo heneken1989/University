@@ -8,11 +8,18 @@
 .schedule-table th, .schedule-table td {
 	text-align: center;
 	vertical-align: middle;
-}
+	}
+	 .merged-cell {
+            background-color: lightblue; 
+        }
+
+
+
 </style>
+
 </head>
-<body>
-	<div layout:fragment="content" class="card ml-4" style="width: 100%">
+<body layout:fragment="content">
+	<div  class="card ml-4" style="width: 100%">
 		<div class="mt-3">
 			<h2 class="text-center" th:text="#{schedule.head}">Weekly Schedule</h2>
 			<form th:action="@{/time_table/show}" method="get"
@@ -26,7 +33,6 @@
 							th:selected="${s.id==currentSemester.id}" th:value="${s.id}"
 							th:text="#{label.semester} +' '+ ${s.name} + ' ' + ${s.year} + '-' + (${s.year} + 1)">Senester
 							1 2024-2025</option>
-
 					</select>
 				</div>
 
@@ -52,7 +58,8 @@
 
 				</div>
 			</form>
-			<table class="table table-bordered schedule-table "
+			
+			<table class="table table-bordered schedule-table " id="schedule-table"
 				style="height: 60vh">
 				<thead>
 					<tr>
@@ -63,15 +70,19 @@
 						<th scope="col" th:text="#{schedule.day.5}">Thứ Năm</th>
 						<th scope="col" th:text="#{schedule.day.6}">Thứ Sáu</th>
 						<th scope="col" th:text="#{schedule.day.7}">Thứ Bảy</th>
-						<th scope="col" th:text="#{schedule.day.8}">Chủ Nhật</th>
+			
 					</tr>
 				</thead>
-				<tbody>
-					<tr th:each="i, rowStat : ${#numbers.sequence(1, 12)}">
-						<th scope="row" style="padding: 0" th:text="#{schedule.day.slot}+ ' ' + ${i}">Tiết1</th>							
-						<td style="padding: 0" th:each="index,day : ${#numbers.sequence(1, 7)}" ></td>
-					</tr>
-				</tbody>
+						<tbody>
+			    <tr th:each="slotNumber : ${#numbers.sequence(1, 12)}">
+			        <th scope="row" th:text="'Tiết ' + ${slotNumber}">Tiết ${slotNumber}</th>
+			        <td th:each="weekday : ${#numbers.sequence(1, 6)}" style="padding: 0">
+			          <div th:each="subject : ${listsubject}" th:if="${slotNumber >= subject.startSlot && slotNumber <= subject.endSlot && weekday == subject.weekDay}">
+			                <div th:text="${subject.name}"></div>
+			            </div>
+			        </td>
+			    </tr>
+			</tbody>
 			</table>
 
 			<div style="width: 100%" class="d-flex justify-content-center">
@@ -85,81 +96,60 @@
 		<!--  th:if="${i == listsubject.get(it-1).startSlot && index==listsubject.get(it-1).weekDay}"  -->
 	</div>
 	
-	<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        function mergeCells(table, columnIndex) {
-            let headerCell = null;
-            let headerText = null;
 
-            for (let i = 1; i < table.rows.length; i++) { // Start from the second row
-                const row = table.rows[i];
-                const firstCell = row.cells[columnIndex];
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    function mergeColumnCells(table, columnIndex) {
+        let headerCell = null;
+        let headerText = null;
 
-                if (firstCell.innerText.trim() !== '') { // Check if cell has content
-                    if (headerText === null || firstCell.innerText !== headerText) {
-                        headerText = firstCell.innerText;
-                        headerCell = firstCell;
+        console.log(`Starting merge on column index: ${columnIndex}`);
+
+        // Start from the second row to skip the header
+        for (let rowIndex = 1; rowIndex < table.rows.length; rowIndex++) {
+            const row = table.rows[rowIndex];
+            if (columnIndex < row.cells.length) {
+                const cell = row.cells[columnIndex];
+                const cellText = cell.textContent.trim();
+
+                console.log(`Text in cell (${rowIndex}, ${columnIndex}): '${cellText}'`);
+
+                if (cellText !== '') {
+                    if (headerText === null || cellText !== headerText) {
+                        headerText = cellText;
+                        headerCell = cell;
+                        headerCell.rowSpan = 1; // Initialize or reset the rowspan
                     } else {
                         headerCell.rowSpan++;
-                        firstCell.remove();
-                        headerCell.classList.add('merged-cell'); // Apply the CSS class to merged cells
+                        row.deleteCell(columnIndex);
+                        headerCell.classList.add('merged-cell');
+                        console.log(`Merged cell (${rowIndex}, ${columnIndex}) with header cell.`);
                     }
+                } else {
+                    // Reset if the cell is empty or content changes
+                    headerText = null;
                 }
+            } else {
+                console.log(`Column index ${columnIndex} out of range for row ${rowIndex}`);
             }
         }
+    }
 
-        function mergeColumns(table, rowIndex) {
-            let headerCell = null;
-            let headerText = null;
-
-            const row = table.rows[rowIndex];
-            for (let i = row.cells.length - 1; i >= 0; i--) { // Start from the last column
-                const cell = row.cells[i];
-
-                if (cell.innerText.trim() !== '') { // Check if cell has content
-                    if (headerText === null || cell.innerText !== headerText) {
-                        headerText = cell.innerText;
-                        headerCell = cell;
-                    } else {
-                        headerCell.colSpan++;
-                        cell.remove();
-                        headerCell.classList.add('merged-cell'); // Apply the CSS class to merged cells
-                    }
-                }
-            }
+    let table = document.getElementById("schedule-table");
+    if (table) {
+        // Loop through columns from right to left, merging cells
+        for (let columnIndex = table.rows[0].cells.length - 1; columnIndex >= 1; columnIndex--) {
+            mergeColumnCells(table, columnIndex);
         }
-
-        let table = document.querySelector(".schedule-table");
-        // Merge cells for each day of the week (except the first column)
-        for (let i = 1; i < table.rows[0].cells.length; i++) {
-            mergeCells(table, i);
-        }
-        // Merge cells for each row (except the first row)
-        for (let i = 1; i < table.rows.length; i++) {
-            mergeColumns(table, i);
-        }
-    });
+    } else {
+        console.log("No table found with id 'schedule-table'");
+    }
+});
 </script>
 
-
+    
+    
+   
+    
 </body>
 </html>
-
-
-
-
-<!-- <tr th:each="i, rowStat : ${#numbers.sequence(1, 12)}">
-    <th scope="row" style="padding:0" th:text="'Tiết ' + ${i}">Tiết 1</th>
-   <div th:each="it,test : ${#numbers.sequence(1, listsubject.size())}" >
-
-  <td th:each="index,day : ${#numbers.sequence(1, 7)}" style="padding:0" 
-      th:if="${i==1 && index==3}"
-    th:rowspan="${listsubject.get(it-1).endSlot - listsubject.get(it-1).startSlot +1}">
-</td>
-</div>
-<td th:each="day,index : ${#numbers.sequence(1, 7)}" style="padding:0" 
-    th:if="${index != 1}">
-</td>
-    
-
-</tr> -->
