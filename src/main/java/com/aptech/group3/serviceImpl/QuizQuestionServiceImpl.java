@@ -24,7 +24,7 @@ public class QuizQuestionServiceImpl implements QuizQuestionService {
 	
 	@Autowired
     private QuizRepository quizRepository;
-	
+		
 	@Autowired
 	ModelMapper mapper; 
 
@@ -56,6 +56,21 @@ public class QuizQuestionServiceImpl implements QuizQuestionService {
     public List<QuizQuestion> findListQuestionByQuizId(Long quizId)
     {
     	 return quizQuestionRepository.findByQuizId(quizId);
+    }
+    
+    public float findCurrentMarkOfQuiz(Long quizId)
+    {
+    	 List<QuizQuestion> listQuestions = this.findListQuestionByQuizId(quizId);
+         float currentMark = 0;
+   	     if(!listQuestions.isEmpty())
+   	     {
+   		     for(QuizQuestion a :listQuestions )
+   		     {
+   		    	float mark= a.getMark();
+   		    	currentMark += mark;
+   		     }	 
+   	     }
+   	     return currentMark;
     }
     
     

@@ -1,6 +1,6 @@
 package com.aptech.group3.entity;
 
-import java.sql.Time;
+
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +35,10 @@ public class Quiz {
 		@ManyToOne
 		@JoinColumn(name="subject_id")
 		 private Subject subject;
+		
+		@ManyToOne
+		@JoinColumn(name="teacher_id")
+		 private User teacher;
 	   
 	   @OneToMany(mappedBy="quiz", cascade = CascadeType.ALL)
 	   @JsonIgnore

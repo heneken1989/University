@@ -58,17 +58,10 @@ public class TimeTableController {
 		
 	}
 
-	
-	
 	TimeTableDto currentWeek= new TimeTableDto();
 	 Date date = new Date();
-		
-	 
 	 if(se != null) {
 		 weeks.forEach(e->{
-				
-		
-				
 				if(e.getWeek()==week) {
 					currentWeek.setWeek(e.getWeek());
 					currentWeek.setEnd_day(e.getEnd_day());
@@ -86,8 +79,7 @@ public class TimeTableController {
 					currentWeek.setStart_day(e.getStart_day());
 				}
 			});
-		 
-		 
+		
 	 }
 	
 	
@@ -103,21 +95,15 @@ public class TimeTableController {
 	model.addAttribute("currentweek", currentWeek);
 	
 	
-Long id=(long) 4;
+Long id=currentUser.getUserId();
  
 		List<TimeTableShowDto>	data= service.getCurrentTimeTable(id, 
 			currentWeek.getStart_day(), currentWeek.getEnd_day(), currentSemester.getId());
+		
+		System.out.print("time table: "+ data.toString());
 	
-
-	
-	
-	
-
 model.addAttribute("listsubject",data);
 
-
-
-	
 	return "time_table/index";
 }
 

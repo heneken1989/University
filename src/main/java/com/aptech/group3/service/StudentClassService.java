@@ -27,4 +27,6 @@ public interface StudentClassService {
 	
 	public boolean CheckStuentInClass(Long stuentId, Long ClassId);
 	
+	public List<StudentClass> findByClassForSubjectId(Long classId);
+	
 }

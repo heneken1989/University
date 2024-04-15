@@ -49,13 +49,16 @@
 }
 
   </style>
+  
+
+</head>
 </head>
 <body layout:fragment="content">
 
 			<form  th:action="@{/quiz/create}" method="post" th:object="${quiz}">
 		
 
-<label>Select Subject</label>
+<label class="form-label">Select Subject</label>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -71,33 +74,43 @@
     </div>
   </div>
 </nav>
-<input type="hidden"  id="selectedSubjectId" name="subjectId" th:field="*{subject_id}" value="">
-<div th:if="${#fields.hasErrors('subject_id')}" th:errors="*{subject_id}">Subject Error</div>
+<input type="hidden"   id="selectedSubjectId" name="subjectId" th:field="*{subject_id}" value="" class="form-control">
+<p th:if="${#fields.hasErrors('subject_id')}" th:errors="*{subject_id}" class="text-danger">Subject Error</p>
 
-<label>Enter Name of Exam</label>
-<input  th:field="*{name}" >
+<label class="form-label">Enter Name of Exam</label>
+<input  th:field="*{name}"  class="form-control">
+  <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger">Name Error</p>
 
 <div>
-<label>Enter Exam Duration (Minute)</label>
-<input type="number" th:field="*{duration}" >
+
+    <div class="mb-3">
+<label class="form-label">Enter Exam Duration (Minute)</label>
+<input type="number" th:field="*{duration}" class="form-control" >
+<p th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}" class="text-danger">Duration Error</p>
 </div>
 
+</div>
 
-
-             <label>Type Of Exam</label>
+    <div class="mb-3">
+             <label class="form-label">Type Of Exam</label>
 			<select class="custom-select" th:field="*{type}">
 					<option th:value="0">Select TYPE</option>
-					<option value="FINAL">FINAL EXAM</option>
-					<option value="MIDLE">MIDLE EXAM</option>
-					<option value="FIRST">FIRST EXAM</option>
+					<option value="1">FINAL EXAM</option>
+					<option value="2">MIDLE EXAM</option>
+					<option value="3">FIRST EXAM</option>
 				</select>
 				
-				
-				<label>Enter Total Mark (Max 100)</label>
-                <input type="number" th:field="*{totalMark}" > 
-				
-			<div>
-			   <input type="submit" value="GO CREATE QUESTIONS">
+				<p th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="text-danger">Type Error</p>
+</div>
+
+				<div>
+				<label class="form-label">Enter Total Mark (Max 100)</label>
+                <input type="number" th:field="*{totalMark}" class="form-control" > 
+                <p th:if="${#fields.hasErrors('totalMark')}" th:errors="*{totalMark}" class="text-danger">Type Error</p>
+				</div>
+
+	         <div class="d-flex justify-content-between">
+			   <input type="submit" value="GO CREATE QUESTIONS" class="btn btn-primary">
 			</div>	
       
 	</form>
@@ -105,6 +118,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function() {
+	    $('#selectedSubjectId').val('');
     // Fetch fields when the document is ready
     $.ajax({
       url: '/api/AllField', 

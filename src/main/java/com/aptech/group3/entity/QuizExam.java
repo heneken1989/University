@@ -32,6 +32,8 @@ public class QuizExam {
 	  private Date endDate;
 	  private float totalMark;
 	  
+	  private String status;
+	  
 	    @ManyToOne
 	    @JoinColumn(name = "user_id",referencedColumnName="id")
 	    private User student;

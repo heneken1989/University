@@ -67,26 +67,10 @@
 					</tr>
 				</thead>
 				<tbody>
-
 					<tr th:each="i, rowStat : ${#numbers.sequence(1, 12)}">
-						<th scope="row" style="padding: 0" th:text="#{schedule.day.slot}+ ' ' + ${i}">Tiết1</th>
-							
+						<th scope="row" style="padding: 0" th:text="#{schedule.day.slot}+ ' ' + ${i}">Tiết1</th>							
 						<td style="padding: 0" th:each="index,day : ${#numbers.sequence(1, 7)}" ></td>
-						
-						
-						
-					
-						
-						
-						
-						
-						
-						
-					
-
-
 					</tr>
-
 				</tbody>
 			</table>
 
@@ -100,6 +84,64 @@
 
 		<!--  th:if="${i == listsubject.get(it-1).startSlot && index==listsubject.get(it-1).weekDay}"  -->
 	</div>
+	
+	<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function mergeCells(table, columnIndex) {
+            let headerCell = null;
+            let headerText = null;
+
+            for (let i = 1; i < table.rows.length; i++) { // Start from the second row
+                const row = table.rows[i];
+                const firstCell = row.cells[columnIndex];
+
+                if (firstCell.innerText.trim() !== '') { // Check if cell has content
+                    if (headerText === null || firstCell.innerText !== headerText) {
+                        headerText = firstCell.innerText;
+                        headerCell = firstCell;
+                    } else {
+                        headerCell.rowSpan++;
+                        firstCell.remove();
+                        headerCell.classList.add('merged-cell'); // Apply the CSS class to merged cells
+                    }
+                }
+            }
+        }
+
+        function mergeColumns(table, rowIndex) {
+            let headerCell = null;
+            let headerText = null;
+
+            const row = table.rows[rowIndex];
+            for (let i = row.cells.length - 1; i >= 0; i--) { // Start from the last column
+                const cell = row.cells[i];
+
+                if (cell.innerText.trim() !== '') { // Check if cell has content
+                    if (headerText === null || cell.innerText !== headerText) {
+                        headerText = cell.innerText;
+                        headerCell = cell;
+                    } else {
+                        headerCell.colSpan++;
+                        cell.remove();
+                        headerCell.classList.add('merged-cell'); // Apply the CSS class to merged cells
+                    }
+                }
+            }
+        }
+
+        let table = document.querySelector(".schedule-table");
+        // Merge cells for each day of the week (except the first column)
+        for (let i = 1; i < table.rows[0].cells.length; i++) {
+            mergeCells(table, i);
+        }
+        // Merge cells for each row (except the first row)
+        for (let i = 1; i < table.rows.length; i++) {
+            mergeColumns(table, i);
+        }
+    });
+</script>
+
+
 </body>
 </html>
 

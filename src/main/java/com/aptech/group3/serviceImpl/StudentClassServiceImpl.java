@@ -55,12 +55,6 @@ public class StudentClassServiceImpl implements StudentClassService {
 	
 
 	public boolean CheckStuentInClass(Long stuentId, Long ClassId) {
-		
-
-		
-		
-		
-
 		StudentClass check = repo.findByStudent_IdAndClassforSubject_Id(stuentId, ClassId);
 		if (check == null) {
 			return false;
@@ -104,6 +98,11 @@ public class StudentClassServiceImpl implements StudentClassService {
 		stuclass.setCreateDate(date);
 		stuclass.setStudent(u);
 		repo.save(stuclass);
+	}
+	
+	public List<StudentClass> findByClassForSubjectId(Long classId)
+	{
+		return repo.findByClassforSubjectId(classId);
 	}
 
 }

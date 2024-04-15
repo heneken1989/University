@@ -93,10 +93,8 @@ layout:decorate="~{/layout}">
     </thead>
 <tbody>
     <tr th:each="slot, slotIdx : ${scheduleTable}">
-
         <td th:text="${slotIdx.index + 1}"></td>
         <!-- Iterate over the slots for the first half -->
-
     <td th:each="classInfo, weekdayIdx : ${slot}" 
     th:text="${classInfo}" 
     th:classappend="${(weekdayIdx.index % 2) == 0} ? 'blue' : 'half-semester'">
@@ -156,7 +154,6 @@ layout:decorate="~{/layout}">
         for (let i = 12; i >= 0; i--) {
             mergeCells(table, i);
         }
-
         // Merge cells for each row
         for (let i = 12; i >= 0; i--) { // Start from the first row
             mergeColumns(table, i);

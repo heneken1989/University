@@ -31,6 +31,9 @@ public interface ClassForSubjectService {
 
 
 	public Page<ClassForSubject> getSubjectByFieldAndSemester(int fieldId, int semesterId,Integer subjectId,Pageable pageable);
+	
+    // HIEN
+	public List<ClassForSubject> findByTeacherId(Long teacherID);
 
 
 

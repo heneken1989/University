@@ -12,4 +12,5 @@ public interface QuizQuestionService {
 	 public Page<QuizQuestion> findPaginatedQuestionsByQuizId(Long quizId, int page, int pageSize);
 	 public QuizQuestion create(QuizQuestionCreateDto dto);
 	 public List<QuizQuestion> findListQuestionByQuizId(Long quizId);
+	 public float findCurrentMarkOfQuiz(Long quizId);
 }

@@ -21,4 +21,7 @@ public interface ClassForSubjectRepository extends JpaRepository<ClassForSubject
 	
 	
 	public ClassForSubject findById(int id);
+	
+	//HIEN
+	public List<ClassForSubject> findByTeacherId(Long id);
 }
