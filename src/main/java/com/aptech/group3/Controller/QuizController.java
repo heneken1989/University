@@ -183,11 +183,12 @@ public class QuizController {
 	}
 	
 	@GetMapping("/listQuiz")
+	@Transactional
 	public String showListQuiz(Model model,@AuthenticationPrincipal CustomUserDetails currentUser) {
            
 		List<StudentClass> listClass = studentClassService.findSubjectByStudentId(currentUser.getUserId());
 
-			
+			System.out.print("listClass"+listClass.get(0).getId());
 		model.addAttribute("listClass",listClass);
 		return "/page/Quiz/QuizList";
 	}
@@ -463,7 +464,7 @@ public class QuizController {
 	@ResponseBody
 	public List<Quiz> showListQuizBySubjectAndTecher(@RequestParam Long classId,@AuthenticationPrincipal CustomUserDetails currentUser ) {
 	        ClassForSubject currentClass = classForSubjectRepository.getById(classId);
-		return quizService.findListQuizBySubjectIdAndTeacherId(currentClass.getSubject().getId(), currentUser.getUserId());
+		    return quizService.findListQuizBySubjectIdAndTeacherId(currentClass.getSubject().getId(), currentUser.getUserId());
 	}
 	
 	     @PostMapping("/ApplyQuiz")

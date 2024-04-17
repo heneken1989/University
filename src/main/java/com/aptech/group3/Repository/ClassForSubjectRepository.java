@@ -13,6 +13,12 @@ import com.aptech.group3.entity.ClassForSubject;
 
 
 public interface ClassForSubjectRepository extends JpaRepository<ClassForSubject,Long> {
+	
+	@Query(" SELECT s FROM class_subject s WHERE s.semeter.id=:semesterId AND s.subject.field.id=:fieldId ")
+	List<ClassForSubject> findBySemeter_IdAndSubject_field_Id(Long semesterId, Long fieldId );
+	
+	
+	
 	List<ClassForSubject> findBySubjectId(Long id);
 	@Query(" SELECT s FROM class_subject s WHERE s.semeter.id = :semesterId AND "
 			+ " s.subject.field.id = :fieldId " + " AND (:subjectId IS NULL OR s.subject.id = :subjectId )")
@@ -24,4 +30,11 @@ public interface ClassForSubjectRepository extends JpaRepository<ClassForSubject
 	
 	//HIEN
 	public List<ClassForSubject> findByTeacherId(Long id);
+	
+	//thanh thêm để lấy học kỳ theo lớp có học kỳ = nhau
+	public List<ClassForSubject> findAll();
+	
+	@Query(" SELECT s FROM class_subject s WHERE s.semeter.id = :semesterId AND "
+			+ " s.subject.field.id = :fieldId ")
+	public List<ClassForSubject> findBySemeterIdAnd(Long semesterId, Long fieldId);
 }

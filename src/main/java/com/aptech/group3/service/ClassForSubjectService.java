@@ -13,6 +13,13 @@ import com.aptech.group3.Dto.ClassSubjectCreateDto;
 import com.aptech.group3.entity.ClassForSubject;
 
 public interface ClassForSubjectService {
+	public List<ClassForSubject> getAllByfieldAndSemester(Long semesterId, Long fieldId);
+	
+	//thanh thêm vào
+	public List<ClassForSubject> findAll();
+	//public List<ClassForSubject> findBySemesterId(long id);
+	public List<ClassForSubject> findBySemesterIdAndFieldId(Long semesterId,Long fieldId);
+	
 	public List<ClassForSubject> findById(Long id);
 
 	public void create(ClassSubjectCreateDto data);

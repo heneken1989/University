@@ -42,11 +42,11 @@ public class ForgotController {
 	
 	@PostMapping("/send-otp")
 	public String sendOTP(@RequestParam("email") String email, HttpSession session, Model model) {
-	    System.out.println("Emailllllllll: " + email);
+	   // System.out.println("Emailllllllll: " + email);
 
 	    // Kiểm tra xem email có tồn tại trong cơ sở dữ liệu hay không
 	    User user = userService.findByEmail(email);
-	    System.out.println("User::::::::::::::::: " + user);
+	   // System.out.println("User::::::::::::::::: " + user);
 	    if (user == null) {
 	    	model.addAttribute("aaaerrorMessage", "Email does not exist!.");
 	        return "forgot_email_password";

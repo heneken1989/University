@@ -57,8 +57,8 @@
 
     <div class="mb-3">
         <label for="question-text" class="form-label">Question:</label>
-        <textarea id="question-text" class="form-control" th:field="*{content}" ></textarea>
-         <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-danger">Type Error</p>
+        <textarea id="question-text" class="form-control" name="content" ></textarea>
+ 
         
     </div>
 

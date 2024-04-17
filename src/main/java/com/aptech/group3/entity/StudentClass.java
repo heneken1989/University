@@ -24,7 +24,7 @@ public class StudentClass {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id ;
+    private  Long id ;
 	
 	@ManyToOne
 	@JoinColumn(name="student_id" , referencedColumnName="id")

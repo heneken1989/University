@@ -14,13 +14,28 @@ import com.aptech.group3.entity.StudentClass;
 
 
 public interface StudentClassRepository extends JpaRepository<StudentClass ,Long> {
+	@Query("SELECT o FROM StudentClass o WHERE o.student.code LIKE %:code% AND o.classforSubject.id = :classId")
+    List<StudentClass> getStudentByCodeAndClassId(String code, Long classId);
+	
+	
+	
+	List<StudentClass> findByClassforSubject_Id( Long ClassId);
+	
+	@Query("SELECT o FROM StudentClass o WHERE o.student.id = :studentId AND "
+			+ " o.classforSubject.semeter.id= :semesterId "
+			+ " AND :dateStart >= o.classforSubject.dateStart  AND :dateEnd<= o.classforSubject.dateEnd")
+	List<StudentClass> getcalendar(Long studentId, Date dateStart, Date dateEnd, Long semesterId);
+	
+	@Query("SELECT DISTINCT o FROM StudentClass o JOIN o.classforSubject cs JOIN cs.lessons l WHERE o.student.id = :studentId AND "
+	        + " cs.id = :classId "
+	        + " AND DATE(l.day) = DATE(:day)")
+	public StudentClass getInfoByStudentIdAndDayAndClassId(Long studentId, Long classId, Date day);
+	
+	
 	
 	//new
-		@Query("SELECT o FROM StudentClass o WHERE o.student.id = :studentId AND "
-				+ " o.classforSubject.semeter.id= :semesterId "
-				+ " AND :dateStart >= o.classforSubject.dateStart  AND :dateEnd<= o.classforSubject.dateEnd" )
-		 Optional<StudentClass> getcalendar(Long studentId, Date dateStart,Date dateEnd, Long semesterId);
-		
+
+		List<StudentClass> findByStudentIdAndStatus(Long studentId, String status);
 		
       List<StudentClass> findByStudentId(Long studentId);
       List<StudentClass> findByClassforSubjectId(Long classId);

@@ -44,6 +44,24 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 
 	@Autowired
 	private ModelMapper mapper;
+	
+	public List<ClassForSubject> getAllByfieldAndSemester( Long semesterId, Long fieldId){
+		return classRepository.findBySemeter_IdAndSubject_field_Id( semesterId, fieldId);
+	}
+	
+	
+	
+	//thanh thêm vào
+	   public List<ClassForSubject> findBySemesterIdAndFieldId(Long semesterId,Long fieldId) {
+	        return classRepository.findBySemeterIdAnd(semesterId, fieldId);
+	    }
+	   
+	   
+	   public List<ClassForSubject> findAll() {
+	        return classRepository.findAll();
+	    }
+	
+	   
 
      // HIEN
 	public List<ClassForSubject> findByTeacherId(Long teacherID)

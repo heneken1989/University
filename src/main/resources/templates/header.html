@@ -9,22 +9,13 @@
 <body>  
    
    
-    <header id="header" style="margin-bottom:10px">
+    <header id="header" class="pl-3 pr-3" style="margin-bottom:10px ;height:80px; margin-left:0; ">
     
-
-    
-              <div class="logo">
-                <a href="index.html">Ramayana</a>
-                
-              </div>
-              
-                                <div class="dropdown-menu">
-  <h6 class="dropdown-header">Dropdown header</h6>
- 
-</div>
-
+<div class="containner d-flex align-items-center justify-content-between w-100" style="height:100%">
+<div id="toggle_position_header"></div>
 <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+  <button class="btn btn-secondary dropdown-toggle mr-4" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
    Language
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -32,6 +23,16 @@
   <a class="dropdown-item" href="?lang=vi" th:text="#{label.lang.vi}">Another vi</a>
   </div>
 </div>
+
+
+</div>
+    
+           
+              
+              
+
+
+
             </header>
 </body>
 </html>

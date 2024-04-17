@@ -23,9 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.aptech.group3.Dto.TimeTableDto;
 import com.aptech.group3.Dto.TimeTableShowDto;
-
+import com.aptech.group3.entity.Attendance;
 import com.aptech.group3.entity.Semeter;
 import com.aptech.group3.model.CustomUserDetails;
+import com.aptech.group3.service.AttendanceService;
 import com.aptech.group3.service.SemesterService;
 import com.aptech.group3.service.StudentClassService;
 
@@ -35,11 +36,11 @@ import shared.BaseMethod;
 @RequestMapping({ "/time_table" })
 public class TimeTableController {
 	
-	@Autowired
-	SemesterService semesterService;
+	@Autowired private SemesterService semesterService;
 	
-	@Autowired
-	StudentClassService service;
+	@Autowired private StudentClassService service;
+	
+	@Autowired private AttendanceService attendanceService;
 
 	
 @GetMapping("/show")
@@ -59,8 +60,13 @@ public class TimeTableController {
 	}
 	TimeTableDto currentWeek= new TimeTableDto();
 	 Date date = new Date();
+		
+	 
 	 if(se != null) {
 		 weeks.forEach(e->{
+				
+		
+				
 				if(e.getWeek()==week) {
 					currentWeek.setWeek(e.getWeek());
 					currentWeek.setEnd_day(e.getEnd_day());
@@ -78,7 +84,8 @@ public class TimeTableController {
 					currentWeek.setStart_day(e.getStart_day());
 				}
 			});
-		
+		 
+		 
 	 }
 	
 	
@@ -94,15 +101,27 @@ public class TimeTableController {
 	model.addAttribute("currentweek", currentWeek);
 	
 	
-Long id=currentUser.getUserId();
+Long studentId= currentUser.getUserId();
+TimeTableDto weekSelected=weeks.get(week-1);
  
-		List<TimeTableShowDto>	data= service.getCurrentTimeTable(id, 
+		List<TimeTableShowDto>	data= service.getCurrentTimeTable(studentId, 
 			currentWeek.getStart_day(), currentWeek.getEnd_day(), currentSemester.getId());
-		    
-		System.out.print("time table: "+ data.size()+ "currentWeek:" +currentWeek + "currentSemester" + currentSemester.getId());
+		
+		
+		
+		/*
+		 * data.forEach(e->{ Attendance tcheck=
+		 * attendanceService.getDetailAttendance(studentId,e.getClass_id() ,
+		 * BaseMethod.getDateFromStartAndWeekday(weekSelected.getStart_day(),
+		 * e.getWeekDay())); e.setStatus(tcheck.getStatus()); });
+		 */
 	
-    model.addAttribute("listsubject",data);
 
+model.addAttribute("listsubject",data);
+
+
+
+	
 	return "time_table/index";
 }
 

@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.aptech.group3.Dto.AttendanceDto;
 import com.aptech.group3.Dto.ClassForSubjectDto;
 import com.aptech.group3.Dto.TimeTableShowDto;
 import com.aptech.group3.Repository.ClassForSubjectRepository;
@@ -35,6 +36,39 @@ public class StudentClassServiceImpl implements StudentClassService {
 
 	@Autowired
 	private ModelMapper mapper;
+	public List<AttendanceDto>getListStudentByCode(String code, Long classId){
+		
+		List<AttendanceDto> data =repo.getStudentByCodeAndClassId(code, classId).stream().map(e->{
+			AttendanceDto dto = new AttendanceDto();
+			dto.setStudent_code(e.getStudent().getCode());
+			dto.setStudent_id(e.getStudent().getId());
+			dto.setStudent_name(e.getStudent().getName());
+			
+			
+			return dto;
+	}).toList();
+	
+	return data;
+	}
+	
+	
+	
+	public List<AttendanceDto> getListStudentInClass(Long classId){
+		
+		List<AttendanceDto> data =repo.findByClassforSubject_Id(classId).stream().map(e->{
+				AttendanceDto dto = new AttendanceDto();
+				dto.setStudent_code(e.getStudent().getCode());
+				dto.setStudent_id(e.getStudent().getId());
+				dto.setStudent_name(e.getStudent().getName());
+				
+				return dto;
+		}).toList();
+		
+		return data;
+		
+	}
+	
+	
 	
 	public List<TimeTableShowDto> getCurrentTimeTable(Long studentId, Date dateStart, Date dateEnd, Long semesterId) {
 		
@@ -116,6 +150,22 @@ public class StudentClassServiceImpl implements StudentClassService {
 	public List<StudentClass> findByClassForSubjectId(Long classId)
 	{
 		return repo.findByClassforSubjectId(classId);
+	}
+	public void updateItemsStatusToPayment(List<Long> idList) {
+        // Fetch the items from the database based on the IDs in the idList
+        List<StudentClass> items = repo.findAllById(idList);
+
+        // Update the status of each item to "payment"
+        for (StudentClass item : items) {
+            item.setStatus("payment");
+        }
+
+        // Save the updated items
+        repo.saveAll(items);
+    }
+	public List<StudentClass> findByStudentIdAndStatus(Long studentId ,String status)
+	{
+		return repo.findByStudentIdAndStatus(studentId, status);
 	}
 
 }

@@ -72,28 +72,32 @@ public class ClassSubjectController {
 	}
 
 	@GetMapping("/create")
-	public String showCreate(Model model) {
+	public String showCreate(Model model, @AuthenticationPrincipal CustomUserDetails currentUser) {
 		ClassSubjectCreateDto data = new ClassSubjectCreateDto();
 		model.addAttribute("semester", SemesterService.getCurrentSemester());
 		model.addAttribute("data", data);
 		ClassSubjectAllDto dataAll = new ClassSubjectAllDto();
 		model.addAttribute("dataAll", dataAll);
-		model.addAttribute("subjects", subjectService.findAll());
+		model.addAttribute("subjects", subjectService.getByField(currentUser.getUser().getFields().get(0).getId()));
+		model.addAttribute("error","noError");
 		return "class_subject/create";
 	}
 
 	@PostMapping("/create")
 	public String create(Model model, @ModelAttribute("data") @Valid ClassSubjectCreateDto data,
 			BindingResult bindingResult) {
-
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("semester", SemesterService.getCurrentSemester());
 			model.addAttribute("data", data);
+			model.addAttribute("error","error");
+			
 			ClassSubjectAllDto dataAll = new ClassSubjectAllDto();
 			model.addAttribute("dataAll", dataAll);
 			model.addAttribute("subjects", subjectService.findAll());
 			return "class_subject/create";
 		}
+		
+		
 		classSubjectService.create(data);
 		return "index";
 	}

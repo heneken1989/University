@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{/layout}">
+<head>
+<title>Content</title>
+</head>
+<body>
+
+	<div layout:fragment="content" class="card ml-4" style="width: 100%">
+
+		<h3 class="card-head text-center" th:text=" 'Create holidate for year  ' +${semester.year} + ' - ' + ${semester.year +1}"></h3>
+
+
+		<form th:action="@{/holiday/create}" th:object="${data}"
+			class="card-body" method="post" style="width: 100%">
+
+
+
+		
+
+			<div class="input-group mb-5 ">
+				<div class="input-group-prepend">
+					<span class="input-group-text" th:text="#{label.name}"
+						id="inputGroup-sizing-default">Name</span>
+				</div>
+				<input th:field="*{name}" class="form-control" aria-label="Default"
+					aria-describedby="inputGroup-sizing-default">
+			</div>
+
+			<!-- <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+				class="text-danger ">Name Error</p> -->
+
+<div class="input-group mb-5 ">
+				<div class="input-group-prepend">
+					<span class="input-group-text" 
+						id="inputGroup-sizing-default">date</span>
+				</div>
+				<input th:field="*{date_cre}" type="date" class="form-control" aria-label="Default"
+					aria-describedby="inputGroup-sizing-default">
+			</div>
+
+		<div class="input-group mb-3">
+			<div class="input-group-prepend" style="width: 150px">
+				<label style="width: 100%" class="input-group-text"
+					for="inputGroupSelect01">Select class</label>
+			</div>
+			
+		<select th:field="*{classId}" class="form-control">
+				<option value=" " th:text="#{discuss.class}">Select class</option>
+				<option th:each="s : ${class}" th:text="${s.name}"
+					th:value="${s.id}"></option>
+
+			</select>
+
+		</div>
+		
+		<input th:field="*{year}" type="hidden" th:value="${semester.year}">
+
+
+			
+	
+
+
+
+	
+
+	
+		
+
+			<button type="submit" class="btn btn-primary mt-5"
+				th:text="#{label.create}">Create</button>
+
+
+
+		</form>
+	</div>
+</body>
+</html>

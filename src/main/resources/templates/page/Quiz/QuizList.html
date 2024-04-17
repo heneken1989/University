@@ -149,7 +149,7 @@ header h1 {
         </header>
         <div class="module-grid">
             <!-- Class modules here -->
-    <div class="module" th:each="list:${listClass}" th:data-class-id="${list.id}" th:onclick="'showQuizList(\'' + ${list.id} + '\')'">
+    <div class="module" th:each="list:${listClass}" th:data-class-id="${list.classforSubject.id}" th:onclick="'showQuizList(\'' + ${list.classforSubject.id} + '\')'">
     <div th:text="${list.classforSubject.Subject.name} + '  ' + ${list.classforSubject.name}"></div>
 </div>
         </div>
@@ -180,6 +180,7 @@ function showQuizList(classId) {
     
     var xhr = new XMLHttpRequest();
     var url = '/listQuizByClass?classId=' + classId;
+    console.log(classId);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function () {

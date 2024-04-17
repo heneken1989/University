@@ -1,6 +1,6 @@
      <!-- Sidebar -->
 
-        <div th:fragment="sidebar" style="height:100%;" id="sidebar">
+       <div th:fragment="sidebar" style="height:100%; overflow-y:scroll; overflow-x:hidden" id="sidebar">
 
           <div class="inner" style="overflow-y:scroll">
 
@@ -36,7 +36,13 @@
         
                   </ul>
                 </li>
-                
+                <li>
+                  <span class="opener">Payment</span>
+                  <ul>
+                    <li><a href="/payment">Payment</a></li>
+                    
+                  </ul>
+                </li>
                 
                 
                           <li>

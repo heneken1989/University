@@ -20,7 +20,7 @@
 				th:data-id="${semester.id}" type="hidden" readonly />
 		</div>
 	
-	
+	<input type="hidden" id="check_error_if_has" value="${error}">
 
 		<div class="input-group mb-3">
 			<div class="input-group-prepend" style="width: 150px">
@@ -30,6 +30,7 @@
 			
 			<select class="custom-select select_subject_create" id="inputGroupSelect01">
     <option th:value="0" th:selected="${data.subject_id == 0}">select subject</option>
+    
     <option th:each="s : ${subjects}" th:data-id="${s.id}" th:data-check="${s.type}"
             th:selected="${s.id == data.subject_id}" th:value="${s.id}" th:text="${s.name}"
             th:data-credit="${s.credit}" th:data-creditac="${s.creditAction}"></option>
@@ -67,10 +68,10 @@
 				</div>
 				<select class="custom-select" th:field="*{type}"
 					id="select_classtype_create">
-					<option th:value="0">Select Subject</option>
-					<option value="all">all year</option>
-					<option value="fhalf">first half year</option>
-					<option value="lhalf">last half year</option>
+					<option class="option_of_select_type"  th:value="0">Select Subject</option>
+					<option class="option_of_select_type"  value="all">all year</option>
+					<option class="option_of_select_type"   value="fhalf">first half year</option>
+					<option class="option_of_select_type"  value="lhalf">last half year</option>
 				</select>
 			</div>
 
@@ -88,6 +89,7 @@
 			<p th:if="${#fields.hasErrors('date_start')}" th:errors="*{date_start}" class="text-danger">Name Error</p>	
 
 			<input th:field="*{weekDay}" id="hidden_weekday_create" type="hidden" />
+			
 			<div class="input-group mb-3" style="display: none">
 
 				<div class="input-group-prepend" style="width: 150px">

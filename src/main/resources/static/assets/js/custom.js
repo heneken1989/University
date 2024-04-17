@@ -84,6 +84,7 @@
 				});
 
 	// Sidebar.
+	var myHeader = $('#toggle_position_header')
 		var $sidebar = $('#sidebar'),
 			$sidebar_inner = $sidebar.children('.inner');
 
@@ -101,10 +102,12 @@
 			&&	browser.name == 'chrome')
 				$('<style>#sidebar .inner::-webkit-scrollbar { display: none; }</style>')
 					.appendTo($head);
+					
+					
 
 		// Toggle.
-			$('<a href="#sidebar" class="toggle">Toggle</a>')
-				.appendTo($sidebar)
+			$('<a href="#sidebar" class="toggle mr-3"><i style="font-size:30px" class="fas fa-bars"></i></a>')
+				.appendTo(myHeader)
 				.on('click', function(event) {
 
 					// Prevent default.

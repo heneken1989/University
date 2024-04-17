@@ -27,6 +27,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String email;
+	private String code;
 	private String name;
 	private String password;
 	private String phone;
@@ -44,8 +45,4 @@ public class User {
 	@JsonIgnore
 	  private List<Field> fields;
 	
-	
-
-	
-
 }

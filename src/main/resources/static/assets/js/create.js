@@ -1,5 +1,8 @@
 let select_subject = document.querySelector(".select_subject_create");
- const link= "http://localhost:8081/api";
+ const currentUrl = window.location.href;
+ const url = new URL(currentUrl);
+ oneForm=$("#form_create_one");
+const baseUrl = url.origin;
  let weekday;
  let start;
  let dstart;
@@ -14,6 +17,7 @@ let select_subject = document.querySelector(".select_subject_create");
  let dendTheory;
  let dendAction;
  
+ 
 
  
  if($(".select_subject_create").val()!= 0){
@@ -21,14 +25,16 @@ let select_subject = document.querySelector(".select_subject_create");
 	   let checkType = selectedOption.getAttribute("data-check");
 	    if(checkType=="both"){
 	  oneForm.hide()
+	  console.log(1)
 	   $("#form_create_both").show();
    }else{   
-	  
 	    $("#form_create_both").hide
 	    oneForm.show();
    }
  }
  
+ 
+
  
  let smId=$("#semester_start_create").attr("data-id"); 
  $("#semester_value_create").val(smId);
@@ -40,6 +46,14 @@ select_subject.addEventListener('change', function(e) {
   let checkType = selectedOption.getAttribute("data-check");
  credit=selectedOption.getAttribute("data-credit");
  creditAction= selectedOption.getAttribute("data-creditac");
+ 
+if (credit > 3) {
+    $(".option_of_select_type").each(function() {
+        if ($(this).val() === "fhalf" || $(this).val() === "lhalf") {
+            $(this).hide();
+        }
+    });
+}
  
   $("#subject_value_create").val(e.target.value)
  $("#subject_hidden_creaet_both").val(e.target.value)
@@ -104,23 +118,36 @@ $("#select_classtype_create").on("change",(e)=>{
  $("#select_startdate_create").on("change",(e)=>{	
 		$("#select_startslot_create").parent().show();
 		dstart=e.target.value;
-		console.log(dstart)
 		let date = new Date(dstart);
 		weekday=date.getDay()+1;
 		$("#hidden_weekday_create").val(weekday);
 		$("#select_enddate_create").parent().show();
 		
-		     let futureDate= setDay(date,$("#select_classtype_create").val())
-     dend = futureDate.toISOString().split('T')[0];
+	
+
+		let type=$("#select_classtype_create").val();
+		let getURL=`${baseUrl}/api/class/dateend?start=${dstart}&type=${type}`;
+	  $.get(getURL, (res,status)=>{
+		 let dayData = new Date(res);
+		  dend = dayData.toISOString().split('T')[0];
      
-		
 		$("#select_enddate_create").val(dend);
+		
+	  });
+	
+    
 		
 // loai bo nhung tiet khong duoc lua chon
 		slotday.forEach(x=>{
-			if(x<6 && x+Number(credit)<=6 || x>6 && x<12&& x+Number(credit)<=12){
+			 if($("#select_classtype_create").val()=="all"){
+				 	if(x<6 && x+Number(credit)<=6 || x>6 && x<12&& x+Number(credit)<=12){
 				result.push(x)
 			}
+			 }else{
+				  	if(x<6 && (x+Number(credit)-1)*2<=6 || x>6 && x<12&& (x+Number(credit)*2-1)<=12){
+				result.push(x)
+			 }
+		}
 		})
 	
 		let data= result.map(e=>`<option value="${e}">${e}</option>`).join()
@@ -135,7 +162,12 @@ $("#select_startslot_create").on("change", () => {
     let selectedStartSlot = $("#select_startslot_create").val();
     start=selectedStartSlot;
     let credit = $("#select_startslot_create").attr("data-id"); 
-	 $("#select_endslot_create").val(Number(selectedStartSlot)+Number(credit) );
+    if($("#select_classtype_create").val()=="all"){
+		 $("#select_endslot_create").val(Number(selectedStartSlot)+Number(credit) );
+	}else{
+		$("#select_endslot_create").val((Number(selectedStartSlot)+Number(credit)-1)*2 );
+	}
+	
 	 $("#select_endslot_create").parent().show();
 	 $("#select_room_create").parent().show();
 	 getAvailableRoom(capacity,weekday,start,dstart,dend) 
@@ -155,9 +187,11 @@ $("#select_room_create").on("change", () => {
 $("#semester_value_create_both").val(smId)
 
 //handle after select type for theory
+let typeTheo
 $("#select_classtype_create_theory").on("change",e=>{
 	$("#select_startdate_create_theory").parent().show();
 	let date =new Date(startDay)
+	typeTheo=e.target.value;
 	 if(e.target.value=="lhalf"){
 		date=newData = new Date(date.getTime() + (8 * 7 * 24 * 60 * 60 * 1000));	
 	}
@@ -170,9 +204,12 @@ $("#select_classtype_create_theory").on("change",e=>{
 })
 
 //handle after select type for action
+
+let typeAction
 $("#select_classtype_create_action").on("change",e=>{
 	$("#select_startdate_create_action").parent().show();
 	let date =new Date(startDay)
+	typeAction=e.target.value;
 	 if(e.target.value=="lhalf"){
 		date=newData = new Date(date.getTime() + (8 * 7 * 24 * 60 * 60 * 1000));	
 	}
@@ -188,20 +225,25 @@ $("#select_classtype_create_action").on("change",e=>{
 
 //dandle after select start day for theory
 $("#select_startdate_create_theory").on("change",e=>{
-	let date=new Date(e.target.value)
-	$("#hidden_weekday_create_theory").val(date.getDay()+1);
-	  let futureDate= setDay(date,$("#select_classtype_create_theory").val())
-   let  endTheo = futureDate.toISOString().split('T')[0];
-		$("#select_enddate_create_theory").val(endTheo);
+	
+   
+   let getURL=`${baseUrl}/api/class/dateend?start=${e.target.value}&type=${typeTheo}`;
+	  $.get(getURL, (res,status)=>{
+		 let dayData = new Date(res);
+		  dend = dayData.toISOString().split('T')[0];
+     
+
+		$("#select_enddate_create_theory").val(dend);
 		$("#select_enddate_create_theory").parent().show()
 		
+	  });
+   
 		let slotArray=[];
 			slotday.forEach(x=>{
 			if(x<6 && x+Number(credit-creditAction)<=6 || x>6 && x<12&& x+Number(credit-creditAction)<=12){
 				slotArray.push(x)
 			}
-		})
-				
+		});		
 let data= slotArray.map(e=>`<option value="${e}">${e}</option>`).join()
 		$("#select_startslot_create_theory").html(`<option value="0"> select slot for theory</option> ${data}`)
 		$("#select_startslot_create_theory").show()
@@ -209,13 +251,16 @@ let data= slotArray.map(e=>`<option value="${e}">${e}</option>`).join()
 
 //dandle after slect start day for action
 $("#select_startdate_create_action").on("change",e=>{
-	let date=new Date(e.target.value)
-	$("#hidden_weekday_create_action").val(date.getDay()+1);
-	
-	  let futureDate= setDay(date,$("#select_classtype_create_action").val())
-   let  endTheo = futureDate.toISOString().split('T')[0];
-		$("#select_enddate_create_action").val(endTheo);
+  let getURL=`${baseUrl}/api/class/dateend?start=${e.target.value}&type=${typeAction}`;
+	  $.get(getURL, (res,status)=>{
+		 let dayData = new Date(res);
+		  dend = dayData.toISOString().split('T')[0];
+     
+		$("#select_enddate_create_action").val(dend);
 		$("#select_enddate_create_action").parent().show()
+		
+	  });
+	
 		
 				let slotArray=[];
 			slotday.forEach(x=>{
@@ -266,7 +311,7 @@ $("#select_room_create_theory").on("change",e=>{
 
 //suport function
 let getAvailableTeacher= async (subject,weekday,start,dstart,dend )=>{
-	await $.get(`${link}/teacher/available?id=${subject}&weekday=${weekday}&start=${start}&dstart=${dstart}&dend=${dend}`, 
+	await $.get(`${baseUrl}/api/teacher/available?id=${subject}&weekday=${weekday}&start=${start}&dstart=${dstart}&dend=${dend}`, 
 	function(data,status ){
 		let str= data.map(e=> `<option value="${e.id}"> ${e.name}</option>`).join();
 		$("#select_teacher_create").html(`<option value="0"> select teacher</option> ${str}`);
@@ -274,7 +319,7 @@ let getAvailableTeacher= async (subject,weekday,start,dstart,dend )=>{
 }
 		
 let getAvailableRoom= async (capacity,weekday,start,dstart,dend )=>{
-	await $.get(`${link}/room/available?capacity=${capacity}&weekday=${weekday}&start=${start}&dstart=${dstart}&dend=${dend}`, 
+	await $.get(`${baseUrl}/api/room/available?capacity=${capacity}&weekday=${weekday}&start=${start}&dstart=${dstart}&dend=${dend}`, 
 	function(data,status ){
 		let str= data.map(e=> `<option value="${e.id}"> ${e.name}</option>`).join();
 		$("#select_room_create").html(`<option value="0"> Select room</option> ${str}`);
@@ -282,7 +327,7 @@ let getAvailableRoom= async (capacity,weekday,start,dstart,dend )=>{
 }
 
 let getAvailableRoomTheory= async (capacity,weekday,start,dstart,dend,type )=>{
-	await $.get(`${link}/room/available?capacity=${capacity}&weekday=${weekday}&start=${start}&dstart=${dstart}&dend=${dend}`, 
+	await $.get(`${baseUrl}/api/room/available?capacity=${capacity}&weekday=${weekday}&start=${start}&dstart=${dstart}&dend=${dend}`, 
 	function(data,status ){
 		let str= data.map(e=> `<option value="${e.id}"> ${e.name}</option>`).join();
 		if(type="theory"){
@@ -297,7 +342,7 @@ let getAvailableRoomTheory= async (capacity,weekday,start,dstart,dend,type )=>{
 }
 
 let getAvailableTeacherTheory= async (subject,weekday,start,dstart,dend,type )=>{
-	await $.get(`${link}/teacher/available?id=${subject}&weekday=${weekday}&start=${start}&dstart=${dstart}&dend=${dend}`, 
+	await $.get(`${baseUrl}/api/teacher/available?id=${subject}&weekday=${weekday}&start=${start}&dstart=${dstart}&dend=${dend}`, 
 	function(data,status ){
 		let str= data.map(e=> `<option value="${e.id}"> ${e.name}</option>`).join();
 		if(type="theory"){
