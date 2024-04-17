@@ -196,14 +196,14 @@ public class SubjectRegisterController {
 				}
 			}
 
-			if (newSemesterType.equals("FirstHalf")) {
+			if (newSemesterType.equals("lhaft")) {
 				if (existingClass != null && !existingClass.isEmpty()) {
 					return true;
 				}
 
 			}
 
-			if (newSemesterType.equals("FullSemester")) {
+			if (newSemesterType.equals("full")) {
 
 				if (existingClassSecond != null && !existingClassSecond.isEmpty()) {
 					return true;
@@ -231,16 +231,16 @@ public class SubjectRegisterController {
 			String subjectInfo = classForSubject.getSubject().getName() + " " + classForSubject.getRoom().getName();
 
 			for (int slot = slotStart; slot <= slotEnd; slot++) {
-				if (semesterType.equals("FullSemester")) {
+				if (semesterType.equals("full")) {
 					// Populate both halves of the day
 					scheduleTable[slot - 1][2 * (weekday - 1)] = subjectInfo;
 					scheduleTable[slot - 1][2 * (weekday - 1) + 1] = subjectInfo;
 
-				} else if (semesterType.equals("FirstHaftSemester")) {
+				} else if (semesterType.equals("fhalf")) {
 					// Populate only the first half of the day
 					scheduleTable[slot - 1][2 * (weekday - 1)] = subjectInfo;
 
-				} else if (semesterType.equals("SecondHalfSemester")) {
+				} else if (semesterType.equals("lhaft")) {
 					// Populate only the second half of the day
 					scheduleTable[slot - 1][2 * (weekday - 1) + 1] = subjectInfo;
 

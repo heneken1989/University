@@ -2,13 +2,12 @@ package com.aptech.group3.Controller;
 
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 import com.aptech.group3.entity.StudentClass;
+import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.service.StudentClassService;
 import com.aptech.group3.service.VNPayService;
-import com.aptech.group3.serviceImpl.StudentClassServiceImpl;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -33,9 +32,9 @@ public class PaymentController {
 	 
 	
 	@GetMapping("/payment")
-	public String payment(Model model)
+	public String payment(Model model,@AuthenticationPrincipal CustomUserDetails currentUser)
 	{
-		  List<StudentClass> classs = service.findByStudentIdAndStatus(1L, "Waiting");
+		  List<StudentClass> classs = service.findByStudentIdAndStatus(currentUser.getUserId(), "Waiting");
 	
 		
 		  model.addAttribute("classes",classs);

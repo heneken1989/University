@@ -69,33 +69,18 @@ public class StudentClassServiceImpl implements StudentClassService {
 	}
 	
 	
-	
 	public List<TimeTableShowDto> getCurrentTimeTable(Long studentId, Date dateStart, Date dateEnd, Long semesterId) {
-		
-		List<TimeTableShowDto> data = repo.findByStudentId((long) 3).stream().map(e->{
+
+		List<TimeTableShowDto> data = repo.getcalendar(studentId, dateStart, dateEnd, semesterId).stream().map(e->{
 			TimeTableShowDto dto = new TimeTableShowDto();
 			dto.setEndSlot(e.getClassforSubject().getSlotEnd());
 			dto.setStartSlot(e.getClassforSubject().getSlotStart());
-			dto.setName(e.getClassforSubject().getName());
+			dto.setName(e.getClassforSubject().getSubject().getName());
 			dto.setRoom(e.getClassforSubject().getRoom().getName());
 			dto.setWeekDay(e.getClassforSubject().getWeekDay());
-			return dto;
-			
+			dto.setClass_id(e.getClassforSubject().getId());
+			return dto;			
 		}).toList();
-
-   
-			/*
-			 * List<TimeTableShowDto> data = repo.getcalendar(studentId, dateStart, dateEnd,
-			 * semesterId).stream().map(e->{ TimeTableShowDto dto = new TimeTableShowDto();
-			 * dto.setEndSlot(e.getClassforSubject().getSlotEnd());
-			 * dto.setStartSlot(e.getClassforSubject().getSlotStart());
-			 * dto.setName(e.getClassforSubject().getName());
-			 * dto.setRoom(e.getClassforSubject().getRoom().getName());
-			 * dto.setWeekDay(e.getClassforSubject().getWeekDay()); return dto;
-			 * 
-			 * }).toList();
-			 */
-
 		return data;
 	}
 	
@@ -154,13 +139,11 @@ public class StudentClassServiceImpl implements StudentClassService {
 	public void updateItemsStatusToPayment(List<Long> idList) {
         // Fetch the items from the database based on the IDs in the idList
         List<StudentClass> items = repo.findAllById(idList);
-
-        // Update the status of each item to "payment"
+                      
         for (StudentClass item : items) {
             item.setStatus("payment");
         }
 
-        // Save the updated items
         repo.saveAll(items);
     }
 	public List<StudentClass> findByStudentIdAndStatus(Long studentId ,String status)
