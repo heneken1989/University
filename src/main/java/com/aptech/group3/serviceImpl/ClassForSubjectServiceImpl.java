@@ -1,6 +1,7 @@
 package com.aptech.group3.serviceImpl;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ import com.aptech.group3.Dto.ClassForSubjectDto;
 import com.aptech.group3.Dto.ClassSubjectAllDto;
 import com.aptech.group3.Dto.ClassSubjectBasicDto;
 import com.aptech.group3.Dto.ClassSubjectCreateDto;
+import com.aptech.group3.Dto.ClassSubjectEditOneDto;
 import com.aptech.group3.Dto.SubjectDto;
 import com.aptech.group3.Repository.ClassForSubjectRepository;
 import com.aptech.group3.Repository.RoomRepository;
@@ -45,23 +47,69 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 	@Autowired
 	private ModelMapper mapper;
 	
-	public List<ClassForSubject> getAllByfieldAndSemester( Long semesterId, Long fieldId){
-		return classRepository.findBySemeter_IdAndSubject_field_Id( semesterId, fieldId);
-	}
-	
-	
-	
 	//thanh thêm vào
 	   public List<ClassForSubject> findBySemesterIdAndFieldId(Long semesterId,Long fieldId) {
 	        return classRepository.findBySemeterIdAnd(semesterId, fieldId);
+	    }
+	   
+	   public List<ClassForSubject> listClassBySemesterId(Long semesterId) {
+	        return classRepository.lissClassBySemesterId(semesterId);
 	    }
 	   
 	   
 	   public List<ClassForSubject> findAll() {
 	        return classRepository.findAll();
 	    }
-	
 	   
+	   //danh sách môn học bằng classid
+	    public List<ClassForSubject> getClassSubjects(Long classId) {
+	        List<ClassForSubject> classForSubjects = classRepository.findBySubject_Id(classId);
+	        return classForSubjects;
+	    }
+	    
+	    		
+	
+	public List<ClassForSubject> getAllByfieldAndSemester( Long semesterId, Long fieldId){
+		return classRepository.findBySemeter_IdAndSubject_field_Id( semesterId, fieldId);
+	}
+	
+	public boolean checkType(Long id){
+		boolean result=false;
+		ClassForSubject data=classRepository.findById(id).orElse(null);
+		List<ClassForSubject> check= classRepository.findByName(data.getName());
+		
+		if (check.size()>1 ) {
+			result=true;
+		}
+		return result;
+	}
+	
+	public ClassSubjectEditOneDto getEditDto(Long id) {
+		
+		ClassSubjectEditOneDto data = classRepository.findById(id)
+			    .map(e -> {
+			    	ClassSubjectEditOneDto dto=	mapper.map(e, ClassSubjectEditOneDto.class);
+			    	dto.setRoom_id(e.getRoom().getId());
+			    	dto.setSemeter_id(e.getSemeter().getId());
+			    	dto.setTeacher_id(e.getTeacher().getId());
+			    	dto.setSubject_id(e.getSubject().getId());
+			    	return dto;
+			    	}).orElse(null);
+		
+		return data;
+	}
+	
+	public void Edit(ClassSubjectEditOneDto dto) {
+		ClassForSubject data =mapper.map(dto, ClassForSubject.class);
+		semesterRepo.findById(dto.getSemeter_id()).ifPresent(data::setSemeter);
+		subjectRepo.findById(dto.getSubject_id()).ifPresent(data::setSubject);
+		userRepo.findById(dto.getTeacher_id()).ifPresent(data::setTeacher);
+		roomRepo.findById(dto.getRoom_id()).ifPresent(data::setRoom);
+		
+		classRepository.save(data);
+		
+	}
+
 
      // HIEN
 	public List<ClassForSubject> findByTeacherId(Long teacherID)
@@ -76,14 +124,22 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 	}
 	
 	
-	public List<ClassForSubject> findById(Long id) {
-		return classRepository.findBySubjectId(id);
+	public ClassForSubject findById(Long id) {
+		return classRepository.findById(id).orElse(null);
 	}
 	
 	public List<ClassForSubjectDto> findBySubjectId(Long id) {
 		List<ClassForSubject> classss = classRepository.findBySubjectId(id);
 		return mapper.map(classss,  new TypeToken<List<ClassForSubjectDto>>() {}.getType());
 	}
+	
+	public List<ClassForSubjectDto> findBySubjectIdAndDate(Long id,Date date) {
+		List<ClassForSubject> classss = classRepository.findBySubjectIdAndDateBetweenRegistration(id, date);
+		return mapper.map(classss,  new TypeToken<List<ClassForSubjectDto>>() {}.getType());
+	}
+	
+	
+	
 	
 	public ClassForSubject findByClassId(int id) {
 		return classRepository.findById(id);

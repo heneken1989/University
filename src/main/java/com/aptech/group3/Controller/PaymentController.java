@@ -78,7 +78,7 @@ public class PaymentController {
                     .map(Long::parseLong)
                     .collect(Collectors.toList());
 	    
-	    	System.out.println("selectedItemsString: " + idList);
+	    System.out.println("selectedItemsString: " + idList);
 	    model.addAttribute("orderId", orderInfo);
 	    model.addAttribute("totalPrice", totalPrice);
 	    model.addAttribute("paymentTime", paymentTime);

@@ -2,10 +2,9 @@ package com.aptech.group3.Dto;
 
 import java.util.List;
 
+import com.aptech.group3.entity.Field;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+
 import lombok.Data;
 
 
@@ -15,25 +14,14 @@ import lombok.Data;
 public class UserDto    {
 
 	private Long id;
-    @NotEmpty(message="{admin.user.email.error}")
-	@Email(message="please input follow form of email")
 	private String email;
     private String code;
-	private String password;
-
-	@NotEmpty(message="{admin.user.name.error}")
 	private String name;
-
-
-	@NotEmpty(message="{admin.user.phone.error}")
-	private String phone;
-	
+	private String phone;	
 	private String infomation;
 	private String role;
 	private String address;
 	private String avatar;
-	@NotEmpty(message="Please choose field!")
-	@NotNull(message="Khong đc null ")
-	private List<Long> fields;
+	private List<Field> fields;
 	
 }

@@ -51,11 +51,11 @@ public class ClassSubjectApi {
 		
 		
 		  listHoliday.forEach(e -> { int cws =
-		  BaseMethod.customCompareDate(e.getDate(), startDate); int cwe =
-		  BaseMethod.customCompareDate(e.getDate(), endate.getTime());
+		  BaseMethod.customCompareDate(e.getDateStart(), startDate); int cwe =
+		  BaseMethod.customCompareDate(e.getDateEnd(), endate.getTime());
 		  
 		  if (cws >= 0 && cwe <= 0 && BaseMethod.getWeekDay(startDate) ==
-		  BaseMethod.getWeekDay(e.getDate())) { 
+		  BaseMethod.getWeekDay(e.getDateStart())) { 
 				endate.add(Calendar.DATE, 7);
 		  }
 		  });

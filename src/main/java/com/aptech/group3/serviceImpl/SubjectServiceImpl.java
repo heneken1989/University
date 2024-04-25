@@ -26,6 +26,11 @@ public class SubjectServiceImpl implements SubjectService {
 
 	@Autowired
 	private ModelMapper mapper;
+	
+	public Subject findByName(String name)
+	{
+		return subjectRepo.findByName(name);
+	}
 
 	public List<Subject> searchSubject(String name, Integer fieldId, Integer levelId) {
 		List<Subject> data = subjectRepo.findByMultipleCriteria(name, levelId, fieldId);

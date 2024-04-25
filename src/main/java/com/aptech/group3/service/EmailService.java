@@ -27,10 +27,10 @@ public class EmailService {
 	        SimpleMailMessage message = new SimpleMailMessage();
 	        message.setTo(email);
 	        message.setSubject("Thông tin đăng nhập mới");
-	        message.setText("Mật khẩu của bạn là: " + password);
+	        message.setText("Thông tin : " + password);
 	        emailSender.send(message);
-	    }
-	public boolean sendEmail(String subject, String message, String to) {
+	 }
+	 public boolean sendEmail(String subject, String message, String to) {
 		boolean f = false;
 		String from = "nguyenthaithanh101104@gmail.com";
 		String host = "smtp.gmail.com";

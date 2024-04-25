@@ -12,23 +12,23 @@
 <body>
 	<div layout:fragment="content" class="card text-center ml-3">
 		<!-- Thêm mã HTML để hiển thị thông báo lỗi -->
-
-
 		<div style="width: 100%" class="card-header">
 			<h3 style="font-weight: bold; font-size: 40px"
 				th:text="' List '+${type}"></h3>
 			<div class="d-flex align-items-center justify-content-between"
 				style="padding: 0 10px">
-
-				<form id="exportForm" th:action="@{export}" method="get">
-					<select name="role" onchange="submitForm()">
-						<option value=" ">Export to excel</option>
-						<option value="all">All</option>
-						<option value="student">Student</option>
-						<option value="teacher">Teacher</option>
-						<option value="employee">Employee</option>
+				<form >
+					<select id="classDropdown">
+						<option>Chọn Class</option>
 					</select>
+					</form>
+				<form id="exportForm" action="/user/export" method="GET">
+					<select id="subjectDropdown">
+						<option>Chọn Môn học</option>
+					</select>
+					<input type="submit" id="submitExport" value="Export">
 				</form>
+
 				<form style="width: 100%"
 					class="d-flex align-items-center justify-content-between"
 					method="get" th:action="@{/user/list}" id="form_change_semester">
@@ -78,7 +78,7 @@
 					<td class="text-center" th:text="${iterStat.index + 1}"></td>
 					<td class="text-center"><img
 						style="max-width: 50px; max-height: 50px; display: block; margin: auto;"
-						th:src="@{/assets/images/logo-university.png}"></td>
+						th:src="@{/getimage/{avatar}(avatar=${s.avatar})}" alt="@{/getimage/{avatar}(avatar=${s.avatar})}"/></td>
 					<td class="text-center" th:text="*{name}"></td>
 					<td class="text-center" th:text="*{email}"></td>
 					<td class="text-center" th:text="*{phone}"></td>
@@ -119,33 +119,8 @@
 				style="border: solid 1px black; padding: 3px 10px; margin-left: 10px">
 				Next</a>
 		</div>
-		<!-- 
-		<form id="semesterForm" th:action="@{list}" method="GET">
-			<select class="js-select-semester" name="semester">
-				<option value="">Chọn học kỳ</option>
-				<option th:each="semester : ${semesterAll}"
-					th:value="${semester.id}" th:text="${'học kỳ '+semester.name}"></option>
-			</select>
-			Loại bỏ button Gửi
-		</form> -->
 
-		<select id="hoc-ky" class="hoc-ky">
-			<option value="">Chọn học kỳ</option>
-			<option th:each="semester : ${semesterAll}" th:value="${semester.id}"
-				th:text="${semester.name}"></option>
-				
-				
-				
-		</select> <select id="class_select_list" class="lop-hoc">
-			<option value="" >Chọn lớp học</option>
-			
-			
-			
-			
-		</select> <select id="mon-hoc" class="mon-hoc" style="display: none;">
-			<option value="">Chọn môn học</option>
-		</select>
-	
+
 	</div>
 </body>
 

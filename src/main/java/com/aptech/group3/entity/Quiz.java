@@ -31,6 +31,7 @@ public class Quiz {
 	  private String type;
 	  private float totalMark;
 	  private Date createDate;
+	  private String status;
 	  
 		@ManyToOne
 		@JoinColumn(name="subject_id")

@@ -51,26 +51,24 @@ public class ForgotController {
 	    	model.addAttribute("aaaerrorMessage", "Email does not exist!.");
 	        return "forgot_email_password";
 	    } else {
-	        int otp = random.nextInt(999999);
-	        System.out.println("OTPPPP: " + otp);
+	    	int otp = random.nextInt(999999);
+	    	String otpString = String.valueOf(otp);
+	        System.out.println("OTPPPP: " + otpString);
 
 	        String subject = "OTP Forgot Password";
 	        String message = "OTP is:  " + otp;
 	        String to = email;
 
 	        //write code for send otp to email..
-	        boolean flag = this.emailService.sendEmail(subject, message, to);
-
-	        if (flag) {
+	        //boolean flag = this.emailService.sendEmail(subject, message, to);
+	        emailService.sendPasswordEmail(email, otpString);
+	       
 	            session.setAttribute("myotp", otp);
 	            session.setAttribute("email", email);
 	            model.addAttribute("successMessage", "OTP sent successfully!");
 	            return "verify_otp";
-	        } else {
-	        	model.addAttribute("errorMessage", "Failed to send OTP. Please try again.");
-	            return "forgot_email_password";
-	        }
-	    }
+	        } 
+	    
 	}
 
     	
@@ -78,21 +76,24 @@ public class ForgotController {
  
  @PostMapping("/verify-otp")
  public String verifyOtp(@RequestParam("otp") int otp, HttpSession session) {
-	 int myOtp = (int)session.getAttribute("myotp");
-	 String email = (String)session.getAttribute("email");
-	 if(myOtp == otp) {
-		 User user = this.uRepo.getUserByUsername(email);
-		 System.out.println("User ======: " + user);
-		 if(user == null) {
-		    	session.setAttribute("message", "User does not exit with this email!");
-				return "forgot_email_password";
-		 }else {
-			 return "change_form";
-		 }
+	 System.out.println("REquestOtp: ======: " + otp);
+	    int myOtp = (int) session.getAttribute("myotp");
+	    String email = (String) session.getAttribute("email");
+	    
+	    // Chuyển đổi chuỗi OTP thành số nguyên
+	     if (myOtp != otp) {
+//		 User user = this.uRepo.getUserByUsername(email);
+//		 System.out.println("User ======: " + user);
+//		 if(user == null) {
+//		    	session.setAttribute("message", "User does not exit with this email!");
+	    	 	return "verify_otp";
+//		 }
+//	     else {
+//			 return "change_form";
+//		 }
 		 
 	 }else {
-		 session.setAttribute("message", "You have entered wrong otp!");
-		 return "verify_otp";
+		 return "change_form";
 	 }
  }
  

@@ -6,7 +6,10 @@ import java.util.List;
 import com.aptech.group3.entity.TeacherRegisted;
 
 public interface TeacherRegistedService {
+
 	public List<TeacherRegisted> getListClassByDay(Long teacherId, Date day);
+	
+	public void update(Long classId,Long teacherId);
 	
 	
 	/* new method */

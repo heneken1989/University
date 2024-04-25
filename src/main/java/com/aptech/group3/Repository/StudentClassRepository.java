@@ -14,6 +14,17 @@ import com.aptech.group3.entity.StudentClass;
 
 
 public interface StudentClassRepository extends JpaRepository<StudentClass ,Long> {
+	
+	//thanh
+	@Query("SELECT o FROM StudentClass o WHERE o.classforSubject.id = :classId")
+    List<StudentClass> getStudentByClassId(Long classId);
+	
+	List<StudentClass> findByClassforSubject_IdAndClassforSubject_Subject_Id(Long classId, Long subjectId);
+	
+	
+
+    
+    
 	@Query("SELECT o FROM StudentClass o WHERE o.student.code LIKE %:code% AND o.classforSubject.id = :classId")
     List<StudentClass> getStudentByCodeAndClassId(String code, Long classId);
 	

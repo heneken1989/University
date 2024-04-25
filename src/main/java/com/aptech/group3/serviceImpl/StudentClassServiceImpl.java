@@ -2,6 +2,7 @@ package com.aptech.group3.serviceImpl;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -84,7 +85,6 @@ public class StudentClassServiceImpl implements StudentClassService {
 		return data;
 	}
 	
-	
 
 	public boolean CheckStuentInClass(Long stuentId, Long ClassId) {
 		StudentClass check = repo.findByStudent_IdAndClassforSubject_Id(stuentId, ClassId);
@@ -150,5 +150,24 @@ public class StudentClassServiceImpl implements StudentClassService {
 	{
 		return repo.findByStudentIdAndStatus(studentId, status);
 	}
+	
+	
+	//thanh
+    public List<StudentClass> getListStudentByClassId(Long classId) {
+        return repo.getStudentByClassId(classId);
+    }
+    
+    public List<User> getStudentsByClassAndSubject(Long classId, Long subjectId) {
+        // Lấy danh sách các học sinh đang học môn học có subjectId trong lớp học có classId từ repository
+        List<StudentClass> studentClasses = repo.findByClassforSubject_IdAndClassforSubject_Subject_Id(classId, subjectId);
+        
+        // Tạo danh sách học sinh từ danh sách StudentClass
+        List<User> students = new ArrayList<>();
+        for (StudentClass studentClass : studentClasses) {
+            students.add(studentClass.getStudent());
+        }
+        
+        return students;
+    }
 
 }

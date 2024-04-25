@@ -11,34 +11,39 @@ $("#select_semeser").on("change",()=>{
 $("#select_subject_form").on("change",()=>{
 	$("#form_change_semester").submit();
 })
-
+let currentlanguage=$(".btn_change_language").text()
 
 
 let checkChange= document.querySelectorAll(".convert_week_day");
-checkChange.forEach(e=>{
-	if(e.innerText==2){
-		e.innerHTML="Monday"
+if(checkChange){
+	check= currentlanguage == "English" ?1 :0
+	checkChange.forEach(e=>{
+	if(e.innerText==1){
+		if("Việt nam")
+		e.innerHTML= check==1 ?"Monday":"Thứ hai"
 	}
 	
-	if(e.innerText==3){
-		e.innerHTML="Tuesday"
+	if(e.innerText==2){
+		e.innerHTML=check==1 ?"Tuesday" :"Thứ ba"
 	}
-	if(e.innerText==4){
-		e.innerHTML="Wednesday"
+	if(e.innerText==3){
+		e.innerHTML=check==1 ?"Wednesday":"Thứ tư"
+	}
+	
+		if(e.innerText==4){
+		e.innerHTML=check==1 ?"Thursday":"Thứ năm"
 	}
 	
 		if(e.innerText==5){
-		e.innerHTML="Thursday"
+		e.innerHTML=check==1 ?"friday":"Thứ sáu"
 	}
 	
 		if(e.innerText==6){
-		e.innerHTML="friday"
-	}
-	
-		if(e.innerText==7){
-		e.innerHTML="Saturday"
+		e.innerHTML=check==1 ?"Saturday":"Thứ bảy"
 	}
 })
+}
+
 
 
 const aTag = document.querySelectorAll(".change_page_href");

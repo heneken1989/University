@@ -65,7 +65,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="fieldDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-             Default
+             Choose Subject
           </a>
           <ul class="dropdown-menu" aria-labelledby="fieldDropdown">
           </ul>
@@ -74,8 +74,9 @@
     </div>
   </div>
 </nav>
-<input type="hidden"   id="selectedSubjectId" name="subjectId" th:field="*{subject_id}" value="" class="form-control">
-<p th:if="${#fields.hasErrors('subject_id')}" th:errors="*{subject_id}" class="text-danger">Subject Error</p>
+
+<input id="selectedSubjectId1"   th:field="*{subjectName}" class="form-control">
+<p th:if="${#fields.hasErrors('subjectName')}" th:errors="*{subjectName}" class="text-danger">Subject Error</p>
 
 <label class="form-label">Enter Name of Exam</label>
 <input  th:field="*{name}"  class="form-control">
@@ -192,9 +193,11 @@
 	          var subjectAnchor = $('<a>').addClass('dropdown-item').text(subject.name).attr('href', '#').on('click', function() {
 	        	    // Update hidden input with the selected subject ID when a subject is clicked
 	        	    $('#selectedSubjectId').val(subject.id);
-	        	    $('#selectedSubjectId').text(subject.id);
+	        	    $('#selectedSubjectId').text(subject.name);
+	        	    $('#selectedSubjectId1').val(subject.name);
+	        	
 	        	    // Optional: update the dropdown display text
-	        	    $('#fieldDropdown').text(subject.name);
+	        	    $('#fieldDropdown').text("Choose Subject");
 	        	    // Close the dropdown after selection
 	        	    $('#fieldDropdown').dropdown('toggle');
 	        	  });

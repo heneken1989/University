@@ -19,6 +19,7 @@ public class ClassSubjectCreateDto {
 	@NotNull(message="{label.error}")
 	@NotEmpty(message="{label.error}")
 	private String date_start;
+	
 	private String date_end;
 	@NotNull(message="plese select slot start")
 	@Min(value=1,message="plese select slot end")
@@ -27,12 +28,24 @@ public class ClassSubjectCreateDto {
 	@NotNull(message="vui lòng nhập sĩ số")
 	@Min(value=20,message="vui lòng nhập sĩ số")
 	private int quantity;
-	private String status="waiting";
-	private int weekDay;
-	private Long teacher_id;
-	private Long subject_id;
-	private Long room_id;
-	private Long semeter_id;
+	
+	@NotEmpty(message="please select type of class")
 	private String type;
+	
+	private String status="waiting";
+	
+	private int weekDay;
+	
+	@NotNull(message="{label.error}")
+	private Long teacher_id;
+	
+	private Long subject_id;
+	
+	@NotNull(message="{label.error}")
+	private Long room_id;
+	
+	private Long semeter_id;
+	
+	
 	
 }

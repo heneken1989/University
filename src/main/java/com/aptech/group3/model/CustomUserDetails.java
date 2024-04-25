@@ -64,7 +64,26 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    
+    public String getName() {
+        return user.getName();
+    }
 
+    public String getPhone() {
+        return user.getPhone();
+    }
+    
+    public String getAddress() {
+        return user.getAddress();
+    }
+    
+    public String getInformation() {
+        return user.getInfomation();
+    }
+
+    public String getRole() {
+        return user.getRole();
+    }
 	public CustomUserDetails(User user2) {
 		// TODO Auto-generated constructor stub
 	}

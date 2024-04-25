@@ -1,5 +1,6 @@
  <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	layout:decorate="~{layout}">
 <head>
@@ -11,28 +12,109 @@
    
     <header id="header" class="pl-3 pr-3" style="margin-bottom:10px ;height:80px; margin-left:0; ">
     
+         
 <div class="containner d-flex align-items-center justify-content-between w-100" style="height:100%">
 <div id="toggle_position_header"></div>
 <div class="dropdown">
 
-  <button class="btn btn-secondary dropdown-toggle mr-4" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-   Language
+  <button class="btn btn-secondary dropdown-toggle mr-4 btn_change_language" type="button" id="dropdownMenuButton " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+  th:text="#{laebel.current.languag}">
+
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
      <a class="dropdown-item"href="?lang=en" th:text="#{label.lang.en}">eng</a>
-  <a class="dropdown-item" href="?lang=vi" th:text="#{label.lang.vi}">Another vi</a>
+  <a class="dropdown-item" href="?lang=vi" th:text="#{label.lang.vi}"> vi</a>
   </div>
 </div>
 
 
-</div>
-    
-           
-              
-              
+
+			<div class="dropdown-container">
+				<details class="dropdown right">
+					<summary class="avatar">
+
+
+						<img src="https://gravatar.com/avatar/00000000000000000000000000000000?d=mp">
+
+
+					</summary>
+					<ul sec:authorize="isAuthenticated()">
+						<!-- Optional: user details area w/ gray bg -->
+						<li>
+							<p>
+								<span>Welcome <span class="bold"
+									sec:authentication="principal.Username"></span>
+								</span> <span class="avatar_hiddent" style="display: none;"
+									sec:authentication="principal.user.avatar"></span> <span
+									class="block italic" sec:authentication="principal.user.email"></span>
+							</p>
+						</li>
+						<!-- Menu links -->
+						<li><a href="#" id="profile-link"> <span
+								class="material-symbols-outlined">Your profile</span>
+						</a></li>
+						<li><a href="#"> <span class="material-symbols-outlined">Setting</span>
+						</a></li>
+						<li><a href="#"> <span class="material-symbols-outlined">Help</span>
+						</a></li>
+						<!-- Optional divider -->
+						<li class="divider"></li>
+
+						<li><a th:href="@{/logout}"> <span
+								class="material-symbols-outlined">Logout</span>
+						</a></li>
+					</ul>
+
+					<!-- Nếu chưa đăng nhập -->
+					<ul sec:authorize="!isAuthenticated()"
+						style="background-color: none; color: red;">
+						<li>Vui lòng đăng nhập</li>
+					</ul>
+				</details>
+			</div>
+
+
+		</div>
 
 
 
-            </header>
+ <div class="overlay" id="overlay"></div> <!-- Lớp phủ -->
+    <div class="profile-container" id="profile-form" style="display: none;">
+        <div class="profile-section">
+            <h5>Account information</h5>
+            <div class="avatar-container">
+                <img id="avatar-large" src="large-avatar.jpg" alt="Avatar" style="width:100%; height:200px; object-fit:cover;">
+                <img id="avatar-small" src="small-avatar.jpg" alt="Avatar" style="width:80px; height:80px;border-radius:50%;transform:translateY(-15px);">
+                <!-- <button id="change-background-btn"><i class="fas fa-image"></i></button> -->
+                <span class="bold" sec:authentication="principal.Username"  style="font-family: Lucida Console Courier New; font-size: 26px; padding-right:20px;"></span>
+            </div>
+        </div>
+        <div class="personal-info-section" sec:authorize="isAuthenticated()">
+            <h5>Personal information</h5>	
+
+            <div  class="div-flex">
+                <label for="phone" class="a">Phone:</label>
+                <p class="b" sec:authentication="principal.user.phone"></p>
+            </div>
+             <div  class="div-flex">
+                <label for="position" class="a">Role:</label>
+                 <p class="b" sec:authentication="principal.authorities"></p> 
+            </div>
+            <div  class="div-flex">
+                <label for="address" class="a">Address:</label>
+                 <p class="b" sec:authentication="principal.address"></p> 
+            </div>
+            <div  class="div-flex">
+                <label for="information" class="a">Information:</label>
+                <p class="b" sec:authentication="principal.user.infomation"></p>
+            </div>
+            <button id="update-profile-btn">Edit</button>
+        </div>
+    </div>
+	
+
+
+
+	</header>
 </body>
 </html>

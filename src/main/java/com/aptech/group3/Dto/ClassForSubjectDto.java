@@ -31,13 +31,7 @@ public class ClassForSubjectDto {
 	private Room room;
 	private Semeter semeter;
 	private String type;
-	
 	private Boolean conflict;
 	private Boolean isSameSubject;
 	private Boolean isSameClass;
-	
-	
-	
-
-	
 }

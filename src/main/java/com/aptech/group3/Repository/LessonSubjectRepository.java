@@ -11,10 +11,10 @@ import com.aptech.group3.entity.LessonSubject;
 
 public interface LessonSubjectRepository extends JpaRepository<LessonSubject,Long> {
 
-	@Query("SELECT l FROM LessonSubject l WHERE l.class_subject.id= :classId AND DATE(l.day)= DATE(:day)")
+	@Query("SELECT l FROM LessonSubject l WHERE l.classSubject.id= :classId AND DATE(l.day)= DATE(:day)")
 	List<LessonSubject> getLessonByDay( Long classId, Date day);
 	
-	
+	List<LessonSubject>findByClassSubject_Id(Long subjectId);
 	
 
 }

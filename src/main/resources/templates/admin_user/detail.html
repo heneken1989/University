@@ -11,7 +11,7 @@
 
 
 
-		<div class="container">
+		<div class="container" >
 			<div class="row gutters"
 				style="border: 1px solid gray; box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);">
 				<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
@@ -20,8 +20,9 @@
 							<div class="account-settings">
 								<div class="user-profile">
 									<div class="user-avatar">
-										<img src="https://bootdey.com/img/Content/avatar/avatar7.png"
-											alt="Maxwell Admin">
+										<img
+											style="max-width: 200px; max-height: 200px; object-fit:cover; display: block; margin: auto;"
+											th:src="@{/getimage/{avatar}(avatar=${user.avatar})}" />
 									</div>
 									<h5 th:text=${user.name}></h5>
 									<h6 th:text=${user.email}></h6>
@@ -71,6 +72,10 @@
 									<h6 class="mt-3 mb-2 text-primary">Field</h6>
 								</div>
 
+								<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"
+									th:if="${#lists.isEmpty(fields)}">
+									<p style="color: red;">Chưa có field.</p>
+								</div>
 								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12"
 									th:each="fieldName, index : ${fields}">
 									<div class="form-group">
@@ -96,9 +101,6 @@
 				</div>
 			</div>
 		</div>
-
-
-
 	</div>
 </body>
 </html>

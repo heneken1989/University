@@ -9,10 +9,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.aptech.group3.Dto.QuizCreateDto;
 import com.aptech.group3.Dto.QuizQuestionCreateDto;
 import com.aptech.group3.Repository.QuizQuestionRepository;
 import com.aptech.group3.Repository.QuizRepository;
+import com.aptech.group3.entity.Quiz;
 import com.aptech.group3.entity.QuizQuestion;
+import com.aptech.group3.entity.Subject;
 import com.aptech.group3.service.QuizQuestionService;
 
 
@@ -27,6 +30,17 @@ public class QuizQuestionServiceImpl implements QuizQuestionService {
 		
 	@Autowired
 	ModelMapper mapper; 
+	
+	
+	public QuizQuestionCreateDto findQuizQuestionCreateDtoByID(Long id)
+	{
+		QuizQuestion quizQuestion = quizQuestionRepository.getById(id);
+		QuizQuestionCreateDto dto = mapper.map(quizQuestion, QuizQuestionCreateDto.class);
+
+		return dto  ;
+	}
+	
+	
 
     public Page<QuizQuestion> findPaginatedQuestions(int page, int pageSize) {
         PageRequest pageRequest = PageRequest.of(page, pageSize);
@@ -52,6 +66,11 @@ public class QuizQuestionServiceImpl implements QuizQuestionService {
   
     	
     }
+    
+    
+    
+    
+    
     
     public List<QuizQuestion> findListQuestionByQuizId(Long quizId)
     {

@@ -11,15 +11,27 @@ import com.aptech.group3.Dto.ClassForSubjectDto;
 import com.aptech.group3.Dto.TimeTableShowDto;
 import com.aptech.group3.Repository.StudentClassRepository;
 import com.aptech.group3.entity.StudentClass;
+import com.aptech.group3.entity.User;
 
 @Service
 public interface StudentClassService {
+	
+	//thanh
+	public List<StudentClass> getListStudentByClassId(Long classId);
+	public List<User> getStudentsByClassAndSubject(Long classId, Long subjectId);
+	
+	
 	public List<AttendanceDto> getListStudentInClass(Long classId);
 	
 	public List<AttendanceDto>getListStudentByCode(String code, Long classId);
 	
 	
 	public List<TimeTableShowDto> getCurrentTimeTable( Long studentId, Date dateStart,Date dateEnd, Long semesterId);
+	
+
+
+	
+
 	// new method 
 	
 	

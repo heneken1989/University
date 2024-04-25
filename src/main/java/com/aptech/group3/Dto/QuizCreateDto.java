@@ -22,18 +22,22 @@ public class QuizCreateDto {
 	  private int duration;
 	  
 	
-	@NotNull(message="plese select Type")
-	@Min(value=1,message="plese select Type")
+	 @NotNull(message="plese select Type")
+	  @Min(value=1,message="plese select Type")
 	  private String type;
 	  
-	 @NotNull(message="Please Input Mark")
-	 @Min(value=1,message="Mark Must greater than 0")
+	  @NotNull(message="Please Input Mark")
+	  @Min(value=1,message="Mark Must greater than 0")
 	  private float  totalMark;
 	  
 	
 	   private Date   createDate;
 	  
-	   @NotNull(message = "A subject must be selected.")
+	
         private Long   subject_id;
+        
+        @NotNull(message = "A subject must be selected.")
+        @NotEmpty(message = "A subject must be selected.")
+	   private String subjectName;
 	   
 }

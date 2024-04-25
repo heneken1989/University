@@ -34,10 +34,13 @@
 				<option value="EMPLOYEE">Employee</option>
 			</select>
 		</div>
+		
+
 		<!-- STUDENT -->
 		<form style="width: 70%; display: none"
 			id="student_form_create_account" th:action="@{/user/create}"
-			method="post" th:object="${data}">
+			method="post" th:object="${data}"
+			enctype="multipart/form-data">
 			<input type="hidden" id="hidden_role_data_create" th:field="*{role}" />
 			<div>
 				<div class="input-group mb-3">
@@ -119,7 +122,8 @@
 		<!-- TEACHER form_create_user -->
 		<form id="teacher_form_create_account"
 			style="width: 70%; display: none" th:action="@{/user/create}"
-			method="post" th:object="${data}">
+			method="post" th:object="${data}"
+			enctype="multipart/form-data">
 			<input type="hidden" id="hidden_role_data_create_teacher"
 				th:field="*{role}" />
 
@@ -161,19 +165,6 @@
 				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
 					class="text-danger">Name Error</p>
 
-				<div class="input-group mb-3">
-					<div class="input-group-prepend" style="width: 150px">
-						<label style="width: 100%" class="input-group-text"
-							for="infomation">Infomation</label>
-					</div>
-					<input type="text" th:field="*{infomation}" class="form-control"
-						id="name" placeholder="Infomation">
-				</div>
-				<p th:if="${#fields.hasErrors('infomation')}"
-					th:errors="*{infomation}" class="text-danger">Name Error</p>
-
-
-
 				<!-- Include other necessary fields such as phone, address, etc. -->
 				<div class="input-group mb-3" style="display: none;">
 					<div class="input-group-prepend" style="width: 150px">
@@ -183,6 +174,17 @@
 						id="password" placeholder="Password">
 				</div>
 
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend" style="width: 150px">
+						<label style="width: 100%" class="input-group-text" for="name">Avatar</label>
+					</div>
+					<input type="file" th:field="*{avatar}" class="form-control"
+						id="avatar" placeholder="Avatar">
+				</div>
+				<p th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}"
+					class="text-danger">Name Error</p>
+					
 				<div class="input-group mb-3">
 					<div class="input-group-prepend" style="width: 21%">
 						<label style="width: 100%" class="input-group-text"
@@ -208,7 +210,8 @@
 		<!-- Employee form_create_user -->
 		<form id="employee_form_create_account"
 			style="width: 70%; display: none" th:action="@{/user/create}"
-			method="post" th:object="${data}">
+			method="post" th:object="${data}"
+			enctype="multipart/form-data">
 			<input type="hidden" id="hidden_role_data_create_employee"
 				th:field="*{role}" />
 
@@ -260,6 +263,17 @@
 					<input type="password" th:field="*{password}" class="form-control"
 						id="password" placeholder="Password">
 				</div>
+
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend" style="width: 150px">
+						<label style="width: 100%" class="input-group-text" for="name">Avatar</label>
+					</div>
+					<input type="file" th:field="*{avatar}" class="form-control"
+						id="avatar" placeholder="Avatar">
+				</div>
+				<p th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}"
+					class="text-danger">Name Error</p>
 
 				<div class="input-group mb-3">
 					<div class="input-group-prepend" style="width: 21%">

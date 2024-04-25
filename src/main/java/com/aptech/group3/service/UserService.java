@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.aptech.group3.Dto.UserCreateDto;
 import com.aptech.group3.Dto.UserDto;
 import com.aptech.group3.entity.Field;
 import com.aptech.group3.entity.User;
@@ -20,10 +21,10 @@ import jakarta.servlet.ServletOutputStream;
 @Service
 public interface UserService {
 	public Page<User> findByRole(String role, Pageable pageable);
-	public void create(UserDto dto);
+	public void create(UserCreateDto dto);
 	public UserDetails loadUserByUserid(Long id);
 	public User findById(Long id);
-	public void update(UserDto dto);
+	public void update(UserCreateDto dto);
 	public int countStudents();
 	public int countTeachers();
 	public int countEmployees();

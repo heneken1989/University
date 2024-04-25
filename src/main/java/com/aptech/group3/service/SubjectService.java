@@ -9,6 +9,8 @@ import com.aptech.group3.entity.SubjectLevel;
 import com.aptech.group3.entity.User;
 
 public interface SubjectService {
+	public Subject findByName(String name);
+	
 	public List<SubjectLevel> listSubjectLevel();
 	 public List<Subject> findBySubjectName(String name);
 	 public Optional<Subject> findbyId(Long id);

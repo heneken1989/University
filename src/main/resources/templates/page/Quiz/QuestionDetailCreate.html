@@ -43,21 +43,22 @@
  	<form id="question-form" th:action="@{/quiz/createQuestion}" th:object="${questionDto}" method="post">
  	
  	  <input type="hidden"    th:value="${quizId}"  name="quizId"  >
+ 	   <input type="hidden"    name="questionId" th:value="${questionId}" >
  	  
 <div class="container mt-4">
     <div class="mb-3">
         <label for="question-type" class="form-label">Question Type</label>
-        <select class="form-select" id="question-type" th:field="*{type}">
-                <option value="Multi">Multiple Choice</option>
-                <option value="Single">Single Correct</option>           
-        </select>
+  <select id="question-type" class="form-select" th:field="*{type}">
+    <option value="Multi">Multiple Choice</option>
+    <option value="Single">Single Correct</option>
+</select>
         
         <p th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="text-danger">Type Error</p>
     </div>
 
     <div class="mb-3">
         <label for="question-text" class="form-label">Question:</label>
-        <textarea id="question-text" class="form-control" name="content" ></textarea>
+        <textarea id="question-text" class="form-control" th:field="*{content}" ></textarea>
  
         
     </div>
@@ -106,16 +107,58 @@ $('#question-form').submit(function() {
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script th:inline="javascript">
- 
-$('#add-correct-answer-btn').click(function() {
-    // Add a new input field for a correct answer along with a delete button
-    const correctAnswerHtml = `
-        <div class="input-group mb-2">
-            <input type="text" name="correctAnswers[]" class="form-control" placeholder="Enter correct answer">
-            <button type="button" class="btn btn-danger delete-answer-btn">Delete</button>
-        </div>`;
-    $('#correct-answers').append(correctAnswerHtml);
+
+
+
+
+<script>
+$(document).ready(function() {
+    // Call the function to set up the page correctly when it initially loads
+    setupPage();
+
+    $('#question-type').change(function() {
+        setupPage(); // Call the function again when the question type changes
+    });
+
+    function setupPage() {
+        var questionType = $('#question-type').val();
+
+   
+        if (questionType === 'Single') {
+            $('#correct-answers').empty();
+            $('#add-correct-answer-btn').prop('disabled', true);
+            addCorrectAnswer();
+       
+        } else {
+
+          //  $('#correct-answers').empty();
+            $('#add-correct-answer-btn').prop('disabled', false);
+        }
+    }
+
+    function addCorrectAnswer() {
+        const correctAnswerHtml = `
+            <div class="input-group mb-2">
+                <input type="text" name="correctAnswers[]" class="form-control" placeholder="Enter correct answer">
+                <button type="button" class="btn btn-danger delete-answer-btn">Delete</button>
+            </div>`;
+        $('#correct-answers').append(correctAnswerHtml);
+        if ($('#question-type').val() === 'Single' && $('#correct-answers input[type="text"]').length > 0) {
+            $('#add-correct-answer-btn').prop('disabled', true);
+        }
+    }
+
+    // Delete correct answer input fields
+    $('#correct-answers').on('click', '.delete-answer-btn', function() {
+        $(this).closest('.input-group').remove();
+        if ($('#question-type').val() === 'Single' && $('#correct-answers input[type="text"]').length === 0) {
+            $('#add-correct-answer-btn').prop('disabled', false);
+        }
+    });
+
+    $('#add-correct-answer-btn').click(function() {
+        addCorrectAnswer();
+    });
 });
 
 $('#add-incorrect-answer-btn').click(function() {
@@ -150,15 +193,15 @@ $('#answers-container').on('click', '.delete-answer-btn', function() {
         $('#incorrect-answers').append(incorrectAnswerHtml);
     }
 
-    // Function to reconstruct answers based on previously inputted data
+
     function reconstructAnswers() {
         var correctAnswers = $('#answersData').data('correct-answers');
         var incorrectAnswers = $('#answersData').data('incorrect-answers');
-        // Reconstruct correct answer inputs
+ 
         correctAnswers.forEach(function(answer) {
             addCorrectAnswer(answer);
         });
-        // Reconstruct incorrect answer inputs
+
         incorrectAnswers.forEach(function(answer) {
             addIncorrectAnswer(answer);
         });
@@ -184,8 +227,6 @@ $(document).ready(function() {
         if (Number(points) <= 0) {
             errorMessages.push("POINTS must >0");
         }
-
-        // Check if any correct or incorrect answers have been provided
         var hasCorrectAnswers = $('#correct-answers input[type="text"]').filter(function() {
             return $.trim($(this).val()).length > 0;
         }).length > 0;
@@ -194,62 +235,19 @@ $(document).ready(function() {
             return $.trim($(this).val()).length > 0;
         }).length > 0;
 
-        if (!hasCorrectAnswers && !hasIncorrectAnswers) {
+        if (!hasCorrectAnswers || !hasIncorrectAnswers) {
             errorMessages.push("You must provide at least one CORRECT or INCORRECT ANSWER.");
         }
 
         if (errorMessages.length > 0) {
-            // Prevent form submission
             e.preventDefault();
-            // Show an error message with all the collected error messages
             swal("Oops!", errorMessages.join("\n"), "error");
-            return; // Exit the function if there are errors
+            return;
         }
-
-        // If no errors, set the content correctly
         $('textarea[name="content"]').val(questionContent);
     });
 });
 </script>
-
-
-
-
-<!-- <script>
-$(document).ready(function() {
-    $('#question-form').on('submit', function(e) {
-
-        var formData = new FormData(this);
-        formData.set('content', CKEDITOR.instances['question-text'].getData());
-        $('#correct-answers input[type="text"]').each(function() {
-            formData.append('correctAnswers', $(this).val());
-        });
-        $('#incorrect-answers input[type="text"]').each(function() {
-            formData.append('incorrectAnswers', $(this).val());
-        });
-
-        var corect =  $('#correct-answers input[type="text"]');
-        var xhr = new XMLHttpRequest();
-        var url = '/quiz/createQuestion';
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    console.log('Question created successfully');
-          
-                } else {
-                    console.error('Error creating question: ' + xhr.responseText);
-
-                }
-            }
-        };       
-        xhr.send(formData);
-    });
-});
-</script> -->
-
 
 </body>
 </html>

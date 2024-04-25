@@ -26,7 +26,7 @@ public class LessonSubject {
 	private String type;
 	@ManyToOne
 	@JoinColumn(name="class_id" , referencedColumnName="id")
-	private ClassForSubject class_subject;
+	private ClassForSubject classSubject;
 	
 
 }

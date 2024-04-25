@@ -16,6 +16,7 @@ import com.aptech.group3.entity.User;
 
 public interface SubjectRepository extends JpaRepository<Subject,Long> {
 	Optional<Subject> findById(Long id);
+	Subject findByName(String name);
 	List<Subject> findByNameContainingIgnoreCase(String name);
 	List<Subject> findBySubjectlevelId(Long id);
 	List<Subject> findBySubjectlevelIdAndFieldId(Long id,Long fieldId);

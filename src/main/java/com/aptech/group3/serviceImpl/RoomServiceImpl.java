@@ -22,6 +22,11 @@ public class RoomServiceImpl implements RoomService {
 		return data;
 	}
 	
+	public Room getRoomById(Long Id) {
+		return rr.findById(Id).orElse(null);
+	}
+	
+	
 	
 	
 }

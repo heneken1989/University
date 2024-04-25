@@ -1,6 +1,9 @@
 package com.aptech.group3.Controller;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,7 @@ import com.aptech.group3.Dto.SubjectDto;
 import com.aptech.group3.Repository.ClassForSubjectRepository;
 import com.aptech.group3.Repository.FiledRepository;
 import com.aptech.group3.Repository.StudentClassRepository;
+import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.Field;
 import com.aptech.group3.entity.StudentClass;
@@ -61,6 +65,9 @@ public class SubjectRegisterController {
 
 	@Autowired
 	private UserServiceImpl userservice;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	private ClassForSubjectRepository classForSubjectRepository;
@@ -116,10 +123,12 @@ public class SubjectRegisterController {
 	@GetMapping("/listSubjectByStudentAndLevel")
 	@ResponseBody
 	public List<SubjectDto> listSubjectByStudentAndLevel(@RequestParam Long fieldId, @RequestParam Long subjectLevelId,
-			@AuthenticationPrincipal UserDetails currentUser) {
+			 @AuthenticationPrincipal CustomUserDetails currentUser) {
 
-		User student = userservice.getUserByUserEmail(currentUser.getUsername());
+		User student = currentUser.getUser();
 		List<SubjectDto> listSubjects = subService.findByStudent(student, fieldId);
+		
+		System.out.print("listSubjects:"+  listSubjects.size() +"field id"+fieldId);
 		List<Subject> subjectsByLevel = subService.findByLevel(subjectLevelId);
 		List<SubjectDto> filteredSubjects = new ArrayList<>();
 		for (SubjectDto subjectDto : listSubjects) {
@@ -142,9 +151,11 @@ public class SubjectRegisterController {
 		User student = userservice.getUserByUserEmail(currentUser.getUsername());
 		// take RegisteringList of student
 		List<StudentClass> studentClasses = studentsubservice.findSubjectByStudentId(student.getId());
-
+		LocalDateTime now = LocalDateTime.now();
+		Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+		
 		// take list Class of each subject
-		List<ClassForSubjectDto> listclass = classservice.findBySubjectId(subjectId);
+		List<ClassForSubjectDto> listclass = classservice.findBySubjectIdAndDate(subjectId, date);
 		String[][] scheduleTable = addToSchedule(student.getId(), studentClasses);
 		for (ClassForSubjectDto i : listclass) {
 			int newSlotStart = i.getSlotStart();
@@ -190,20 +201,20 @@ public class SubjectRegisterController {
 		for (int slot = newSlotStart; slot <= newSlotEnd; slot++) {
 			String existingClass = scheduleTable[slot - 1][2 * (newWeekday - 1)]; // Check the first half of the day
 			String existingClassSecond = scheduleTable[slot - 1][2 * (newWeekday - 1) + 1];
-			if (newSemesterType.equals("SecondHalf")) {
+			if (newSemesterType.equals("lhaft")) {
 				if (existingClassSecond != null && !existingClassSecond.isEmpty()) {
 					return true;
 				}
 			}
 
-			if (newSemesterType.equals("lhaft")) {
+			if (newSemesterType.equals("fhaft")) {
 				if (existingClass != null && !existingClass.isEmpty()) {
 					return true;
 				}
 
 			}
 
-			if (newSemesterType.equals("full")) {
+			if (newSemesterType.equals("all")) {
 
 				if (existingClassSecond != null && !existingClassSecond.isEmpty()) {
 					return true;
@@ -231,7 +242,7 @@ public class SubjectRegisterController {
 			String subjectInfo = classForSubject.getSubject().getName() + " " + classForSubject.getRoom().getName();
 
 			for (int slot = slotStart; slot <= slotEnd; slot++) {
-				if (semesterType.equals("full")) {
+				if (semesterType.equals("all")) {
 					// Populate both halves of the day
 					scheduleTable[slot - 1][2 * (weekday - 1)] = subjectInfo;
 					scheduleTable[slot - 1][2 * (weekday - 1) + 1] = subjectInfo;

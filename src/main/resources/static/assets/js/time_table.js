@@ -1,8 +1,8 @@
 let form= $("#form_search_time_table");
 
 const currentUrlTime = window.location.href;
-const url = new URL(currentUrlTime);
-const baseUrl = url.origin;
+const urlTimeTable = new URL(currentUrlTime);
+const baseUrlTimeTable = urlTimeTable.origin;
 
 $("#select_week_search_time_table").on("change",()=>{
 	form.submit();
@@ -23,7 +23,7 @@ let submitFormAttendance=(e)=>{
 	
 let data={studentId,status};
 $.post({
-    url: `${baseUrl}/api/attendance/create/${classId}`,
+    url: `${baseUrlTimeTable}/api/attendance/create/${classId}`,
     data: JSON.stringify(data),
     contentType: "application/json",
     success: () => {
@@ -32,6 +32,39 @@ $.post({
 });
 
 }
+
+//change radio hiliday
+$(".radio_check_type_holiday").on("change",(e)=>{
+	console.log(e.target.value)
+	 if(e.target.value=="one"){
+		 
+		 $("#input_start_holiday_create").show();
+		 $("#input_end_holiday_create").hide();
+		  $("#input_date_end_create_holiday").val($("#input_date_start_create_holiday").val());
+	 }else{
+
+		 $("#input_start_holiday_create").show();
+		 $("#input_end_holiday_create").show();
+	 }
+});
+
+
+
+ $('.radio_check_type_holiday').each(function() {
+        if ($(this).is(':checked')) {
+      if($(this).val()=="one"){
+		  $("#input_date_end_create_holiday").val(" ");
+		  	 $("#input_start_holiday_create").show();
+	  }else{
+		   $("#input_start_holiday_create").show();
+		 $("#input_end_holiday_create").show();
+	  }
+        }
+        })
+
+
+
+
 
 
 //show notify error attenadance
@@ -54,6 +87,7 @@ let errorHidden=document.getElementById("hidden_error_attend");
 //seacrh for attendance
 let searchForm= $("#form_search_attendance");
 $("#select_attendace_show_form").on("change",()=>{
+
 searchForm.submit();
 })
 
@@ -70,7 +104,7 @@ list.forEach(e=>{
 	let data={studentId,status};
 	
 $.post({
-    url: `${baseUrl}/api/attendance/create/${classId}`,
+    url: `${baseUrlTimeTable}/api/attendance/create/${classId}`,
     data: JSON.stringify(data),
     contentType: "application/json",
     success: () => {
@@ -80,4 +114,31 @@ $.post({
 
 });
 });
+
+// handle for day create holiday
+ const todayHoliday = new Date().toISOString().split('T')[0];
+    
+    let startInputHoliday= $("#input_date_start_create_holiday");
+if(startInputHoliday){
+	/*startInputHoliday.attr("min",todayHoliday)*/
+}
+   
+    
+$("#input_date_start_create_holiday").on("change",(e)=>{
+	
+	 $('.radio_check_type_holiday').each(function() {
+        if ($(this).is(':checked')) {
+      if($(this).val()=="one"){
+		$("#input_date_end_create_holiday").val($("#input_date_start_create_holiday").val())
+        }
+        }
+        })
+	
+	
+	
+	$("#input_date_end_create_holiday").attr("min",e.target.value);
+	$("#input_date_end_create_holiday").prop("disabled",false);
+	
+});
+
 	

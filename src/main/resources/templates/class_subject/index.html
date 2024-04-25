@@ -7,22 +7,22 @@
     <div layout:fragment="content" class="card text-center ml-3">
        
        <div style="width:100%" class="card-header">
-        <h3 style="font-weight:bold; font-size:40px" >List Class</h3>
+        <h3 style="font-weight:bold; font-size:40px" th:text="#{class.list.head}">List Class</h3>
         <div class="d-flex align-items-center justify-content-between" style="padding: 0 10px">
        <form style="width:100%" class="d-flex align-items-center justify-content-between" method="get" th:action="@{/class/list}" id="form_change_semester">
        <div>
-       <span>Semester :</span>
+       <span th:text="#{label.semester} + ' : '">Semester :</span>
        <select name="semester" id="select_semeser">
        <option th:each="se :${semesters}" 
        th:selected="${currentSemester == se.id}"
        th:value="${se.id}"
-       th:text="'semester ' + ${se.name} + ' ' + ${se.year} + '-' + (${se.year} + 1)"></option>
+       th:text="#{label.semester} + ${se.name} + ' ' + ${se.year} + '-' + (${se.year} + 1)"></option>
        </select>
        </div>
        <div>
-       <span>Subject :</span>
+       <span th:text="#{label.subject} + ' : '">Subject :</span>
         <select name="subject" id="select_subject_form">
-        <option th:selected="${currentSubject==0}" value="0">All subject</option>
+        <option th:selected="${currentSubject==0}" value="0" th:text="#{class.list.all}">All subject</option>
        <option th:selected="${currentSubject== sb.id}" 
        th:each="sb :${subjects}" 
        th:value="${sb.id}"
@@ -41,15 +41,15 @@
             <thead class="bg bg-primary">
                 <tr>
                     <th>#</th>
-                    <th  class="text-center">Name</th>
-                    <th class="text-center">Quantity</th>
-                    <th class="text-center">Week day</th>
-                    <th class="text-center">Slot</th>
-                    <th class="text-center">Date start</th>
-                    <th class="text-center">Date end</th>
-                    <th class="text-center">Teacher</th>
-                    <th class="text-center">Room</th>
-                    <th class="text-center">Action</th>
+                    <th  class="text-center" th:text="#{label.name}" >Name</th>
+                    <th class="text-center" th:text="#{class.quantity}">Quantity</th>
+                    <th class="text-center"  th:text="#{label.weekday}">Week day</th>
+                    <th class="text-center" th:text="#{schedule.day.slot}">Slot</th>
+                    <th class="text-center" th:text="#{holiday.date.start}">Date start</th>
+                    <th class="text-center" th:text="#{holiday.date.end}">Date end</th>
+                    <th class="text-center" th:text="#{label.teacher}">Teacher</th>
+                    <th class="text-center" th:text="#{label.room}">Room</th>
+                    <th class="text-center" th:text="#{label.action}">Action</th>
                 </tr>
             </thead>
             <tbody th:each="s, iterStat : ${data.content}" th:object="${s}">
@@ -64,7 +64,7 @@
                     <td class="text-center" th:text="*{teacher.name}"></td>
                     <td class="text-center" th:text="*{room.name}"></td>
                     <td class="text-center" >
-                    <a class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Update"
+                    <a class="btn btn-warning" th:href="@{'/class/edit/' +*{id}}" data-toggle="tooltip" data-placement="top" title="Update"
         > <i class="fas fa-edit"></i></a>
                     <a th:href="@{'/class/detail/' + *{id}}" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Details">
                     <i class="fas fa-info-circle"></i>
@@ -78,7 +78,7 @@
         
         <div class="card-footer" >
         <a th:data-s="${data.number+1}" id="back_page_btn"  th:classappend="${data.first} ? 'disabled' : ''"  class="btn " 
-        style="border:solid 1px black; padding: 3px 10px ; margin-right:10px" 
+        style="border:solid 1px black; padding: 3px 10px ; margin-right:10px" th:text="#{label.next}"
         > Previous</a>
         
      <a th:each="pageNo : ${#numbers.sequence(0, data.totalPages-1)}"
@@ -89,7 +89,7 @@
 </a>
         
         <a th:data-s="${data.number+1}" id="next_page_btn"  th:classappend="${data.last} ? 'disabled' : ''"  class="btn "  
-        style="border:solid 1px black; padding: 3px 10px ;margin-left:10px" > Next</a>
+        style="border:solid 1px black; padding: 3px 10px ;margin-left:10px" th:text="#{label.back}" > Next</a>
         </div>
         
         

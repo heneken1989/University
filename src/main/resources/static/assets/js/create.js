@@ -16,8 +16,18 @@ const baseUrl = url.origin;
  let startDay=document.getElementById("semester_start_create").value;
  let dendTheory;
  let dendAction;
+ 	
  
  
+if($("#error_create_class_hidden")){
+	if($("#error_create_class_hidden").val()==1){
+		$(".hiddne_div_create").show()
+		$(".handle_hidden_error").show()
+	}
+	
+}
+
+
 
  
  if($(".select_subject_create").val()!= 0){
@@ -68,13 +78,16 @@ if (credit > 3) {
    }
   $("#subject_hidden_creaet").val(selectedId);
   subject=selectedId
-   $("#select_classtype_create_theory").parent().show();
-  $("#input_capacity_create_both").parent().show();
   
-  
-  $("#select_classtype_create").parent().show();
-  $("#input_capacity_create").parent().show();
-  
+  //shwo capacity both
+   $("#input_capacity_create_both").parent().parent().show();
+   
+   //show capacity one
+    $("#input_capacity_create").parent().parent().show()
+    
+
+ 
+//set credit for start slot
  $("#select_startslot_create").attr("data-id",credit)
   
 });
@@ -82,21 +95,22 @@ if (credit > 3) {
 //handle onchange capacity
 $("#input_capacity_create").on('change',(e)=>{
 	capacity=e.target.value 
+	$("#select_classtype_create").parent().parent().show();
 })
 $("#input_capacity_create_both").on('change',(e)=>{
+	
+	$("#select_classtype_create_theory").parent().parent().show();
 	capacity=e.target.value 
 
 
 })
 
 //handle after select class type 
-$("#select_classtype_create").on("change",(e)=>{
+$("#select_classtype_create").on("change",()=>{
 	
 	let date =new Date(startDay);
-    $("#select_startdate_create").parent().show();
+    $("#select_startdate_create").parent().parent().show();
     
-   
- 
     if($("#select_classtype_create").val()=="SecondHalf"){
 		date=newData = new Date(date.getTime() + (8 * 7 * 24 * 60 * 60 * 1000));	
 	}
@@ -109,9 +123,6 @@ $("#select_classtype_create").on("change",(e)=>{
     $("#select_startdate_create").attr("max",max)
   
 });
-
-
-
 
 
 //handle after select start date
@@ -135,8 +146,6 @@ $("#select_classtype_create").on("change",(e)=>{
 		
 	  });
 	
-    
-		
 // loai bo nhung tiet khong duoc lua chon
 		slotday.forEach(x=>{
 			 if($("#select_classtype_create").val()=="all"){
@@ -144,6 +153,7 @@ $("#select_classtype_create").on("change",(e)=>{
 				result.push(x)
 			}
 			 }else{
+				
 				  	if(x<6 && (x+Number(credit)-1)*2<=6 || x>6 && x<12&& (x+Number(credit)*2-1)<=12){
 				result.push(x)
 			 }
@@ -152,10 +162,13 @@ $("#select_classtype_create").on("change",(e)=>{
 	
 		let data= result.map(e=>`<option value="${e}">${e}</option>`).join()
 		$("#select_startslot_create").html(`<option value="0"> select slot</option> ${data} `)
+		$("#select_startslot_create").parent().parent().show();
 			if(weekday!=null){
 			getAvailableRoom(capacity,weekday,start,dstart,dend)
 		}
-	})
+	});
+	
+	
        
 //handle after select start slot
 $("#select_startslot_create").on("change", () => {
@@ -169,17 +182,17 @@ $("#select_startslot_create").on("change", () => {
 	}
 	
 	 $("#select_endslot_create").parent().show();
-	 $("#select_room_create").parent().show();
+	 $("#select_room_create").parent().parent().show();
 	 getAvailableRoom(capacity,weekday,start,dstart,dend) 
-})
+});
 
 //handle after slect room
 $("#select_room_create").on("change", () => {
 	 getAvailableTeacher(subject,weekday,start,dstart,dend)
-	$("#select_teacher_create").parent().show();
-	
-	
-})
+	$("#select_teacher_create").parent().parent().show();
+});
+
+
 
 
 //set semesterid for all 
@@ -189,7 +202,10 @@ $("#semester_value_create_both").val(smId)
 //handle after select type for theory
 let typeTheo
 $("#select_classtype_create_theory").on("change",e=>{
-	$("#select_startdate_create_theory").parent().show();
+	if($("#select_classtype_create_action").val()!=""){
+		$("#select_startdate_create_theory").parent().parent().show();
+	}
+	
 	let date =new Date(startDay)
 	typeTheo=e.target.value;
 	 if(e.target.value=="lhalf"){
@@ -207,7 +223,10 @@ $("#select_classtype_create_theory").on("change",e=>{
 
 let typeAction
 $("#select_classtype_create_action").on("change",e=>{
-	$("#select_startdate_create_action").parent().show();
+	if($("#select_classtype_create_theory").val()!=""){
+			$("#select_startdate_create_action").parent().parent().show();
+	}
+
 	let date =new Date(startDay)
 	typeAction=e.target.value;
 	 if(e.target.value=="lhalf"){
@@ -226,27 +245,40 @@ $("#select_classtype_create_action").on("change",e=>{
 //dandle after select start day for theory
 $("#select_startdate_create_theory").on("change",e=>{
 	
+   	let date = new Date(e.target.value);
+		wdt=date.getDay()+1;
+	$("#hidden_weekday_create_theory").val(wdt);
+   
    
    let getURL=`${baseUrl}/api/class/dateend?start=${e.target.value}&type=${typeTheo}`;
 	  $.get(getURL, (res,status)=>{
 		 let dayData = new Date(res);
 		  dend = dayData.toISOString().split('T')[0];
-     
-
+    
 		$("#select_enddate_create_theory").val(dend);
 		$("#select_enddate_create_theory").parent().show()
-		
 	  });
    
 		let slotArray=[];
-			slotday.forEach(x=>{
-			if(x<6 && x+Number(credit-creditAction)<=6 || x>6 && x<12&& x+Number(credit-creditAction)<=12){
+		
+			
+		slotday.forEach(x=>{
+			 if($("#select_classtype_create_theory").val()=="all"){
+				 	if(x<6 && x+Number(credit)<=6 || x>6 && x<12&& x+Number(credit)<=12){
 				slotArray.push(x)
 			}
-		});		
+			 }else{
+				  	if(x<6 && (x+Number(credit)-Number(creditAction)-1)*2<=6 || x>6 && x<12&& (x+(Number(credit)-Number(creditAction))*2-1)<=12){
+				slotArray.push(x)
+			 }
+		}
+		})	
 let data= slotArray.map(e=>`<option value="${e}">${e}</option>`).join()
 		$("#select_startslot_create_theory").html(`<option value="0"> select slot for theory</option> ${data}`)
-		$("#select_startslot_create_theory").show()
+		if($("#select_startdate_create_action").val()!=""){
+					$("#select_startslot_create_theory").parent().parent().show();
+		}
+
 })
 
 //dandle after slect start day for action
@@ -260,26 +292,53 @@ $("#select_startdate_create_action").on("change",e=>{
 		$("#select_enddate_create_action").parent().show()
 		
 	  });
+	let date = new Date(e.target.value);
+		wdt=date.getDay()+1;
+	$("#hidden_weekday_create_action").val(wdt);
 	
 		
 				let slotArray=[];
-			slotday.forEach(x=>{
-			if(x<6 && x+Number(creditAction)<=6 || x>6 && x<12&& x+Number(creditAction)<=12){
+				
+		slotday.forEach(x=>{
+			 if($("#select_classtype_create_action").val()=="all"){
+				 	if(x<6 && x+Number(credit)<=6 || x>6 && x<12&& x+Number(credit)<=12){
 				slotArray.push(x)
 			}
-		})
+			 }else{
+				
+				  	if(x<6 && (x+Number(creditAction)-1)*2<=6 || x>6 && x<12&& (x+Number(creditAction)*2-1)<=12){
+				slotArray.push(x)
+			 }
+		}
+		})	
 				
 let data= slotArray.map(e=>`<option value="${e}">${e}</option>`).join()
 		$("#select_startslot_create_action").html(`<option value="0"> select slot for action</option> ${data}`)
-		$("#select_startslot_create_action").parent().show()
+		console.log($("#select_startdate_create_theory").val())
+		if($("#select_startdate_create_theory").val()!=""){
+			$("#select_startslot_create_action").parent().parent().show();
+		}
+		
 })
 
 
 //handle after select startslot for theory
 $("#select_startslot_create_theory").on("change",e=>{
-	$("#select_endslot_create_theory").val(Number(e.target.value)+Number(credit-creditAction) );
-	 $("#select_endslot_create_theory").parent().show();
-	 $("#select_room_create_theory").parent().show();
+	
+	  if($("#select_classtype_create_theory").val()=="all"){
+		 $("#select_endslot_create_theory").val(Number(e.target.value)+Number(credit) );
+	}else{
+		$("#select_endslot_create_theory").val((Number(e.target.value)+(Number(credit)-Number(creditAction))-1)*2 );
+	}
+	
+
+	if($("#select_startslot_create_action").val!=0){
+		 $("#select_endslot_create_theory").parent().show();
+	 $("#select_room_create_theory").parent().parent().show();
+	}
+	
+	
+	
 	 getAvailableRoomTheory(capacity,$("#hidden_weekday_create_theory").val(),e.target.value,$("#select_startdate_create_theory").val(),$("#select_enddate_create_theory").val(),"theory")
 	
 })
@@ -287,8 +346,19 @@ $("#select_startslot_create_theory").on("change",e=>{
 //handle after select startslot for action
 $("#select_startslot_create_action").on("change",e=>{
 	$("#select_endslot_create_action").val(Number(e.target.value)+Number(creditAction) );
-	 $("#select_endslot_create_action").parent().show();
-	 $("#select_room_create_action").parent().show();
+	
+	  if($("#select_classtype_create_action").val()=="all"){
+		 $("#select_endslot_create_action").val(Number(e.target.value)+Number(credit) );
+	}else{
+		$("#select_endslot_create_action").val((Number(e.target.value)+Number(creditAction)-1)*2 );
+	}
+	
+	
+	if($("#select_startslot_create_theory").val!=0){
+		 $("#select_endslot_create_action").parent().show();
+	 $("#select_room_create_action").parent().parent().show();
+	}
+	
 	 getAvailableRoomTheory(capacity,$("#hidden_weekday_create_action").val(),e.target.value,$("#select_startdate_create_action").val(),$("#select_enddate_create_action").val(),"action")
 	
 })
@@ -298,15 +368,20 @@ $("#select_room_create_theory").on("change",e=>{
 	
 	 getAvailableTeacher(subject,weekday,start,dstart,dend)
 	 getAvailableTeacherTheory(subject,$("#hidden_weekday_create_theory").val(),$("#select_startslot_create_theory").val(),$("#select_startdate_create_theory").val(),$("#select_enddate_create_theory").val(),"theory")
-	$("#select_teacher_create_theory").parent().show();
+	 if($("#select_room_create_action").val()!=0){
+		 $("#select_teacher_create_theory").parent().parent().show();
+	 }
+	
 })
 
 //handle after select room action
-$("#select_room_create_theory").on("change",e=>{
+$("#select_room_create_action").on("change",e=>{
 	
 	 getAvailableTeacher(subject,weekday,start,dstart,dend)
 	 getAvailableTeacherTheory(subject,$("#hidden_weekday_create_action").val(),$("#select_startslot_create_action").val(),$("#select_startdate_create_action").val(),$("#select_enddate_create_action").val(),"action")
-	$("#select_teacher_create_theory").parent().show();
+	 if($("#select_room_create_theory").val()!=0){
+	$("#select_teacher_create_theory").parent().parent().show();
+	}
 })
 
 //suport function
@@ -350,7 +425,7 @@ let getAvailableTeacherTheory= async (subject,weekday,start,dstart,dend,type )=>
 		}
 		
 		if(type="action"){
-			$("#select_teacher_create_action").html(`<option value="0"> select teacher for theory</option> ${str}`);
+			$("#select_teacher_create_action").html(`<option value="0"> select teacher for action</option> ${str}`);
 		}
 		
   });

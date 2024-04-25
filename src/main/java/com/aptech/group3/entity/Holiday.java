@@ -21,9 +21,15 @@ public class Holiday {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private Date date;
 	private String name;
+	
+	private Date dateStart;
+	
+	private Date dateEnd;
+	
 	private int year;
+	
+	
 	
 	@ManyToOne
 	@JoinColumn(name="class_id" , referencedColumnName="id")

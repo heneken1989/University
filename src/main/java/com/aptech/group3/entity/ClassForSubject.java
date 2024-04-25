@@ -33,6 +33,11 @@ public class ClassForSubject {
 	private String name;
 	private Date dateStart;
 	private Date dateEnd;
+	
+	private Date startRegisDate;
+	private Date closeRegisDate;
+	
+	
 	private int slotStart;
 	private int slotEnd;
 
@@ -46,7 +51,7 @@ public class ClassForSubject {
 	private int minQuantity;
 	
 	@JsonIgnore
-	 @OneToMany(mappedBy="class_subject")
+	 @OneToMany(mappedBy="classSubject")
 	    private List<LessonSubject> lessons;
 
 	@ManyToOne
