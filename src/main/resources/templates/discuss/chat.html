@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{/layout}">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>discuss</title>
+   
+</head>
+<body>
+<div layout:fragment="content" class="card ml-5" id="chat_access_form" style="width: 100%">
+
+<div class="messaging">
+  <div class="inbox_msg">
+
+	<div class="mesgs" style="padding :0">
+	 <div class="msg_history" id="messageArea" >
+	 
+	 <p th:Text="${topic}" class="h3 mb-5 text-center bg bg-warning" >topic</p>
+    <div th:each="message : ${messages}" th:object="${message}">
+        <div th:class="${message.sender_id == student} ? 'outgoing_msg' : 'incoming_msg'">
+            <!-- Check if message is outgoing or incoming -->
+            <div th:if="${message.sender_id == student}" class="d-flex justify-content-end">
+            <div class="mt-3 mr-2 icob_rollmessage"><i class="fas fa-undo "></i></div>
+            <div  class="sent_msg">
+                <p th:text="*{text}"></p>
+                
+                <span class="time_date" th:text="*{#dates.format(createAt, 'yyyy-MM-dd')}">11:01 AM | Today</span>
+                
+            </div>
+            </div>
+            
+            <div th:unless="${message.sender_id == student}" class="incoming_msg">
+           
+                <div class="incoming_msg_img">
+                    <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                </div>
+                <div class="received_msg">
+                    <div class="received_withd_msg">
+                        <span style="font-size:18px" class="time_date"  th:text="*{sender_name}">ho van y</span>
+                        <p  th:text="*{text}">We work directly with our designers and suppliers,
+                            and sell direct to you, which means quality, exclusive
+                            products, at a price anyone can afford.</p>
+                        <span class="time_date" th:text="*{#dates.format(createAt, 'yyyy-MM-dd')}">11:01 AM | Today</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	  
+	  
+	 <form id="messageForm" name="messageForm">
+            <div class="form-group">
+                <div class="input-group clearfix">
+                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+                    <button type="submit" class="primary">Send</button>
+                </div>
+            </div>
+        </form>
+	  
+	</div>
+  </div>
+</div>
+
+ <input id="id_room_discuss" type="hidden" th:data-id="${student}" th:value="${room}" readonly>
+
+
+</div>
+
+
+</body>
+</html>
+
+
+
+
