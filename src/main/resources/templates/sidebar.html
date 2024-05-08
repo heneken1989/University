@@ -1,0 +1,71 @@
+     <!-- Sidebar -->
+
+       <div th:fragment="sidebar" style="height:100%; overflow-y:scroll; overflow-x:hidden" id="sidebar">
+
+          <div class="inner" style="overflow-y:scroll">
+
+            <!-- Search Box -->
+            <section id="search" class="alt">
+              <form method="get" action="#">
+                <input type="text" name="search" id="search" placeholder="Search..." />
+              </form>
+            </section>
+              
+            <!-- Menu -->
+                 <!-- Menu -->
+            <nav id="menu">
+              <ul>
+                <li><a href="index.html">Homepage</a></li>
+                <li><a href="simple_page.html">Simple Page</a></li>
+                <li><a href="shortcodes.html">Shortcodes</a></li>
+                
+                <li>
+                  <span class="opener">Register Subject</span>
+                  <ul>
+                    <li><a href="/SubjectRegister">New Subject Register</a></li>
+                    <li><a href="#">Re-Learn</a></li>
+                    <li><a href="/Ongoing">On-Going Register</a></li>
+                     <li><a href="/time_table/show">Time-Table</a></li>
+                  </ul>
+                </li>
+                
+       <li><span class="opener">User Management</span>
+					<ul>
+						<li><a href="/user/list">User list</a></li>
+						<li><a href="/user/create">Create</a></li>
+					</ul></li>
+                
+                
+                
+                        <li>
+                  <span class="opener"> Class</span>
+                  <ul>
+                    <li><a href="/class/create">New Class</a></li>
+        
+                  </ul>
+                </li>
+                <li>
+                  <span class="opener">Payment</span>
+                  <ul>
+                    <li><a href="/payment">Payment</a></li>
+                    
+                  </ul>
+                </li>
+                          <li>
+                  <span class="opener">Quiz</span>
+                  <ul>
+                    <li><a href="/quiz/QuizManage">Quiz Manage</a></li>
+                    <li><a href="/quiz/create">Create Quiz</a></li>
+                    <li><a href="/teacherQuizManage">Quiz Apply</a></li>
+                    <li><a href="/listQuiz">Do quiz</a></li>
+                  </ul>
+                </li>
+
+              </ul>
+            </nav>
+
+           Footer
+                <div th:replace="footer :: footer"></div> 
+
+          </div>
+        </div> 
