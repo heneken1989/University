@@ -7,4 +7,5 @@ import com.aptech.group3.entity.ExamQuestionAnswer;
 public interface ExamQuestionAnswerService {
 	public List<ExamQuestionAnswer> findByQuestionID(Long id);
 	public List<ExamQuestionAnswer> findByExamID(Long id);
+	public List<ExamQuestionAnswer> findByQuizExamIdAndQuestionId(Long quizExamId,Long quizQuestionId);
 }

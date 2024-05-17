@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.aptech.group3.Dto.UpdateProfileDto;
 import com.aptech.group3.Dto.UserCreateDto;
 import com.aptech.group3.Dto.UserDto;
 import com.aptech.group3.entity.Field;
@@ -20,10 +21,14 @@ import com.aptech.group3.entity.User;
 import jakarta.servlet.ServletOutputStream;
 @Service
 public interface UserService {
+	public UserDetails loadUserByUsername(String email);
+	public User getUserByEmail(String email);
+	public String getGreeting();
 	public Page<User> findByRole(String role, Pageable pageable);
 	public void create(UserCreateDto dto);
 	public UserDetails loadUserByUserid(Long id);
 	public User findById(Long id);
+	public User findByEmail(String email);
 	public void update(UserCreateDto dto);
 	public int countStudents();
 	public int countTeachers();
@@ -37,4 +42,5 @@ public interface UserService {
 	public List<Field> findFieldsByUserId(Long userId);
 	public List<String> getFieldNamesByUserId(Long userId);
 	public boolean checkIfEmailExists(String email);
+	public void updateProfile(UpdateProfileDto dto);
 }

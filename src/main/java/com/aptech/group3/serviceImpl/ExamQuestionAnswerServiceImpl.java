@@ -27,4 +27,9 @@ public class ExamQuestionAnswerServiceImpl implements ExamQuestionAnswerService 
 	{
 		return examQuestionAnswerRepository.findByQuizExamId(id);
 	}
+	
+	public List<ExamQuestionAnswer> findByQuizExamIdAndQuestionId(Long quizExamId,Long quizQuestionId)
+	{
+		return examQuestionAnswerRepository.findByQuizExamIdAndQuizQuestionId(quizExamId, quizQuestionId);
+	}
 }

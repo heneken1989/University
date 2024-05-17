@@ -85,6 +85,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 
 
  <div class="overlay" id="overlay"></div> <!-- Lớp phủ -->
+
     <div class="profile-container" id="profile-form" style="display: none;">
         <div class="profile-section">
             <h5>Account information</h5>
@@ -92,15 +93,15 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
                 <img id="avatar-large" src="large-avatar.jpg" alt="Avatar" style="width:100%; height:200px; object-fit:cover;">
                 <img id="avatar-small" src="small-avatar.jpg" alt="Avatar" style="width:80px; height:80px;border-radius:50%;transform:translateY(-15px);">
                 <!-- <button id="change-background-btn"><i class="fas fa-image"></i></button> -->
-                <span class="bold" sec:authentication="principal.name"  style="font-family: Lucida Console Courier New; font-size: 26px; padding-right:20px;"></span>
+                <span class="bold namejs" sec:authentication="principal.name"  style="font-family: Lucida Console Courier New; font-size: 26px; padding-right:20px;"></span>
             </div>
         </div>
         <div class="personal-info-section" sec:authorize="isAuthenticated()">
             <h5>Personal information</h5>	
-
+      		<p th:name="id" class="b" style="display:none" sec:authentication="principal.user.id"></p>
             <div  class="div-flex">
                 <label for="phone" class="a">Phone:</label>
-                <p class="b" sec:authentication="principal.phone"></p>
+                <p class="b phonejs" sec:authentication="principal.phone"></p>
             </div>
              <div  class="div-flex">
                 <label for="position" class="a">Role:</label>
@@ -108,13 +109,13 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
             </div>
             <div  class="div-flex">
                 <label for="address" class="a">Address:</label>
-                 <p class="b" sec:authentication="principal.address"></p> 
+                 <p class="b addressjs" sec:authentication="principal.address"></p> 
             </div>
             <div  class="div-flex">
                 <label for="information" class="a">Information:</label>
-                <p class="b" sec:authentication="principal.user.infomation"></p>
+                <p class="b infojs" sec:authentication="principal.user.infomation"></p>
             </div>
-            <button id="update-profile-btn">Edit</button>
+            <a id="update-profile-btn" th:href="@{/user/profile}">Edit</a>
         </div>
     </div>
 	

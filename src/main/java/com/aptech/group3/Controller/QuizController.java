@@ -196,8 +196,6 @@ public class QuizController {
 	public String showListQuiz(Model model,@AuthenticationPrincipal CustomUserDetails currentUser) {
            
 		List<StudentClass> listClass = studentClassService.findSubjectByStudentId(currentUser.getUserId());
-
-		
 		model.addAttribute("listClass",listClass);
 		return "/page/Quiz/QuizList";
 	}

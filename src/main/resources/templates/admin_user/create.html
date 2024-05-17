@@ -10,37 +10,34 @@
 
 	<div layout:fragment="content"
 		class="d-flex align-items-center flex-column">
-		<h2>Create new account</h2>
-		
-		<div th:if="${error}" class="alert alert-info" id="error"
-			style="height: 50px; background:white;">
-			<p th:text="${error}" class="error" style="text-align: center"></p>
-		</div>
-		<div th:if="${message}" class="alert alert-info">
-			<p th:text="${message}"></p>
-		</div>
+		<h2
+			style="color: rebeccapurple; font-family: 'georgia'; padding: 30px 0px 30px 0px; font-weight: 300; font-size: 40px;">Create
+			new account</h2>
 
-		<div th:if="${errorMessage}" class="error-message">
-			<p style="color: red" th:text="${errorMessage}"></p>
-		</div>
 		<div class="input-group mb-5">
 			<div class="input-group-prepend" style="width: 150px">
 				<label style="width: 100%" class="input-group-text" for="role">Role</label>
 			</div>
-			<select class="form-control" id="account_create_select_role" required>
-				<option value=" ">select role for account</option>
-				<option value="STUDENT">Student</option>
-				<option value="TEACHER">Teacher</option>
-				<option value="EMPLOYEE">Employee</option>
+			<select class="form-control" id="account_create_select_role"
+				name="role" required>
+				<option th:attr="selected=${data.role == ' '}" value=" ">select
+					role for account</option>
+				<option th:attr="selected=${data.role == 'STUDENT'}" value="STUDENT">Student</option>
+				<option th:attr="selected=${data.role == 'TEACHER'}" value="TEACHER">Teacher</option>
+				<option th:attr="selected=${data.role == 'EMPLOYEE'}"
+					value="EMPLOYEE">Employee</option>
 			</select>
 		</div>
-		
+
 
 		<!-- STUDENT -->
 		<form style="width: 70%; display: none"
 			id="student_form_create_account" th:action="@{/user/create}"
-			method="post" th:object="${data}"
-			enctype="multipart/form-data">
+			method="post" th:object="${data}" enctype="multipart/form-data">
+			<div th:if="${error}" class="alert alert-info" id="error"
+				style="border: none; background: white; color: red;">
+				<p th:text="${error}" class="error" style="text-align: center"></p>
+			</div>
 			<input type="hidden" id="hidden_role_data_create" th:field="*{role}" />
 			<div>
 				<div class="input-group mb-3">
@@ -51,7 +48,10 @@
 						id="email" placeholder="Email">
 				</div>
 				<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
-					class="text-danger">Name Error</p>
+					class="text-danger"></p>
+				<div th:if="${error}" class="error-message">
+					<p style="color: red" th:text="${error}"></p>
+				</div>
 
 				<div class="input-group mb-3">
 					<p th:text="${msphoner}" class="error" style="text-align: center"></p>
@@ -73,7 +73,7 @@
 						id="name" placeholder="Name">
 				</div>
 				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
-					class="text-danger">Name Error</p>
+					class="text-danger"></p>
 
 				<div class="input-group mb-3">
 					<div class="input-group-prepend" style="width: 150px">
@@ -91,12 +91,9 @@
 					<div class="input-group-prepend" style="width: 150px">
 						<label style="width: 100%" class="input-group-text" for="name">Avatar</label>
 					</div>
-					<input type="file" th:field="*{avatar}" class="form-control"
-						id="avatar" placeholder="Avatar">
+					<input type="file" name="image" class="form-control" id="avatar"
+						placeholder="Avatar">
 				</div>
-				<p th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}"
-					class="text-danger">Name Error</p>
-
 
 
 
@@ -122,8 +119,7 @@
 		<!-- TEACHER form_create_user -->
 		<form id="teacher_form_create_account"
 			style="width: 70%; display: none" th:action="@{/user/create}"
-			method="post" th:object="${data}"
-			enctype="multipart/form-data">
+			method="post" th:object="${data}" enctype="multipart/form-data">
 			<input type="hidden" id="hidden_role_data_create_teacher"
 				th:field="*{role}" />
 
@@ -139,10 +135,13 @@
 					<div th:if="${message}" class="alert alert-info">
 						<p th:text="${message}"></p>
 					</div>
+
 				</div>
 				<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
 					class="text-danger">Name Error</p>
-
+				<div th:if="${error}" class="error-message">
+					<p style="color: red" th:text="${error}"></p>
+				</div>
 				<div class="input-group mb-3">
 					<div class="input-group-prepend" style="width: 150px">
 						<label style="width: 100%" class="input-group-text" for="phone">Phone</label>
@@ -150,9 +149,6 @@
 					<input type="number" th:field="*{phone}" class="form-control"
 						id="phone" placeholder="Phone">
 				</div>
-
-				<p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"
-					class="text-danger">Name Error</p>
 
 
 				<div class="input-group mb-3">
@@ -179,16 +175,13 @@
 					<div class="input-group-prepend" style="width: 150px">
 						<label style="width: 100%" class="input-group-text" for="name">Avatar</label>
 					</div>
-					<input type="file" th:field="*{avatar}" class="form-control"
-						id="avatar" placeholder="Avatar">
+					<input type="file" name="image" class="form-control" id="avatar"
+						placeholder="Avatar">
 				</div>
-				<p th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}"
-					class="text-danger">Name Error</p>
-					
+
 				<div class="input-group mb-3">
 					<div class="input-group-prepend" style="width: 21%">
-						<label style="width: 100%" class="input-group-text"
-							for="infomation">Field</label>
+						<label style="width: 100%" class="input-group-text" for="field">Field</label>
 					</div>
 					<select class="select2" name="field[]" multiple style="width: 79%;">
 						<option th:each="field, fieldStat : ${fields}"
@@ -196,7 +189,8 @@
 							th:text="${fieldStat.index + 1 + '. ' + field.name}"></option>
 					</select>
 				</div>
-
+				<p th:if="${#fields.hasErrors('fields')}" th:errors="*{fields}"
+					class="text-danger"></p>
 
 				<!-- Include other necessary fields such as role, avatar, etc. -->
 				<input class="btn btn-primary" value="Create " type="submit" />
@@ -210,8 +204,7 @@
 		<!-- Employee form_create_user -->
 		<form id="employee_form_create_account"
 			style="width: 70%; display: none" th:action="@{/user/create}"
-			method="post" th:object="${data}"
-			enctype="multipart/form-data">
+			method="post" th:object="${data}" enctype="multipart/form-data">
 			<input type="hidden" id="hidden_role_data_create_employee"
 				th:field="*{role}" />
 
@@ -229,7 +222,10 @@
 					</div>
 				</div>
 				<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
-					class="text-danger">Name Error</p>
+					class="text-danger"></p>
+				<div th:if="${error}" class="error-message">
+					<p style="color: red" th:text="${error}"></p>
+				</div>
 
 				<div class="input-group mb-3">
 					<div class="input-group-prepend" style="width: 150px">
@@ -240,7 +236,8 @@
 				</div>
 
 				<p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"
-					class="text-danger">Name Error</p>
+					class="text-danger"></p>
+
 
 
 				<div class="input-group mb-3">
@@ -251,7 +248,7 @@
 						id="name" placeholder="Name">
 				</div>
 				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
-					class="text-danger">Name Error</p>
+					class="text-danger"></p>
 
 
 
@@ -269,16 +266,14 @@
 					<div class="input-group-prepend" style="width: 150px">
 						<label style="width: 100%" class="input-group-text" for="name">Avatar</label>
 					</div>
-					<input type="file" th:field="*{avatar}" class="form-control"
-						id="avatar" placeholder="Avatar">
+					<input type="file" name="image" class="form-control" id="avatar"
+						placeholder="Avatar">
 				</div>
-				<p th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}"
-					class="text-danger">Name Error</p>
+
 
 				<div class="input-group mb-3">
 					<div class="input-group-prepend" style="width: 21%">
-						<label style="width: 100%" class="input-group-text"
-							for="infomation">Field</label>
+						<label style="width: 100%" class="input-group-text" for="field">Field</label>
 					</div>
 					<select class="select2" name="field[]" multiple style="width: 79%;">
 						<option th:each="field, fieldStat : ${fields}"
@@ -287,9 +282,8 @@
 						<!-- Thêm các option khác nếu cần -->
 					</select>
 				</div>
-
-				<p th:if="${#fields.hasErrors('fields')}" th:errors="*{fields}"
-					class="text-danger">Name Error</p>
+								<p th:if="${#fields.hasErrors('fields')}" th:errors="*{fields}"
+					class="text-danger"></p>
 				<!-- Include other necessary fields such as role, avatar, etc. -->
 				<input class="btn btn-primary" value="Create " type="submit" />
 			</div>

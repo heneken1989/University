@@ -31,5 +31,10 @@ public class RoomApiController {
 		List<Room> data= roomService.getAvailableRoom(capacity,weekday,start,startd, endd);
 		return data;
 	};
+	
+	@GetMapping("/test")
+	public String test() {
+		return "hello";
+	}
 
 }

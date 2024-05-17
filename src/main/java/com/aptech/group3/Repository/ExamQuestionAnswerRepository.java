@@ -13,4 +13,7 @@ public interface ExamQuestionAnswerRepository extends JpaRepository<ExamQuestion
 
 	    public List<ExamQuestionAnswer> findByQuizQuestionId(Long questionId);
 	    public List<ExamQuestionAnswer> findByQuizExamId(Long examId);
+	    
+	    public List<ExamQuestionAnswer> findByQuizExamIdAndQuizQuestionId(Long quizExamId,Long quizQuestionId);
+	    
 }

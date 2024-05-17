@@ -3,11 +3,13 @@ package com.aptech.group3.serviceImpl;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,9 +31,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.aptech.group3.Dto.UpdateProfileDto;
 import com.aptech.group3.Dto.UserCreateDto;
 import com.aptech.group3.Dto.UserDto;
 import com.aptech.group3.Repository.FiledRepository;
+import com.aptech.group3.Repository.TokenRepository;
 import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.Field;
 import com.aptech.group3.entity.User;
@@ -66,6 +70,34 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired 
+	private TokenRepository tokenRepository;
+	
+	public User getUserByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+	
+    public void deleteByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            // Xóa tài khoản - token của tài khoản
+            userRepository.delete(user);
+            tokenRepository.deleteByUserId(user.getId());
+        }
+    }
+
+
+	public String getGreeting() {
+		LocalTime currentTime = LocalTime.now();
+		if (currentTime.isAfter(LocalTime.of(6, 0)) && currentTime.isBefore(LocalTime.of(12, 0))) {
+			return "Good morning ";
+		} else if (currentTime.isAfter(LocalTime.of(12, 0)) && currentTime.isBefore(LocalTime.of(18, 0))) {
+			return "Good afternoon ";
+		} else {
+			return "Good evening ";
+		}
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String email) {
 		// Kiểm tra xem user có tồn tại trong database không?
@@ -76,19 +108,29 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		return new CustomUserDetails(user);
 	}
 
-	public Page<User> findByRole(String role, Pageable pageable) {
-		return userRepository.findByRole(role, pageable);
+	public Page<User> findAll(Pageable pageable) {
+		return userRepository.findAll(pageable);
 	}
+
+	public Page<User> findByRole(String type, Pageable pageable) {
+		if ("ALL".equals(type)) {
+			return findAll(pageable);
+		} else {
+			return userRepository.findByRole(type, pageable);
+		}
+	}
+
+//	public Page<User> findByRole(String role, Pageable pageable) {
+//		return userRepository.findByRole(role, pageable);
+//	}
 
 	public UserDetails loadUserByUserid(Long id) {
 		Optional<User> userOptional = userRepository.findById(id);
 
 		if (userOptional.isPresent()) {
-			User user = userOptional.get();
-		
-			// Retrieve the User object from Optional
+			User user = userOptional.get(); // Retrieve the User object from Optional
 			CustomUserDetails userDetails = new CustomUserDetails(user);
-			 System.out.print("role is : "+userDetails.getUser().getRole());
+
 			return userDetails;
 		} else {
 			System.out.println("User not found!");
@@ -223,6 +265,30 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			throw new UsernameNotFoundException("User not found!"); // Xử lý khi không tìm thấy người dùng
 		}
 	}
+	
+	  public void updateProfile(UpdateProfileDto dto) {
+	        User currentUser = userRepository.findById(dto.getId())
+	                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+	        // Update only the specified fields
+	        currentUser.setName(dto.getName());
+	        currentUser.setEmail(dto.getEmail());
+	        currentUser.setPhone(dto.getPhone());
+	        currentUser.setInfomation(dto.getInfomation());
+	        currentUser.setAddress(dto.getAddress());
+	        // Preserve the fields relationship
+	        // Preserve the fields relationship
+	        if (dto.getFields() != null && !dto.getFields().isEmpty()) {
+	            List<Field> fields = fieldRepository.findAllById(dto.getFields());
+	            currentUser.setFields(fields);
+	        } else {
+	            // If no fields provided in DTO, preserve existing fields
+	            List<Field> existingFields = currentUser.getFields();
+	            currentUser.setFields(existingFields);
+	        }
+	        currentUser.setAvatar(dto.getAvatar());
+	        userRepository.save(currentUser);
+	    }
 
 	public int countStudents() {
 		return userRepository.countStdByRole("student");
@@ -242,6 +308,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	public List<User> readUsersFromExcel(MultipartFile file) throws IOException {
 		List<User> users = new ArrayList<>();
+		int successfulCount = 0;
+		int failedCount = 0;
 
 		try (InputStream inputStream = file.getInputStream()) {
 			Workbook workbook = WorkbookFactory.create(inputStream);
@@ -264,6 +332,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 					} else if (emailCell.getCellType() == CellType.STRING) {
 						email = emailCell.getStringCellValue();
 					}
+				}
+				if (checkIfEmailExists(email)) {
+					System.out.println("Email already exists: " + email);
+					continue;
 				}
 
 				Cell nameCell = row.getCell(2);
@@ -315,13 +387,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 						phone = phoneCell.getStringCellValue();
 					}
 				}
-
 				// Tạo mật khẩu ngẫu nhiên
 				String randomPassword = UUID.randomUUID().toString().substring(0, 6);
-//                 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//                 String encodedPassword = encoder.encode(randomPassword);
 
-				// Tiếp tục cho các trường còn lại
+//			int studentCount = userService.countStudents();
+//			String code = "ST24" + String.format("%04d", studentCount + 1);
+//			data.setCode(code);
 
 				User user = new User();
 				user.setEmail(email);
@@ -335,11 +406,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 				// Đặt các giá trị cho các trường khác
 
 				users.add(user);
+				successfulCount++;
+				System.out.println("success" + successfulCount);
 			}
 
 			workbook.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+			failedCount++;
+			System.out.println("failed" + failedCount);
 		}
 
 		return users;
@@ -374,46 +449,49 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("Students");
 		int rowNum = 0;
-		 // Tạo dòng cho tiêu đề "Danh sách học sinh"
-	    Row titleRow = sheet.createRow(rowNum++);
-	    Cell titleCell = titleRow.createCell(0);
-	    titleCell.setCellValue("Danh sách học sinh");
-	    titleCell.setCellStyle(getCenteredCellStyle(workbook)); 
-	    // Gộp các ô thành một ô duy nhất cho tiêu đề "Danh sách học sinh"
-	    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5)); // Từ cột 0 đến cột 5
+		// Tạo dòng cho tiêu đề "Danh sách học sinh"
+		Row titleRow = sheet.createRow(rowNum++);
+		Cell titleCell = titleRow.createCell(0);
+		titleCell.setCellValue("Danh sách học sinh");
+		titleCell.setCellStyle(getCenteredCellStyle(workbook));
+		// Gộp các ô thành một ô duy nhất cho tiêu đề "Danh sách học sinh"
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5)); // Từ cột 0 đến cột 5
 
-	    // Tạo dòng cho header
-	    Row headerRow = sheet.createRow(rowNum++);
-	    String[] headers = { "Email", "Tên", "Phone", "Code", "Điểm", "Ký tên" };
-	    for (int i = 0; i < headers.length; i++) {
-	        Cell cell = headerRow.createCell(i);
-	        cell.setCellValue(headers[i]);
-	    }
+		// Tạo dòng cho header
+		Row headerRow = sheet.createRow(rowNum++);
+		String[] headers = { "Email", "Tên", "Phone", "Code", "Điểm", "Ký tên" };
+		for (int i = 0; i < headers.length; i++) {
+			Cell cell = headerRow.createCell(i);
+			cell.setCellValue(headers[i]);
+		}
 
-	    // Thêm dữ liệu từ danh sách users
-	    for (User user : users) {
-	        Row row = sheet.createRow(rowNum++);
-	        row.createCell(0).setCellValue(user.getEmail());
-	        row.createCell(1).setCellValue(user.getName());
-	        row.createCell(2).setCellValue(user.getPhone());
-	        row.createCell(3).setCellValue(user.getCode());
-	        // Thêm các cột "Mark" và "Sign" ở đây nếu có giá trị tương ứng từ đối tượng User
-	    }
+		// Thêm dữ liệu từ danh sách users
+		for (User user : users) {
+			Row row = sheet.createRow(rowNum++);
+			row.createCell(0).setCellValue(user.getEmail());
+			row.createCell(1).setCellValue(user.getName());
+			row.createCell(2).setCellValue(user.getPhone());
+			row.createCell(3).setCellValue(user.getCode());
+			// Thêm các cột "Mark" và "Sign" ở đây nếu có giá trị tương ứng từ đối tượng
+			// User
+		}
 
-	    try {
-	        workbook.write(outputStream);
-	        workbook.close();
-	    } catch (IOException e) {
-	        // Xử lý ngoại lệ
-	        e.printStackTrace();
-	    }
+		try {
+			workbook.write(outputStream);
+			workbook.close();
+		} catch (IOException e) {
+			// Xử lý ngoại lệ
+			e.printStackTrace();
+		}
 	}
+
 	private CellStyle getCenteredCellStyle(Workbook workbook) {
-	    CellStyle style = workbook.createCellStyle();
-	    style.setAlignment(HorizontalAlignment.CENTER); // Đặt căn giữa cho văn bản
-	    style.setVerticalAlignment(VerticalAlignment.CENTER); // Đặt căn giữa theo chiều dọc
-	    return style;
+		CellStyle style = workbook.createCellStyle();
+		style.setAlignment(HorizontalAlignment.CENTER); // Đặt căn giữa cho văn bản
+		style.setVerticalAlignment(VerticalAlignment.CENTER); // Đặt căn giữa theo chiều dọc
+		return style;
 	}
 
-
+	
+	
 }

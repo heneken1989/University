@@ -12,9 +12,7 @@
 				th:text="'Update User'"></h3>
 		</div>
 		<div class="card-body">
-			<form method="post" th:object="${user}"
-				th:action="@{/user/update/{id}}" id="update_user_form"
-				enctype="multipart/form-data">
+			<form method="post" th:object="${user}" th:action="@{/user/update/{id}}" id="update_user_form" enctype="multipart/form-data">
 				<input type="hidden" th:field="*{id}" />
 				<!-- Hidden field for user ID -->
 

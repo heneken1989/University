@@ -31,16 +31,23 @@ import com.aptech.group3.Dto.ClassForSubjectDto;
 import com.aptech.group3.Dto.SubjectDto;
 import com.aptech.group3.Repository.ClassForSubjectRepository;
 import com.aptech.group3.Repository.FiledRepository;
+import com.aptech.group3.Repository.QuizRepository;
 import com.aptech.group3.Repository.StudentClassRepository;
 import com.aptech.group3.Repository.SubjectLevelRepository;
 import com.aptech.group3.entity.ClassForSubject;
+import com.aptech.group3.entity.ExamQuestionAnswer;
 import com.aptech.group3.entity.Field;
+import com.aptech.group3.entity.Quiz;
+import com.aptech.group3.entity.QuizAnswer;
+import com.aptech.group3.entity.QuizQuestion;
 import com.aptech.group3.entity.StudentClass;
 import com.aptech.group3.entity.Subject;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.model.LoginRequest;
 import com.aptech.group3.service.ClassForSubjectService;
+import com.aptech.group3.service.ExamQuestionAnswerService;
+import com.aptech.group3.service.QuizAnswerService;
 import com.aptech.group3.service.SubjectService;
 import com.aptech.group3.serviceImpl.JwtTokenProvider;
 import com.aptech.group3.serviceImpl.StudentClassServiceImpl;
@@ -64,6 +71,10 @@ public class ApiController {
 	
 @Autowired
 private SubjectService subService;
+
+@Autowired
+private QuizRepository quizRepository;
+
 
 @Autowired
 private StudentClassRepository studentClassRepository;
@@ -91,6 +102,12 @@ private FiledRepository filedRepository;
 @Autowired
 private SubjectLevelRepository subjectLevelRepository;
 
+@Autowired
+private QuizAnswerService quizAnswerService;
+
+@Autowired
+private ExamQuestionAnswerService examQuestionAnswerService;
+
 
 @PostMapping("/api/ClassRegister")
 @ResponseBody
@@ -100,6 +117,48 @@ public Long ClassRegister(@RequestBody Map<String, Long> requestBody) {
 	studentsubservice.RegisterClassMobile(classId, userId);
 	return classId;
 }
+
+
+@Transactional
+@PostMapping("/api/Quiz")
+public List<QuizQuestion> FindQuizById(@RequestBody Map<String, Long> requestBody) {
+    Long quizId = requestBody.get("quizId");
+    System.out.print("quizId"+quizId);
+  Quiz quiz =quizRepository.getById(quizId);
+    List<QuizQuestion>  listqQuestions = quiz.getQuizquestions();
+	return listqQuestions ;
+}
+
+
+
+@PostMapping("api/Quiz/QuizExamAnswers")
+public List<Long> FindSavedAnswer(@RequestBody Map<String, Long> requestBody) {
+    Long questionId = requestBody.get("questionId");
+    Long quizExamId = requestBody.get("quizExamId");
+    
+     List<ExamQuestionAnswer>  listExamQuestionAnswers = examQuestionAnswerService.findByQuizExamIdAndQuestionId(quizExamId, questionId);
+     List<Long> answerIdList = new ArrayList<>(); ;
+     
+        for(ExamQuestionAnswer answer:listExamQuestionAnswers )
+        {
+        	Long idLong = answer.getQuizAnswer().getId();
+        	answerIdList.add(idLong);
+        }
+   
+	return answerIdList ;
+}
+
+
+
+@Transactional
+@PostMapping("/api/Quiz/ListAnswers")
+public List<QuizAnswer> FindAnswerByQuestionId(@RequestBody Map<String, Long> requestBody) {
+    Long questionId = requestBody.get("questionId");
+
+  List<QuizAnswer> answers = quizAnswerService.findAnswerByQuestionId(questionId);
+	return answers ;
+}
+
 
 @PostMapping("/api/Ongoing")
 @ResponseBody
@@ -173,7 +232,7 @@ public ResponseEntity<UserDetails> getUserById(@PathVariable Long userId) {
 
 
 
-@PostMapping("api/login")
+@PostMapping("api/loginn")
 public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
     Authentication authentication = authenticationManager.authenticate(

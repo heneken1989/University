@@ -76,11 +76,11 @@ public class SercurityConfig {
 	public SecurityFilterChain api(HttpSecurity http) throws Exception {
 		return http.securityMatcher("/api/**").authorizeHttpRequests(au -> {
 			au.requestMatchers(HttpMethod.GET, "/api/login", "/api/logout").permitAll();
-			au.requestMatchers(HttpMethod.POST, "/api/login").permitAll();
+			au.requestMatchers(HttpMethod.POST, "/api/login", "/api/loginn", "api/refreshtoken").permitAll();
 			au.requestMatchers("/api//admin/**").hasAuthority("ADMIN");
 			au.requestMatchers("/api/teacher/**").hasAuthority("TEACHER");
 			au.requestMatchers("/api/student/**").hasAuthority("STUDENT");
-			au.anyRequest().permitAll();
+			au.anyRequest().authenticated();
 		})
 				// Adding JWT filter before UsernamePasswordAuthenticationFilter
 				.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
