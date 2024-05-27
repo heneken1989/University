@@ -1,0 +1,176 @@
+
+<!-- Sidebar -->
+
+
+<div th:fragment="sidebar" style="height: 100%;" id="sidebar">
+
+	<div class="inner">
+
+		<div id="side_user_info" 
+		sec:authorize="isAuthenticated()"
+			style="border-bottom: solid 1px gray; height: 120px;">
+
+			<div class="dropdown-container">
+				<details class="dropdown right" >
+					<summary class="avatar" style="display: flex;">
+
+
+						<img
+							src="https://gravatar.com/avatar/00000000000000000000000000000000?d=mp">
+
+						
+							<span
+								style="line-height: 2em; padding: 0 0 0 7px; text-transform: none; font-size: 18px; font-weight: normal; font-style: italic; letter-spacing: -0.005em; word-spacing: 1px; letter-spacing: none;"
+								sec:authentication="principal.user.name"></span><span
+								sec:authentication="principal.user.code"
+								style="line-height: 2em; padding-top:22px;transform: translateX(-85px); text-transform: none; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: -0.005em; word-spacing: 1px; letter-spacing: none;"></span>
+					
+
+					</summary>
+					<ul  class="event">
+						<!-- Optional: user details area w/ gray bg -->
+						<li>
+							<p>
+								<span>Welcome <span class="bold"
+									sec:authentication="principal.name"></span>
+								</span> <span class="avatar_hiddent" style="display: none;"
+									sec:authentication="principal.user.avatar"></span> <span
+									class="block italic" sec:authentication="principal.user.email"></span>
+							</p>
+						</li>
+						<!-- Menu links -->
+						<li><a href="#" id="profile-link"> <span
+								class="material-symbols-outlined">Your profile</span>
+						</a></li>
+						<li><a href="#"> <span class="material-symbols-outlined">Setting</span>
+						</a></li>
+						<li><a href="#"> <span class="material-symbols-outlined">Help</span>
+						</a></li>
+						<!-- Optional divider -->
+						<li class="divider"></li>
+
+						<li><a th:href="@{/logout}"> <span
+								class="material-symbols-outlined">Logout</span>
+						</a></li>
+					</ul>
+
+					
+				</details>
+			</div>
+
+
+		</div>
+
+
+
+
+<!-- nếu chưa đăng nhập -->
+		<div id="side_user_info" sec:authorize="!isAuthenticated()"
+			style="border-bottom: solid 1px gray; height: 120px;">
+
+			<div style="width:100%; height: 100%; font-size: 20px; font-family:bold; transform:translateX(40%)
+			" class="d-flex align-items-center">
+				 <a href="/login">Login</a>
+			</div>
+
+
+		</div>
+
+		<div class="overlay" id="overlay" ></div>
+		<!-- Lớp phủ -->
+
+		<div class="profile-container" id="profile-form" sec:authorize="isAuthenticated()"
+			style="display: none;">
+			<div class="profile-section">
+				<h5>Account information</h5>
+				<div class="avatar-container">
+					<img id="avatar-large" src="large-avatar.jpg" alt="Avatar"
+						style="width: 100%; height: 200px; object-fit: cover;"> <img
+						id="avatar-small" src="small-avatar.jpg" alt="Avatar"
+						style="width: 80px; height: 80px; border-radius: 50%; transform: translateY(-15px);">
+					<!-- <button id="change-background-btn"><i class="fas fa-image"></i></button> -->
+					<span class="bold namejs" sec:authentication="principal.name"
+						style="font-family: Lucida Console Courier New; font-size: 26px; padding-right: 20px;"></span>
+				</div>
+			</div>
+			<div class="personal-info-section" sec:authorize="isAuthenticated()">
+				<h5>Personal information</h5>
+				<p th:name="id" class="b" style="display: none"
+					sec:authentication="principal.user.id"></p>
+				<div class="div-flex">
+					<label for="phone" class="a">Phone:</label>
+					<p class="b phonejs" sec:authentication="principal.phone"></p>
+				</div>
+				<div class="div-flex">
+					<label for="position" class="a">Role:</label>
+					<p class="b" sec:authentication="principal.authorities"></p>
+				</div>
+				<div class="div-flex">
+					<label for="address" class="a">Address:</label>
+					<p class="b addressjs" sec:authentication="principal.address"></p>
+				</div>
+				<div class="div-flex">
+					<label for="information" class="a">Information:</label>
+					<p class="b infojs" sec:authentication="principal.user.infomation"></p>
+				</div>
+				<a id="update-profile-btn" th:href="@{/user/profile}">Edit</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Menu -->
+	<!-- Menu -->
+	<nav id="menu">
+		<ul>
+			<li><a href="index.html">Homepage</a></li>
+			<li><a th:href="@{/time_table/show}">Time table</a></li>
+			<li><a th:href="@{/discuss/list/class_attend}">Discuss</a></li>
+
+			<li><span class="opener">Register Subject</span>
+				<ul>
+					<li><a href="/web/ClassRegister/SubjectRegister">New Subject Register</a></li>
+					<li><a href="#">Re-Learn</a></li>
+					<li><a href="/web/ClassRegister/Ongoing">On-Going Register</a></li>
+				</ul></li>
+
+			<li><span class="opener">User Management</span>
+				<ul>
+					<li><a href="/user/list">User list</a></li>
+					<li><a href="/user/create">Create</a></li>
+				</ul></li>
+
+
+
+			<li><span class="opener"> Class</span>
+				<ul>
+					<li><a href="/class/create">New Class</a></li>
+					<li><a href="/class/list">List class</a></li>
+
+				</ul></li>
+
+			<li><span class="opener"> Attendance</span>
+				<ul>
+					<li><a href="/attendance/list">List class</a></li>
+				</ul></li>
+
+
+
+
+			<li><span class="opener">Payment</span>
+				<ul>
+					<li><a href="/payment">Payment</a></li>
+
+				</ul></li>
+			<li><span class="opener">Quiz</span>
+				<ul>
+					<li><a href="/web/quiz/QuizManage">Quiz Manage</a></li>
+					<li><a href="/web/quiz/create">Create Quiz</a></li>
+					<li><a href="/web/quiz/teacherQuizManage">Quiz Apply</a></li>
+					<li><a href="/web/quiz/listQuiz">Do quiz</a></li>
+				</ul></li>
+
+		</ul>
+	</nav>
+
+
+</div>

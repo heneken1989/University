@@ -1,0 +1,108 @@
+
+<aside th:fragment="sidebar" style="height:100px;"
+	class="main-sidebar sidebar-dark-primary elevation-4" id="sidebar">
+	<!-- Brand Logo -->
+	<div style="height: 80px"
+		class="d-flex align-items-center justify-content-center">
+		<div>
+
+			<span class="brand-text font-weight-light">AdminLTE 3</span>
+		</div>
+
+	</div>
+
+
+
+	<!-- Sidebar -->
+	<div class="sidebar" >
+
+		<!-- Sidebar Menu -->
+		<nav class="mt-2">
+			<ul class="nav nav-pills nav-sidebar flex-column"
+				data-widget="treeview" role="menu" data-accordion="false">
+						
+				
+				<li class="nav-item has-treeview" style=" border-bottom:2px solid gray">
+				<a class="nav-link"> 
+			
+				<i class="fas fa-chalkboard nav-icon"></i>
+			
+						<p >
+							Manager Class <i  class="fas fa-angle-left right"></i> 
+							
+						</p>
+				</a>
+					<ul class="nav nav-treeview">
+						
+						
+					
+						<li style=" border-bottom:2px solid gray" class="nav-item">
+						<a 
+							th:href="@{/class/list}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >List Class</p>
+						</a>
+						</li>
+						<li  class="nav-item">
+						<a
+							th:href="@{/class/create}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >Create Class</p>
+						</a></li>
+					</ul>
+					</li>
+					
+					
+							
+				<li class="nav-item has-treeview" style=" border-bottom:2px solid gray">
+				<a class="nav-link"> 
+			
+				<i class="fas fa-umbrella-beach nav-icon"></i>
+						<p >
+							Manager Holiday <i  class="fas fa-angle-left right"></i> 
+							
+						</p>
+				</a>
+					<ul class="nav nav-treeview">
+						
+						
+					
+						<li style=" border-bottom:2px solid gray" class="nav-item">
+						<a 
+							th:href="@{/holiday/index}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >List holiday</p>
+						</a>
+						</li>
+						<li  class="nav-item">
+						<a
+							th:href="@{/holiday/create}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >Create Holiday</p>
+						</a></li>
+					</ul>
+					</li>
+					
+					
+				
+
+				<li class="nav-item" style=" border-bottom:2px solid gray" >
+				<a th:href="@{/holiday/index}"
+				
+					class="nav-link"> 
+					<i class="fas fa-umbrella-beach nav-icon"></i>
+						<p > test</p>
+				</a>
+				</li>
+
+			</ul>
+		</nav>
+		<!-- /.sidebar-menu -->
+	</div>
+	<!-- /.sidebar -->
+</aside>
+</div>
