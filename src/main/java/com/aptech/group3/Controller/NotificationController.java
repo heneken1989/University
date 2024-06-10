@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.aptech.group3.Dto.ActionStatus;
 import com.aptech.group3.Dto.NoftifyType;
 import com.aptech.group3.Dto.NotifyCreateDto;
 import com.aptech.group3.Dto.UserStatus;
@@ -63,6 +65,7 @@ public class NotificationController {
 	public String index(Model model,
 			@AuthenticationPrincipal CustomUserDetails currentUser,
 			@RequestParam(name = "semester", required = false) Integer se,
+			@RequestParam(name = "eror", required = false) ActionStatus error,
 			@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		List<Semeter> semester = semesterService.findAll();
@@ -94,7 +97,7 @@ public class NotificationController {
 
 	@PostMapping("/create")
 	public String createAction(Model model, @AuthenticationPrincipal CustomUserDetails currentUser,
-			@ModelAttribute("data") @Valid NotifyCreateDto data,BindingResult bindingResult) {
+			@ModelAttribute("data") @Valid NotifyCreateDto data,BindingResult bindingResult,RedirectAttributes redirect) {
 		data.setCreated_at(new Date());
 		if (data.getType() == NoftifyType.ALL) {
 			data.setField_id(null);
@@ -194,7 +197,7 @@ public class NotificationController {
 			fireBasseService.sentManyNotification(listMess);
 		}
 		
-	
+		redirect.addAttribute("error",ActionStatus.UPDATED);
 		return "redirect:/admin/notify/list";
 	}
 

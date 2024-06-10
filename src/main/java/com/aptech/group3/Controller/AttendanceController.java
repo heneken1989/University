@@ -22,21 +22,20 @@ import com.aptech.group3.entity.Attendance;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.LessonSubject;
 import com.aptech.group3.entity.Semeter;
-import com.aptech.group3.entity.TeacherRegisted;
+
 import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.service.AttendanceService;
 import com.aptech.group3.service.ClassForSubjectService;
 import com.aptech.group3.service.LessonSubjectService;
 import com.aptech.group3.service.SemesterService;
 import com.aptech.group3.service.StudentClassService;
-import com.aptech.group3.service.TeacherRegistedService;
+
 
 @Controller
 @RequestMapping({ "/web/attendance" })
 public class AttendanceController {
 
-	@Autowired
-	private TeacherRegistedService teacherService;
+
 
 	@Autowired
 	private StudentClassService classService;
@@ -126,7 +125,6 @@ public class AttendanceController {
 			@RequestParam(name = "error", required = false) String error) {
 
 		Long teacherId = currentUser.getUserId();
-		Semeter currentSemester = semesterService.getCurrentSemester();
 		List<ClassForSubject> data = new ArrayList<ClassForSubject>();
 		Semeter semester = semesterService.getCurrentSemester();
 		if (currentUser.getRole().equals("TEACHER")) {
@@ -156,15 +154,9 @@ public class AttendanceController {
 			@RequestParam(name = "code", required = false, defaultValue = "") String code,
 			@AuthenticationPrincipal CustomUserDetails currentUser, RedirectAttributes redirectAttribute) {
 
-		Long teacherId = currentUser.getUserId();
 
-		boolean check = teacherService.checkTeacherOwnClass(teacherId, classId);
 
-		if (!check) {
-			model.addAttribute("error", "just attendance  for your class");
-			return "attendance/list";
-		}
-
+		
 		List<LessonSubject> currentLesson = lessonService.getCurrentLesson(classId, new Date());
 		if (currentLesson.isEmpty()) {
 

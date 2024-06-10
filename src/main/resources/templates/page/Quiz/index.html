@@ -212,7 +212,7 @@ layout:decorate="~{/layout}">
 </div>
      
      
-    <form th:action="@{/web/quiz/submitQuiz}" method="post">
+    <form th:action="@{/web/quiz/submitQuiz}" method="post" id="quizForm">
     
     <input th:value="${duration}" id="quizDuration" type="hidden" >
     <input th:value="${quizExamId}" name="quizExamId" type="hidden" >
@@ -291,6 +291,11 @@ layout:decorate="~{/layout}">
 document.addEventListener('DOMContentLoaded', function() {
     // Retrieve or initialize the timer's end time
     initializeTimer();
+
+    document.getElementById('quizForm').addEventListener('submit', function(event) {
+        resetTimer();
+    });
+
 });
 
 function initializeTimer() {
@@ -336,6 +341,11 @@ function updateTimerDisplay(timeLeft) {
     var seconds = Math.floor((timeLeft % 60000) / 1000);
     document.getElementById('minutes').textContent = minutes < 10 ? '0' + minutes : minutes;
     document.getElementById('seconds').textContent = seconds < 10 ? '0' + seconds : seconds;
+}
+
+
+function resetTimer() {
+    localStorage.removeItem('endTime');
 }
 
 

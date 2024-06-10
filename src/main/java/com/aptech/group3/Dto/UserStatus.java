@@ -6,6 +6,7 @@ public enum UserStatus {
 	LEAVE,
 	EXPULSION,
 	TEACHING,
-	WORKING
+	WORKING,
+	CHOOSEDEPARTMENT
 }
  

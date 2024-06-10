@@ -19,13 +19,23 @@ import com.aptech.group3.entity.User;
 
 @Service
 public interface StudentClassService {
+	List<Long> getListStudentRegistered(Long studentid , List<Long> listId);
 	
 	//thanh thêm1
 	public List<ClassForSubject> getTodayClassStudent(Long studentId, Long SemesterId) ;
 
 	public List<ClassForSubject> getListClassStudent(Long studentId, Long SemesterId);
+	
+	
+	
 
+	public void DeleteByClassIdAndStatus(Long classId, ClassStatus status);
+	public List<StudentClass> getListByClassIdAndStatus(Long classId, ClassStatus status);
+	public void updateManyStudentStatusByClassId(Long classId,ClassStatus status);
 	// new
+
+
+
 	public List<StudentClassApiDto> getCurrentClassList(Long studentId, Long SemesterId);
 
 	public List<TimeTableApiDto> getTimtableApiDto(Long studentId, Date day);

@@ -157,6 +157,7 @@ public class QuizController {
 			   int duration = quiz.getDuration();
 			   LocalDateTime endDate = now.plusMinutes(duration);
 			   quizExam.setSubmit_exam_time(Date.from(endDate.atZone(ZoneId.systemDefault()).toInstant()));
+			   quizExam.setStatus("OnProcess");
 			   quizExamRepository.save(quizExam);
 			   model.addAttribute("quizExamId",quizExam.getId() );			   
 		// Set Answers 	   
@@ -175,7 +176,6 @@ public class QuizController {
 		        }
 		    }		    		   	 
 	     	model.addAttribute("savedAnswers", savedAnswerss);
-	    
 		return "page/Quiz/index";
 	}
 	

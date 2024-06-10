@@ -2,12 +2,12 @@
 <!-- Sidebar -->
 
 
-<div th:fragment="sidebar" style="height: 100%;" id="sidebar">
+<div th:fragment="sidebar"  id="sidebar">
 
 	<div class="inner">
 
 		<div id="side_user_info" sec:authorize="isAuthenticated()"
-			style="border-bottom: solid 1px gray; height: 120px;">
+			style="border-bottom: solid 1px gray; height: 140px;">
 
 			<div class="dropdown-container">
 				<details class="dropdown right">
@@ -72,7 +72,7 @@
 
 		<!-- nếu chưa đăng nhập -->
 		<div id="side_user_info" sec:authorize="!isAuthenticated()"
-			style="border-bottom: solid 1px gray; height: 120px;">
+			style="border-bottom: solid 1px gray; height: 140px;">
 
 			<div
 				style="width: 100%; height: 100%; font-size: 20px; font-family: bold; transform: translateX(40%)"
@@ -144,15 +144,20 @@
 					<li><a href="/user/create">Create</a></li>
 				</ul></li>
 
-			<li><a href="/web/attendance/list">Attendance</a></li>
-
+			<li><span class="opener">Mark and Attendance</span>
+				<ul>
+					<li><a href="/web/mark/getMarkSubject">Mark Subject</a></li>
+					<li><a href="/web/attendance/list">Attendance</a></li>
+				</ul>
+			</li>
 
 
 
 
 			<li><span class="opener">Payment</span>
 				<ul>
-					<li><a href="/payment">Payment</a></li>
+					<li><a th:href="@{/web/payment}">Payment</a></li>
+					<li><a th:href="@{/web/payment/details}">History</a></li>
 
 				</ul></li>
 			<li><span class="opener">Quiz</span>
@@ -162,6 +167,17 @@
 					<li><a href="/web/quiz/teacherQuizManage">Quiz Apply</a></li>
 					<li><a href="/web/quiz/listQuiz">Do quiz</a></li>
 				</ul></li>
+				
+				
+		<li><span class="opener">Subject</span>
+					<ul>
+						<li><a href="/Subject/list">Subject List</a></li>
+						<li><a href="/Subject/create">Create Subject</a></li>
+						<li><a href="/Subject/hiddenSubject" >HiddenSubject</a></li>
+						<!-- <li><a href="/Subject/update">Update Subject</a></li> -->
+						<li><a href="/Subject/listrequiredsubject">Required Subject List</a></li>
+						<li><a href="/Subject/listlevel" >SubjectLevel</a></li>
+					</ul></li>
 
 		</ul>
 	</nav>

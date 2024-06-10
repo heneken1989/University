@@ -30,7 +30,7 @@
       
        </div>  
        
-       
+        <input th:if="${error=='CREATED'}" class="show_success_toast" readonly type="hidden"  th:value="#{toast.success.create}">
         <table class="table  border card-body" id="class_for_subject_table">
             <thead class="bg bg-primary">
                 <tr>

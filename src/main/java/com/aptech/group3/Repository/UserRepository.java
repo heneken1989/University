@@ -12,12 +12,30 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.aptech.group3.Dto.UserStatus;
+import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.User;
 
 import jakarta.transaction.Transactional;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
+	//field, mã số, status
+
+	
+	@Transactional
+	@Modifying
+	 @Query("update User u SET u.status = :status where u.id in :id ")
+	    public void updateStatusStudent(UserStatus status, List<Long> id);
+
+	 @Query("SELECT u FROM User u LEFT JOIN u.fields f " +
+	           "WHERE (:status IS NULL OR u.status = :status) AND (:fieldId IS NULL OR f.id = :fieldId)")
+	    List<User> findByFieldIdAndSubjectIdAndStatusAndCode(@Param("status") UserStatus status, @Param("fieldId") Long fieldId);
+
+//		@Query("SELECT u FROM User u JOIN u.fields f " +
+//		           "WHERE (:status IS NULL OR u.status = :status) " +
+//		           "AND (:fieldId IS NULL OR f.id = :fieldId) " +
+//		           "AND (:code IS NULL OR u.code LIKE %:code%)")
+		//List<User> searchUserByCode()
 	Page<User> findByNameContainingIgnoreCase(String name, Pageable pageable);
 	
 	@Transactional
@@ -34,6 +52,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 
     Optional<User> findById(Long id);
     List<User> findByRole(String role);
+    Page<User> findByRoleNot(String role, Pageable pageable); 
     //User findByEmail(String email);
     public User findByResetPasswordToken(String token);	
     @Query("SELECT u FROM User u WHERE u.email = :email")
@@ -49,5 +68,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("update User u set u.password = :password where u.id = :id")
     public void updatePassword(String password, Long id);
+
+    public List<User> findByCode(String code);
     
 }

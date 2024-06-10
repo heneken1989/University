@@ -23,17 +23,9 @@ public class RoomRegisted {
 	
 	@ManyToOne
 	@JoinColumn(name="class_id" , referencedColumnName="id")
-	private ClassForSubject class_registed;
+	private ClassForSubject classRegisted;
 	@ManyToOne
 	@JoinColumn(name="room_id" , referencedColumnName="id")
 	private Room room;
-	
-	@ManyToOne
-	@JoinColumn(name="Semeter_id" , referencedColumnName="id")
-	private Semeter Semeter;
-	
-	
-	
-	
-	
+		
 }

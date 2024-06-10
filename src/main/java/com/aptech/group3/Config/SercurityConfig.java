@@ -66,7 +66,7 @@ public class SercurityConfig {
 			au.requestMatchers("/api//admin/**").hasAuthority("ADMIN");
 			au.requestMatchers("/api/teacher/**").hasAuthority("TEACHER");
 			au.requestMatchers("/api/student/**").hasAuthority("STUDENT");
-			au.anyRequest().permitAll();
+			au.anyRequest().authenticated();
 		})
 				.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.csrf(csrf -> csrf.disable()) // Often, CSRF is disabled for APIs

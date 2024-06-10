@@ -20,7 +20,7 @@ public class ClassSubjectAllDto {
 	
 	private Long semeter_id;
 	
-	private String status = "waiting";
+	private ClassStatus status;
 	
 	private Long subject_id;
 	

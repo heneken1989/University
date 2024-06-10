@@ -154,8 +154,6 @@ public List<QuizExam> ListQuizAlreeadyApplied(@RequestParam Long classId,@Authen
 	    return quizExamService.findExamByClassId(classId);
 }
 
-
-
 @PostMapping("/api/Quiz/Submit")
 @ResponseBody
 public void QuizSubmit(@RequestBody Map<String, Object> requestBody) {
@@ -227,6 +225,29 @@ public void StartQuiz(@RequestBody Map<String, Long> requestBody) {
 
 
 
+@PostMapping("/api/public/Quiz/AutoUpdateQuizExam")
+@ResponseBody
+public void updateQuiz(@RequestBody Map<String, Long> requestBody,@AuthenticationPrincipal CustomUserDetails currentUser) {
+    Long classId = requestBody.get("classId");
+	 List<QuizExam> listQuizExam = quizExamService.findExamByStudentIdAndClassId(currentUser.getUserId(), classId);
+	    LocalDateTime now = LocalDateTime.now();
+	    for(QuizExam aExam : listQuizExam )
+	    {
+		    Date endTimeDate = aExam.getSubmit_exam_time();
+		    LocalDateTime endTime = endTimeDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+		    if(now.isAfter(endTime))
+		    {
+		    	aExam.setStatus("Submitted");
+		 	   quizExamRepository.save(aExam);
+		    } 
+	    }
+
+
+}
+
+
+
+
 
 @PostMapping("/api/ClassRegister")
 @ResponseBody
@@ -255,6 +276,16 @@ public List<QuizExam> FindExamByStudentId(@RequestBody Map<String, Long> request
 	LocalDateTime now = LocalDateTime.now();
 	Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
 	 List<QuizExam> listQuizExam = quizExamService.findExamByStudentIdAndDate(studentId, date);
+	return listQuizExam ;
+}
+
+
+
+@PostMapping("/api/public/Quiz/ListExam")
+public List<QuizExam> FindExamByStudentIdWeb(@RequestBody Map<String, Long> requestBody,@AuthenticationPrincipal CustomUserDetails currentUser) {
+     Long classId = requestBody.get("classId");
+     System.out.print("quizId:"+ classId);
+	 List<QuizExam> listQuizExam = quizExamService.findExamByStudentIdAndClassId(currentUser.getUserId(), classId);
 	return listQuizExam ;
 }
 

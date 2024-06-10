@@ -21,8 +21,12 @@
        </div>
     
        
-       <input type="hidden" th:if=${error!=null} th:value="${error}" id="error_index_holiday">
-        <input type="hidden" th:if=${success!=null} th:value="${success}" id="success_index_holiday">
+       <input th:if="${error=='CREATED'}" class="show_success_toast" readonly type="hidden"  th:value="#{toast.success.create}">
+       <input th:if="${error=='UPDATED'}" class="show_success_toast" readonly type="hidden"  th:value="#{toast.success.update}">
+       <input th:if="${error=='DELETED'}" class="show_success_toast" readonly type="hidden"  th:value="#{toast.success.delete}">
+       <input th:if="${error=='ERROR'}" class="show_success_toast" readonly type="hidden"  th:value="#{toast.error.delete.over}">
+       
+      
    
       </form>
       

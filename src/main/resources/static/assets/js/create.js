@@ -31,19 +31,47 @@ if($("#error_create_class_hidden")){
 
 
 
+
+
  
  if($(".select_subject_create").val()!= 0){
+	 credit= $("#Credit_selected_when_error").val();
 	  let selectedOption = select_subject.options[select_subject.selectedIndex];
 	   let checkType = selectedOption.getAttribute("data-check");
 	    if(checkType=="both"){
 	  oneForm.hide()
-	  console.log(1)
 	   $("#form_create_both").show();
    }else{   
 	    $("#form_create_both").hide
 	    oneForm.show();
+	    $("#select_enddate_create").parent().show();
+	    
+	    slotday.forEach(x=>{
+			 if($("#select_classtype_create").val()=="all"){
+				 	if(x<6 && x+Number(credit)<=6 || x>6 && x<12&& x+Number(credit)<=12){
+				result.push(x)
+			}
+			 }else{
+				
+				  	if(x<6 && (x+Number(credit)-1)*2<=6 || x>6 && x<12&& (x+Number(credit)*2-1)<=12){
+				result.push(x)
+			 }
+		}
+		})
+	
+	selected_start_slot=$("#start_slot_select_error").val();
+		let data= result.map(e=>`<option value="${e}" ${selected_start_slot==e?"selected":""}>${e}</option>`).join()
+		$("#select_startslot_create").html(`<option value="0"> select slot</option> ${data} `)
+		
+
+		$("#select_endslot_createss").val($("#end_slot_select_error").val());
+	}
+	
+	 $("#select_endslot_createss").parent().show();
+	
+	    
    }
- }
+ 
  
  
 
@@ -175,12 +203,9 @@ $("#select_classtype_create").on("change",()=>{
 //handle after select start slot
 $("#select_startslot_create").on("change", () => {
     let selectedStartSlot = $("#select_startslot_create").val();
-    
-    console.log(selectedStartSlot)
-   
+      
     start=selectedStartSlot;
     let credit = $("#select_startslot_create").attr("data-id"); 
-    console.log(selectedStartSlot,credit)
     if($("#select_classtype_create").val()=="all"){
 		 $("#select_endslot_createss").val( Number(selectedStartSlot)+ Number(credit) );
 	}else{

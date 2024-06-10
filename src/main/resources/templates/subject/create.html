@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{adminLayout/adminLayout}">
+<head>
+<meta charset="utf-8">
+<title>Create new Subject</title>
+
+<style>
+ .subject-level {
+            cursor: pointer;
+            background-color:#d1e5f0;
+            color: Black;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .subject-level:hover {
+            background-color: #d1e5f0;
+        }
+        .hidden { display: none; }
+</style>
+</head>
+
+<body>
+
+ <article layout:fragment="content" class="d-flex align-items-center flex-column">
+ <h2>Create new Subject</h2>
+  <div th:if="${error}" class="alert alert-info" id="error"
+			style="height: 50px; background:white;">
+			<p th:text="${error}" class="error" style="text-align: center"></p>
+		</div>
+		<div th:if="${message}" class="alert alert-info">
+			<p th:text="${message}"></p>
+		</div>
+
+		<div th:if="${errorMessage}" class="error-message">
+			<p style="color: red" th:text="${errorMessage}"></p>
+		</div>
+ <form th:action="@{/Subject/create}" method="post" style="width: 70%"
+ id="subject_form_create_account" th:object="${data}" >
+
+ <input type="hidden" name="id" value="${data.id}"> <!-- Hidden input for ID -->
+<!--  <span>Name: </span><input type="text" name="name" id="name" required/> -->
+ 
+					
+					<div>
+				<div class="input-group mb-3">
+					<div class="input-group-prepend" style="width: 150px">
+						<label style="width: 100%" class="input-group-text" for="name">Name</label>
+					</div>
+					<input type="text" th:field="*{name}" class="form-control"
+						id="name" placeholder="Name" required>
+				</div>
+				
+					</div>
+ 
+<!--  <span>Credit</span><input type="number" name="credit" required/><br> -->
+ <div class="input-group mb-5">
+			<div class="input-group-prepend" style="width: 150px">
+			<label style="width: 100%" class="input-group-text">Type</label>
+			</div>
+ <select id="select_type_create_subject" name="type" class="form-control" required>
+ <option value=""> select type</option>
+ <option th:each="subject : ${type}" th:value="${subject}" th:text="${subject}" th:field="*{type}"></option>
+ </select><br>
+ 
+ </div>
+ 
+  <div class="input-group mb-5" id="select_credit_proper" style="display: none">
+			<div class="input-group-prepend" style="width: 150px">
+			<label style="width: 100%" class="input-group-text" >Credit</label>
+			</div>
+ <select id="credit_create_subject" name="credit" class="form-control" required >
+<option th:value="0">Select Credit</option>	
+ <option th:value="1">1</option>
+ <option th:value="2">2</option>
+ <option th:value="3">3</option>
+ <option th:value="4">4</option>
+ <option th:value="5">5</option>
+ 
+ </select>
+ <br>
+ </div>
+ 
+  <div class="input-group mb-5" id="credit_action_proper" style="display: none" >
+			<div class="input-group-prepend" style="width: 150px">
+			<label style="width: 100%" class="input-group-text">Credit for Action</label>
+			</div>
+  <select id="creditAction_create_subject" th:field="*{creditAction}" class="form-control" >
+ <option th:each="subject : ${creditAction}" th:value="${subject}" th:text="${subject}"></option>
+ <option th:value="0">Select Credit for Action</option>	
+ <option th:value="1">1</option>
+ <option th:value="2">2</option>
+ <option th:value="3">3</option>
+ <option th:value="4">4</option>
+ </select><br>
+ </div>       
+              <input name="field_id"  id="field_create_subject" th:value="${field}" type="hidden"/>
+        
+ <div class="input-group mb-5"  >
+			<div class="input-group-prepend" style="width: 150px" >
+        <label style="width: 100%" class="input-group-text" for="subjectlevel">Subject Level:</label>
+        </div>
+        
+        
+        <select id="subjectlevel" name="subjectlevel_id"  class="form-control"  >
+              <option value="" disabled selected >Select a Subject Level</option>  
+              
+            <option th:each="subjectlevel : ${subjectlevels}" th:value="${subjectlevel.id}" th:text="${subjectlevel.name}" ></option>
+        </select>
+        <label style="width: 100%" class="input-group-text">Pass</label>
+        
+        
+        <select  class="select2" name="field[]" multiple id="select_create_subject" style="display: none; width:100%">  
+        </select>
+
+        </div>
+
+
+
+
+                      <input name="field_id1"  id="field_create_subject1" th:value="${field}" type="hidden"/>
+        
+ <div class="input-group mb-5"  >
+			<!-- <div class="input-group-prepend" style="width: 150px"  > -->
+			<div class="input-group-prepend" style="display: none"  >
+        <label style="width: 100%" class="input-group-text" for="subjectlevel">Subject Level:</label>
+        </div>
+        
+        <select id="subjectlevel1" name="subjectlevel_id" class="input-group-text" style="display: none">
+              <option value="" disabled selected>Select a Subject Level</option>  
+            <option th:each="subjectlevel : ${subjectlevels}" th:value="${subjectlevel.id}" th:text="${subjectlevel.name}" ></option>
+        </select>
+        <label style="width: 100%" class="input-group-text">OptionalPass</label>
+        <select  class="select2" name="field1[]" multiple id="select_create_subject1" style="display: none; width:100%">  
+        </select>
+
+        </div>
+        
+        
+        
+        
+        <button class="btn btn-primary" type="submit">Create</button>
+        <!-- <select name="requiredSubjects" id="select_subject_status" style="display: none">
+        </select>  -->
+       
+        
+        
+        <!-- sau khi chon subject level dung ajax de goij apoi lay ve danh sach subject theo field va level -->
+       
+            
+            
+        </form>
+
+
+<!-- Update your existing JavaScript code -->
+
+
+ </article>
+</body>
+</html>

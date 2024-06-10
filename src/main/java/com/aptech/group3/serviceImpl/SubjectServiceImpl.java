@@ -2,19 +2,30 @@ package com.aptech.group3.serviceImpl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.aptech.group3.Dto.SubjectCreateDto;
 import com.aptech.group3.Dto.SubjectDto;
+import com.aptech.group3.Repository.FiledRepository;
+import com.aptech.group3.Repository.RequiredSubjectRepository;
 import com.aptech.group3.Repository.SubjectLevelRepository;
 import com.aptech.group3.Repository.SubjectRepository;
+import com.aptech.group3.entity.Field;
+import com.aptech.group3.entity.RequiredSubject;
 import com.aptech.group3.entity.Subject;
 import com.aptech.group3.entity.SubjectLevel;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.service.SubjectService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class SubjectServiceImpl implements SubjectService {
@@ -25,8 +36,14 @@ public class SubjectServiceImpl implements SubjectService {
 	private SubjectLevelRepository LevelRepo;
 
 	@Autowired
+	private RequiredSubjectRepository reqsubRepo;
+
+	@Autowired
+	private FiledRepository fieldRepo;
+
+	@Autowired
 	private ModelMapper mapper;
-	
+
 	public List<Subject> findPassesSubject(User student)
 	{
 		return subjectRepo.findPassedSubject(student);
@@ -76,16 +93,6 @@ public class SubjectServiceImpl implements SubjectService {
 	}
 
 	public Subject saveSubject(Subject sub) {
-
-		// Retrieve the Category object based on the provided category_id
-		// Long categoryId = room.getCategory().getId();
-		// Category category = cateRepo.findById(categoryId)
-		// .orElseThrow(() -> new RuntimeException("Category not found with id: " +
-		// categoryId));
-
-		// Set the retrieved Category object to the room's category field
-		// room.setCategory(category);
-
 		return subjectRepo.save(sub);
 	}
 
@@ -107,11 +114,94 @@ public class SubjectServiceImpl implements SubjectService {
 		}.getType());
 	}
 	
-	
 	public List<SubjectDto> findByStudentMoNeedRequiredSubjectCondition(Long field) {
 		List<Subject> listS = subjectRepo.findSubjectsForStudentAndNoNeedRequiredSubject(field);
 		return mapper.map(listS, new TypeToken<List<SubjectDto>>() {
 		}.getType());
 	}
+	
+	
+	
+	// DU
+		public List<RequiredSubject> listReq() {
+			return reqsubRepo.findAll();
+		}
+
+		public Subject create(SubjectCreateDto data) {
+			
+			Subject subject = new Subject();
+			subject.setName(data.getName());
+			subject.setCredit(data.getCredit());
+			subject.setType(data.getType());
+			subject.setCreditAction(data.getCreditAction());
+			
+			fieldRepo.findById(data.getField_id()).ifPresent(subject::setField);
+			LevelRepo.findById(data.getSubjectlevel_id()).ifPresent(subject::setSubjectlevel);
+			Subject newsub =subjectRepo.save(subject);
+			return newsub;
+		}
+		
+		 @Transactional
+		    public void saveSubjectWithRequiredSubjects(Subject subject, Set<RequiredSubject> requiredSubjects) {
+		        subject = subjectRepo.save(subject);
+		        for (RequiredSubject requiredSubject : requiredSubjects) {
+		            requiredSubject.setSubject(subject);
+		            reqsubRepo.save(requiredSubject);
+		        }
+		    }
+
+		/*
+		 * public void createrequired(RequiredSubjectDto reqdata) {
+		 * 
+		 * RequiredSubject req = new RequiredSubject();
+		 * 
+		 * reqsubRepo.findById(0); reqsubRepo.findById(0); reqsubRepo.save(req); }
+		 */
+		 public void updatesubject(SubjectCreateDto dto) {
+			 Optional <Subject> subOptional = subjectRepo.findById(dto.getId());
+			 
+			 if(subOptional.isPresent()) {
+				 Subject sub = subOptional.get();
+				 sub.setName(dto.getName());
+				 sub.setType(dto.getType());
+				 sub.setCredit(dto.getCredit());
+				 sub.setCreditAction(dto.getCreditAction());
+				 subjectRepo.save(sub);
+				
+			 }else {
+					throw new UsernameNotFoundException("Subject not found!");  // Xử lý khi không tìm thấy người dùng
+				}
+			 
+			
+		 }
+		 
+		 public List<Subject> getByFieldIDAndLevel(Long FieldId, Long level) {
+				return subjectRepo.getListSubjectByFieldAndLevel(FieldId, level);
+			}
+		 
+		 
+		 public void hideById(Long id) {
+		        subjectRepo.findById(id).ifPresent(subject -> {
+		            subject.setHidden(true);
+		            subjectRepo.save(subject);
+		        });
+		    }
+		 
+		 
+		 public void showById(Long id) {
+		        subjectRepo.findById(id).ifPresent(subject -> {
+		            subject.setHidden(false);
+		            subjectRepo.save(subject);
+		        });
+		    }
+
+
+			public Page<Subject> getListPage(Long fieldId, Long levelId, Pageable pageable) {
+		        return subjectRepo.findByFieldIdAndSubjectlevelId(fieldId, levelId, pageable);
+		    }
+
+
+
+	
 
 }

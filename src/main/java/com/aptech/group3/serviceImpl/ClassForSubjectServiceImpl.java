@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.aptech.group3.Dto.ClassForSubjectDto;
+import com.aptech.group3.Dto.ClassStatus;
+import com.aptech.group3.Dto.ClassSubject;
 import com.aptech.group3.Dto.ClassSubjectAllDto;
 import com.aptech.group3.Dto.ClassSubjectBasicDto;
 import com.aptech.group3.Dto.ClassSubjectCreateDto;
@@ -29,6 +31,7 @@ import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.service.ClassForSubjectService;
 import com.aptech.group3.service.LessonSubjectService;
+import com.aptech.group3.service.RoomRegistedService;
 
 import shared.BaseMethod;
 
@@ -50,20 +53,47 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 	
 	@Autowired
 	private LessonSubjectService lesssonService;
+	
+
+	
 
 	@Autowired
 	private ModelMapper mapper;
 	
-	// thanh thêm
+	@Autowired 
+	private RoomRegistedService roomRegistedService;
+	
+	
+	
+	public void delete(Long classId) {
+		
+		lesssonService.deleteLessonByClassId(classId);
+		ClassForSubject data=	classRepository.findById(classId).orElse(null);
+		
+		classRepository.delete(data);
+	}
+	//new 
+	
+	public Page<ClassForSubject> getSubjectByFieldAndSemester(ClassSubject status, Long fieldId, Long semesterId,Long subjectId,Pageable pageable){
+		Page<ClassForSubject> data =classRepository.findByFieldIdAndSubjectIdAndStatus(semesterId,fieldId,  subjectId,status,  pageable);
+				
+		return data;
+	}
+	
+	public List<ClassForSubject> getListNoPage(ClassSubject status, Long fieldId, Long semesterId,Long subjectId){
+		List<ClassForSubject> data= classRepository.getListByCondition(semesterId, fieldId, subjectId, status);
+		return data;
+	}
+	
+	public void updateClassStatus(ClassSubject status, List<Long> listId) {
+		classRepository.updateStatue(status, listId);
+	}
+	
     public List<ClassForSubject> getClassesForToday(Long teacherId) {
         Date today = new Date();
         return classRepository.findAllByDateTodayAndUserId(today, teacherId);
     }
-	// thanh hết
-	
 
-	
-	
 	public List<ClassForSubject> findByRegistrationDate(Date date)
 	{
 		return classRepository.findClasWhereDateBetweenRegistration(date);
@@ -91,8 +121,7 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 		
 	}
 	
-	
-	//new 
+
 	   public List<ClassForSubject> findBySemesterIdAndFieldId(Long semesterId,Long fieldId) {
 	        return classRepository.findBySemeterIdAnd(semesterId, fieldId);
 	    }
@@ -162,11 +191,6 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
        return classRepository.findByTeacherId(teacherID);
 	}
 
-	public Page<ClassForSubject> getSubjectByFieldAndSemester(int fieldId, int semesterId,Integer subjectId,Pageable pageable){
-		Page<ClassForSubject> data =classRepository.findByFieldIdAndSubjectId(semesterId,fieldId,  subjectId,  pageable);
-				
-		return data;
-	}
 	
 	
 	public ClassForSubject findById(Long id) {
@@ -200,12 +224,14 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 
 			sclass.setDateStart(BaseMethod.convertDate(data.getDate_start()));
 			sclass.setDateEnd(BaseMethod.convertDate(data.getDate_end()));
+			sclass.setStatus(ClassSubject.CREATED);
+			sclass.setMinQuantity((data.getQuantity()*30)/100);
 			ClassForSubject recive = classRepository.save(sclass);
 			recive.setName(genderClassName(recive.getSubject().getName(),recive.getId().intValue()));
 			
 			ClassForSubject	finalResult=classRepository.save(recive);
 			lesssonService.create(finalResult);
-			
+			roomRegistedService.create(finalResult.getId(), finalResult.getRoom().getId());
 		} catch (Exception ex) {
 			throw ex;
 		}
@@ -226,7 +252,7 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 		
 		  ClassForSubject finalTheo= classRepository.save(theoResult);
 		  lesssonService.create(finalTheo);
-		 
+		  roomRegistedService.create(finalTheo.getId(), finalTheo.getRoom().getId());
 
 		ActionClass  = mapForAll(ActionClass, false, data);
 		ClassForSubject actionResult= classRepository.save(ActionClass);
@@ -239,7 +265,7 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 		  finalAction.setName(finalTheo.getName()); classRepository.save(finalAction);
 		 
 		lesssonService.create(finalAction); 
-		
+		roomRegistedService.create(finalAction.getId(), finalAction.getRoom().getId());
 	
 	}
 	
@@ -288,7 +314,7 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 		dataClass.setName(data.getName());
 		subjectRepo.findById(data.getSubject_id()).ifPresent(dataClass::setSubject);
 		semesterRepo.findById(data.getSemeter_id()).ifPresent(dataClass::setSemeter);
-		dataClass.setStatus(data.getStatus());
+		dataClass.setStatus(ClassSubject.CREATED);
 		return dataClass;
 	}
 

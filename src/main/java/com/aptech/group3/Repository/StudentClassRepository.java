@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -12,11 +13,29 @@ import com.aptech.group3.Dto.ClassStatus;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.StudentClass;
 
+import jakarta.transaction.Transactional;
+
 
 
 public interface StudentClassRepository extends JpaRepository<StudentClass ,Long> {
-	
 
+	@Query("SELECT o.id FROM StudentClass o WHERE o.student.id =:studentid and o.classforSubject.id in :listId")
+	List<Long> getListStudentRegistered(Long studentid , List<Long> listId);
+
+	@Query("SELECT s FROM StudentClass s WHERE s.classforSubject.id = :classId AND (:status IS NULL  OR s.status = :status)" )
+	List<StudentClass> searchbyClassIdAndStatus(Long classId, ClassStatus status );
+	
+	@Modifying
+	@Transactional
+	@Query("DELETE  FROM StudentClass s WHERE s.id IN :listId")
+	void deleteManyStudent(List<Long> listId);
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE StudentClass s SET s.status = :status  WHERE s.classforSubject.id = :classId")
+	void updateStatusManyStudent(ClassStatus status,Long classId );
+	
+	// new 
 	@Query("SELECT s.classforSubject FROM StudentClass s JOIN s.classforSubject cs JOIN cs.lessons l WHERE s.student.id = :studentId AND DATE(l.day) = DATE(:today) AND s.classforSubject.semeter.id = :semesterId")
 	List<ClassForSubject> getTodayClassSubject( @Param("today") Date today, Long studentId,  Long semesterId);
 	

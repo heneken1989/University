@@ -3,13 +3,13 @@
 INSERT IGNORE INTO  field (id, name) 
 VALUES 
     (1, 'Biology'),
-    (2, 'History'),
-    (3, 'Economic'),
+    (2, 'Economic'),
+    (3, 'History'),
     (4, 'Information Technology');
     
 INSERT IGNORE INTO semeter (name, year, day_end, day_start, id,startRegisDate,closeRegisDate) VALUES
     (1, 2024, '2024-6-01', '2024-01-01', 1,'2024-05-01','2024-05-11'),
-    (2, 2024, '2024-12-01', '2024-06-02', 2,'2024-05-01','2024-05-11');
+    (2, 2024, '2024-12-01', '2024-06-02', 2,'2024-06-01','2024-06-28');
 
     
 INSERT IGNORE INTO  room (id, name ,capacity) 
@@ -29,16 +29,16 @@ VALUES
     
     
     
-INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role) 
+INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role,status) 
 VALUES 
-    (2, 'sg', 'nobita.jpg', 'admin@gmail.com', 'ad', 'admin', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'ADMIN'),
-    (3, 'dl', 'nobita.jpg', 'student@gmail.com', 'ad', 'student', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT'),
-    (4, 'vt', 'nobita.jpg', 'student1@gmail.com', 'ad', 'student1', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT'),
-    (5, 'hcm', 'nobita.jpg', 'teacher@gmail.com', 'ad', 'teacher', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'TEACHER'),
-    (6, 'hn', 'nobita.jpg', 'employee@gmail.com', 'im employee', 'employee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'EMPLOYEE'),
-    (7, 'hcm', 'nobita.jpg', 'teacher1@gmail.com', 'ad', 'teacher1', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '2', 'TEACHER'),
-    (8, 'hcm', 'nobita.jpg', 'teacher2@gmail.com', 'ad', 'teacher2', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '3', 'TEACHER'),
-    (9, 'hcm', 'nobita.jpg', 'teacher3@gmail.com', 'ad', 'teacher3', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '4', 'TEACHER');
+    (2, 'admin', 'nobita.jpg', 'admin@gmail.com', 'ad', 'admin', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'ADMIN',0),
+    (3, 'st', 'nobita.jpg', 'st', 'ad', 'student', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0),
+    (4, 'st1', 'nobita.jpg', 'st1', 'ad', 'student1', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0),
+    (5, 'tc', 'nobita.jpg', 'teacher', 'ad', 'teacher', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'TEACHER',0),
+    (6, 'emp', 'nobita.jpg', 'employee', 'im employee', 'employee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'EMPLOYEE',0),
+    (7, 'st2', 'nobita.jpg', 'st2', 'ad', 'teacher1', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '2', 'STUDENT',0),
+    (8, 'tc2', 'nobita.jpg', 'teacher2', 'ad', 'teacher2', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '3', 'TEACHER',0),
+    (9, 'st3', 'nobita.jpg', 'st3', 'ad', 'teacher3', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '4', 'STUDENT',0);
     
 
   
@@ -91,12 +91,31 @@ VALUES
     
     
     
-   
+ 
+    
+        INSERT IGNORE INTO  user_field (field_id,users_id) 
+VALUES 
+    (1,6);
+    
+
+        INSERT IGNORE INTO  teacher_subject (id, subject_id,teacher_id) 
+VALUES 
+    (1,36,5);
 
     
-INSERT IGNORE INTO  quiz (duration, totalMark, createDate, id, name, type) 
+    
+            INSERT IGNORE INTO  class_subject (currentQuantity, minQuantity, quantity, slotEnd, slotStart, status, weekDay, dateEnd, dateStart, id, room_id, semeter_id, subject_id, teacher_id, description, name, type) 
 VALUES 
-    (NULL, 100, NULL, 1, 'FinalTest', 'Midle');
+    (0,5,50,3,1,NULL,1,'2024-06-25 12:31:29.000000','2024-01-17 12:31:29.000000',1,1,1,36,5,'Botany class','BOTANY CLASS','BOTH');
+         
+    
+    
+        INSERT IGNORE INTO  studentclass (status,class_id,id,student_id) 
+VALUES 
+      (4,1,1,3),
+      (4,1,2,4),
+      (4,1,3,7);
+
     
    
     

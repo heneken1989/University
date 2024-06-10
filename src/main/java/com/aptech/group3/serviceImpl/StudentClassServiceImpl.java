@@ -45,13 +45,55 @@ public class StudentClassServiceImpl implements StudentClassService {
 	@Autowired
 	private AttendanceRepository attendanceRepo;
 	
+	public List<Long> getListStudentRegistered(Long studentid , List<Long> listId)
+	{
+		return repo.getListStudentRegistered(studentid, listId);
+	}
+	
+	public List<User> getStudentsByClassAndSubject(Long classId) {
+		// Lấy danh sách các học sinh đang học môn học có subjectId trong lớp học có
+		// classId từ repository
+		List<StudentClass> studentClasses = repo.findByClassforSubject_Id(classId
+				);
+
+		// Tạo danh sách học sinh từ danh sách StudentClass
+		List<User> students = new ArrayList<>();
+		for (StudentClass studentClass : studentClasses) {
+			students.add(studentClass.getStudent());
+		}
+
+		return students;
+	}
+	
+	
+	public void DeleteByClassIdAndStatus(Long classId, ClassStatus status) {
+		List<Long> listId = new ArrayList<Long>();
+		listId= repo.searchbyClassIdAndStatus(classId, status).stream().map(
+				e->{
+					return e.getId();
+				}
+				).toList();
+		
+		repo.deleteManyStudent(listId);
+		
+	}
+	
+	public List<StudentClass> getListByClassIdAndStatus(Long classId, ClassStatus status){
+		List<StudentClass> data= repo.searchbyClassIdAndStatus(classId, status);
+		return data;
+	}
+	
+	public void updateManyStudentStatusByClassId(Long classId,ClassStatus status) {
+		repo.updateStatusManyStudent(status, classId);
+	}
+	//new
+	
     public List<ClassForSubject> getTodayClassStudent(Long studentId, Long SemesterId) {
         Date today = new Date();
         return repo.getTodayClassSubject(today, studentId, SemesterId);
     }
 	
-	
-	
+
 	public int currentQuantity(Long classId) {
 		List<StudentClass> liststudentInClass = repo.findByClassforSubjectId(classId);
 		int currentQuantity =liststudentInClass.size();
@@ -238,14 +280,13 @@ public class StudentClassServiceImpl implements StudentClassService {
 		return repo.getStudentByClassId(classId);
 	}
 
-	public List<User> getStudentsByClassAndSubject(Long classId) {
-		List<StudentClass> studentClasses = repo.findByClassforSubject_Id(classId);
-		List<User> students = new ArrayList<>();
-		for (StudentClass studentClass : studentClasses) {
-			students.add(studentClass.getStudent());
-		}
-
-		return students;
-	}
+	/*
+	 * public List<User> getStudentsByClassAndSubject(Long classId) {
+	 * List<StudentClass> studentClasses = repo.findByClassforSubject_Id(classId);
+	 * List<User> students = new ArrayList<>(); for (StudentClass studentClass :
+	 * studentClasses) { students.add(studentClass.getStudent()); }
+	 * 
+	 * return students; }
+	 */
 
 }

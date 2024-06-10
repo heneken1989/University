@@ -24,7 +24,8 @@ import com.aptech.group3.service.StudentClassService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping({ "/api/class" })
+
+@RequestMapping({ "/api/public/class" })
 public class ListClassBySemester {
 	@Autowired
 	private ClassForSubjectService classService;
@@ -34,7 +35,6 @@ public class ListClassBySemester {
 	
 	@Autowired
 	private SemesterService semesterService;
-
 	@GetMapping("/current")
 	public List<ClassForSubject> getCurrentClasses(Model model) {
 		Long currentSemesterId = semesterService.getCurrentSemester().getId();
@@ -42,21 +42,33 @@ public class ListClassBySemester {
 	return currentClasses;
 	}
 //	@GetMapping("/{classId}/students")
-//	public List<User> getClassStudentsBySubject(@PathVariable("classId") Long classId, @RequestParam("subjectId") Long subjectId) {
+//	public List<User> getClassStudentsBySubject(@PathVariable("classId") Long classId) {
 //	    // Lấy danh sách các học sinh đang học môn học có subjectId trong lớp học có classId
 //	    List<User> students = studentClassService.getStudentsByClassAndSubject(classId);
-//	    System.out.println("STUDENT: "+ students);
 //	    return students;
 //	}
-//
-//	
-	
-	
 
+	
+	
+    @GetMapping("/classes/{classId}/subjects")
+    public List<ClassForSubject> getClassSubjects(@PathVariable("classId") Long classId) {
+        List<ClassForSubject> subjects = classService.getClassSubjects(classId);
+        return subjects;
+    }
+	
+//	@GetMapping("/{classId}/subjects")
+//	public String getClassSubjects(@PathVariable("classId") Long classId, Model model) {
+//	    // Lấy danh sách các môn học của lớp dựa vào classId
+//	    List<Subject> subjects = classService.getClassSubjects(classId);
+//	    model.addAttribute("subjects", subjects);
+//	    return "class_subjects"; // Trả về view hiển thị danh sách môn học
+//	}
+//	
     @GetMapping("/{classId}/students")
-    public ResponseEntity<List<User>> getClassStudents(@PathVariable("classId") Long classId, @PathVariable("subjectId") Long subjectId, HttpSession session) {
+    public ResponseEntity<List<User>> getClassStudents(@PathVariable("classId") Long classId, HttpSession session) {
         // Lưu classId và subjectId vào Session
         session.setAttribute("classId", classId);
+
         List<User> students = studentClassService.getStudentsByClassAndSubject(classId);
         return ResponseEntity.ok().body(students);
     }

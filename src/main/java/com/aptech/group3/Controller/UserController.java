@@ -39,6 +39,7 @@ import org.springframework.security.core.Authentication;
 import com.aptech.group3.Dto.UpdateProfileDto;
 import com.aptech.group3.Dto.UserCreateDto;
 import com.aptech.group3.Dto.UserDto;
+import com.aptech.group3.Dto.UserStatus;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.Field;
 import com.aptech.group3.entity.Semeter;
@@ -97,7 +98,16 @@ public class UserController {
 	@Autowired
 	private SemesterService semesterService;
 	
-	
+	@PostMapping("/searchByCode")
+	  public String searchByCode(@RequestParam(value = "code") String code,
+	                             Model model) {
+	      List<User> users = userService.findByCode(code);
+	      List<Field> fieldsList = filedService.getAllFields();
+	      model.addAttribute("fields", fieldsList);
+	      model.addAttribute("statuses", UserStatus.values());
+	      model.addAttribute("users", users);
+	      return "admin_user/updateStatus";
+	  }
 	 @GetMapping("/search")
 	    public String searchUsersByName(@RequestParam("name") String name,
 	                                    @RequestParam(name = "page", defaultValue = "1") int page,
@@ -273,15 +283,20 @@ public class UserController {
 	}
 	
 	@GetMapping("/export")
-	public void exportToExcel(HttpServletResponse response, HttpSession session, Model model) throws IOException {
-		Long classId = (long) session.getAttribute("classId");
-
-		List<User> students = studentService.getStudentsByClassAndSubject(classId);
-		
-		// Tiếp tục xử lý xuất Excel với danh sách sinh viên đã lấy được
-		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-		response.setHeader("Content-Disposition", "attachment; filename=users.xlsx");
-		userService.exportToExcel(students, response.getOutputStream());
+	public void exportToExcel(HttpServletResponse response, HttpSession session) throws IOException {
+	    Long classId = (Long) session.getAttribute("classId");
+	    Long subjectId = (Long) session.getAttribute("subjectId");
+	    List<User> students = studentService.getStudentsByClassAndSubject(classId);
+	    if (students.isEmpty()) {
+	       response.sendRedirect("http://localhost:8081/admin/user/list?notification=Class%20has%20no%20students%20yet!");
+	       return;
+	    }
+	    
+	    
+	    response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+	    response.setHeader("Content-Disposition", "attachment; filename=users.xlsx");
+	    
+	    userService.exportToExcel(students, response.getOutputStream());
 	}
 
 	@PostMapping("/upload")
@@ -328,4 +343,38 @@ public class UserController {
 		}
 		return "redirect:/admin/user/profile";
 	}
+	
+	
+	
+	@GetMapping("/updateStatus")
+	  public String updateStatus(@RequestParam(name = "status", required = false) UserStatus status,
+	                             @RequestParam(name = "fieldId", required = false) Long fieldId,
+	                             Model model) {
+		System.out.println("id:"+ status + fieldId );
+	      List<User> users = new ArrayList<User>();
+	      if(status!=null || fieldId!=null) {
+	    	  users = userService.findByFieldIdAndSubjectIdAndStatusAndCode(status, fieldId);
+	    	  
+	      }
+	      List<Field> fieldsList = filedService.getAllFields();
+			model.addAttribute("fields", fieldsList);
+			model.addAttribute("curenStatus", status);
+		    model.addAttribute("statuses", UserStatus.values());
+	      model.addAttribute("users", users);
+	      return "admin_user/updateStatus";
+	  }
+	  
+	  @PostMapping("/updateStatus")
+	  public String updateStatusForUsers(@RequestParam("select_type_student_update") String status,
+	          @RequestParam("student[]") List<String> students) {
+		  List<Long> list = new ArrayList<Long>();
+		     System.out.println("STUDENTS: "+ students);
+		     System.out.println("STATUS: "+ status);
+		     UserStatus userStatus = UserStatus.valueOf(status);
+		     students.forEach(e->{
+		    	 list.add(Long.parseLong(e));
+		     });
+		     userService.updateStatusForUsers(userStatus, list);
+	      return "redirect:/admin/user/updateStatus";
+	  }
 }

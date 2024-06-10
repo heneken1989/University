@@ -5,6 +5,10 @@ public enum ClassStatus {
 	WAITINGLIST,
 	UNPAID,
 	PAID,
-	LEARNING
+	LEARNING,
+	READLYREGISTER,
+	CREATED,
+	All,
+	FINISHED
 }
  

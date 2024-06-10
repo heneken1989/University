@@ -136,7 +136,7 @@
 				data-widget="treeview" role="menu" data-accordion="false">
 						
 				
-				<li class="nav-item has-treeview" style=" border-bottom:2px solid gray">
+				<li class="nav-item has-treeview" style=" border-bottom:2px solid gray ;color:white">
 				<a class="nav-link"> 
 			
 				<i class="fas fa-chalkboard nav-icon"></i>
@@ -165,8 +165,146 @@
 							<i  class="far fa-circle nav-icon"></i>
 								<p >Create Class</p>
 						</a></li>
+						
+							<li  class="nav-item">
+						<a
+							th:href="@{/admin/class/update/status}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >Update Status class</p>
+						</a></li>
 					</ul>
 					</li>
+					
+					<!-- admin subject -->
+					
+					<li class="nav-item has-treeview" style=" border-bottom:2px solid gray ;color:white">
+				<a class="nav-link"> 
+			
+				<i class="fas fa-chalkboard nav-icon"></i>
+			
+						<p >
+							Manager Subject <i  class="fas fa-angle-left right"></i> 
+							
+						</p>
+				</a>
+					<ul class="nav nav-treeview">
+						
+						<li style=" border-bottom:2px solid gray" class="nav-item">
+						<a 
+							th:href="@{/admin/subject/list}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >List Subject</p>
+						</a>
+						</li>	
+						
+							<li style=" border-bottom:2px solid gray" class="nav-item">
+						<a 
+							th:href="@{/admin/subject/create}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >Create Subject</p>
+						</a>
+						</li>	
+				
+					<li style=" border-bottom:2px solid gray" class="nav-item">
+						<a 
+							th:href="@{/admin/subject/listrequiredsubject}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >List required Subject</p>
+						</a>
+						</li>	
+						
+						<li style=" border-bottom:2px solid gray" class="nav-item">
+						<a 
+							th:href="@{/admin/subject/hiddenSubject}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >List hidden Subject</p>
+						</a>
+						</li>
+			
+					</ul>
+					</li>
+					
+					
+								<!-- admin news -->
+					
+					<li class="nav-item has-treeview" style=" border-bottom:2px solid gray ;color:white">
+				<a class="nav-link"> 
+			
+				<i class="fas fa-chalkboard nav-icon"></i>
+			
+						<p >
+							Manager News <i  class="fas fa-angle-left right"></i> 
+							
+						</p>
+				</a>
+					<ul class="nav nav-treeview">
+						
+						<li style=" border-bottom:2px solid gray" class="nav-item">
+						<a 
+							th:href="@{/admin/news/index}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >List news</p>
+						</a>
+						</li>	
+						
+							<li style=" border-bottom:2px solid gray" class="nav-item">
+						<a 
+							th:href="@{/admin/news/create}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >Create News</p>
+						</a>
+						</li>	
+				
+					
+						
+				
+			
+					</ul>
+					</li>
+					
+					
+					
+					
+									
+				<li class="nav-item has-treeview" style=" border-bottom:2px solid gray">
+				<a class="nav-link"> 
+			
+				<i class="fas fa-umbrella-beach nav-icon"></i>
+						<p >
+							Manager Holiday <i  class="fas fa-angle-left right"></i> 
+							
+						</p>
+				</a>
+					<ul class="nav nav-treeview">
+						
+						
+					
+						<li style=" border-bottom:2px solid gray" class="nav-item">
+						<a 
+							th:href="@{/admin/holiday/index}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >List holiday</p>
+						</a>
+						</li>
+						<li  class="nav-item">
+						<a
+							th:href="@{/admin/holiday/create}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >Create Holiday</p>
+						</a></li>
+					</ul>
+					</li>	
+					
+				
 					
 					
 							
@@ -231,6 +369,16 @@
 							<i  class="far fa-circle nav-icon"></i>
 								<p >Create user</p>
 						</a></li>
+						
+									<li  class="nav-item">
+						<a
+							th:href="@{/admin/user/updateStatus}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >Update Status</p>
+						</a></li>
+						
+						
 					</ul>
 					</li>
 					
@@ -291,11 +439,11 @@
 
 
 				<li class="nav-item" style=" border-bottom:2px solid gray" >
-				<a th:href="@{/admin/holiday/index}"
+				<a th:href="@{/admin/adminpayment}"
 				
 					class="nav-link"> 
 					<i class="fas fa-umbrella-beach nav-icon"></i>
-						<p > test</p>
+						<p > Manager payment</p>
 				</a>
 				</li>
 

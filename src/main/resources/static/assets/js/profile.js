@@ -1,4 +1,31 @@
 
+	
+	
+	
+	$("#btn_update_status_student").on("click",()=>{
+		
+		let checkbox=document.querySelectorAll('.checkbox_status');
+		let str="";
+		checkbox.forEach(e=>{
+		if(e.checked){
+			let value=e.value;
+	
+			str+=`<input name="student[]" readonly value="${value}" type="hidden" >`
+		}	
+		})
+		
+		$("#wrap_input_appen").html(str);
+	});
+	
+	
+$(".submit_update_statusList").on("click", ()=>{
+	$("#updateStatusForm").submit();
+})
+
+//update student status
+$("#status_update_student").on("change", function(){
+	$("#form_search_update_status").submit();
+})
 
 
 function toggleOverlay() {

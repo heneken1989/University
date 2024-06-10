@@ -21,7 +21,9 @@ body, h1, h2, h3, p {
     text-align: center; /* Align text to the left for a more traditional look */
     border: 1px solid #ddd; /* Subtle border */
     box-shadow: 0 2px 4px rgba(0,0,0,0.06); /* Soft shadow for depth */
-    background-color:#FFE7C3;
+    background-color:#c2ebf0;
+          max-height: 600px;
+        overflow-y: auto; 
 }
 header h1 {
     color: #333;
@@ -42,7 +44,7 @@ header h1 {
 
 .module {
     height:100px;
-    background-color:#C1D8C3;
+    background-color:#9eb5b8;
     border-radius: 5px; /* Less pronounced border-radius */
     padding: 15px; /* Adequate padding */
     font-size: 30px; /* Readable font size */
@@ -65,14 +67,12 @@ header h1 {
     /* Adjust font sizes for smaller screens as needed */
 }
 
-
     .content-container {
            background-color:#C1D8C3;
         display: flex;
         justify-content: space-between;
         gap: 20px;
     }
-
 
 
     .quiz-list {
@@ -101,7 +101,7 @@ header h1 {
     }
 
     .quiz-list-container {
-        background-color:#FFE7C3; /* For visibility */
+        background-color:#c2ebf0; /* For visibility */
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         border-radius: 5px;
   
@@ -110,7 +110,9 @@ header h1 {
         max-width: 900px;
         padding: 20px;
         text-align: center;
-        display: none; /* Initially hidden */
+        display: none;
+        max-height: 600px;
+        overflow-y: auto; 
     }
 
     .quiz-item {
@@ -128,9 +130,8 @@ header h1 {
 }
 
 .active-module {
-    background-color: #4CAF50; /* or any color you like */
+    background-color: #8bd5f0; /* or any color you like */
 }
-
 </style>
 </head>
 <body layout:fragment="content">
@@ -165,7 +166,7 @@ header h1 {
 <script>
 // Function to show the quiz list for the selected class
 function showQuizList(classId) {
-
+     var isOnprocess = false; 
     var modules = document.querySelectorAll('.module');
     modules.forEach(function(module) {
         module.classList.remove('active-module');
@@ -177,15 +178,57 @@ function showQuizList(classId) {
         }
     });
 
+// auto update status Quiz Exam
+    var xhrfirst = new XMLHttpRequest();
+    var urlfirst = '/api/public/Quiz/AutoUpdateQuizExam';
+    xhrfirst.open('POST', urlfirst, true);
+    xhrfirst.setRequestHeader('Content-Type', 'application/json');
+    xhrfirst.onreadystatechange = function () {
+        if (xhrfirst.readyState === 4 && xhr.status === 200) {
+                   console.log("uodate successfully!!");
+        }
+    };
+    var datafirst = JSON.stringify({ classId: classId });
+    xhrfirst.send(datafirst);
+
     
+
+    // call api1
     var xhr = new XMLHttpRequest();
-    var url = '/web/quiz/listQuizByClass?classId=' + classId;
-    console.log(classId);
-    xhr.open('GET', url, true);
+    var url = '/api/public/Quiz/ListExam';
+    xhr.open('POST', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log(xhr.responseText);
+            var quizzes = JSON.parse(xhr.responseText);
+            if (quizzes.length > 0) {
+                for (var i = 0; i < quizzes.length; i++) {
+                    var quiz = quizzes[i];
+       
+                    if(quiz.status === 'OnProcess')
+                        {
+                    	isOnprocess = true;                       
+                        }                   
+                }
+                  
+            } else {
+    
+            }
+        }
+    };
+    var data = JSON.stringify({ classId: classId });
+    xhr.send(data);
+
+    // call APi2
+    
+
+    var xhr2 = new XMLHttpRequest();
+    var url2 = '/web/quiz/listQuizByClass?classId=' + classId;
+    xhr2.open('GET', url2, true);
+    xhr2.setRequestHeader('Content-Type', 'application/json');
+    xhr2.onreadystatechange = function () {
+        if (xhr2.readyState === 4 && xhr.status === 200) {
+
             var quizzes = JSON.parse(xhr.responseText);
             if (quizzes.length > 0) {
                 var quizListHtml = quizzes.map(function(quiz) {
@@ -210,6 +253,21 @@ function showQuizList(classId) {
                         buttonClass = 'time-ended'; // Reusing the class for finished quizzes
                     }
 
+                    if(isOnprocess === true)
+                        {
+                        if(quiz.status === "OnProcess" )
+                        {
+                        disabled = false;
+                        buttonText = 'Continue Do Quiz';
+                        }
+                        if(quiz.status === "Waiting")
+                        {        
+                            disabled = true;
+                            buttonText = 'Another Quiz Onprocess';
+                            buttonClass = 'time-ended';
+                        }
+                        }
+
                     return `
                         <div class="quiz-item">
                             <h3>${quiz.classForSubject.name} - ${quiz.classForSubject.subject.name}</h3>
@@ -229,7 +287,10 @@ function showQuizList(classId) {
             quizListContainer.style.display = 'block'; 
         }
     };
-    xhr.send();
+    xhr2.send();
+
+
+    
     }
 
 // Function to prompt the user to start the quiz

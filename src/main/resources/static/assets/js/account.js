@@ -132,10 +132,11 @@ $('#lop-hoc').on('change', function() {
 
 
 
+
 //show danh sách class
 $(document).ready(function() {
 	$.ajax({
-		url: "http://localhost:8081/api/class/current",
+		url: "http://localhost:8081/api/public/class/current",
 		type: "GET",
 		dataType: "json",
 		success: function(response) {
@@ -170,29 +171,40 @@ function loadSubjects(subjects) {
 			text: item.subject.name
 		})); console.log(item.subject.name);
 	});
+
 }
 
 
+$('#classDropdown').change(function() {
+	$('#subjectDropdown').hide();
+	var classId = $(this).val();
 
-//show danh sách môn học 
-
-
-
-
-$('#classDropdown').change(function(event) {
-	var classId = $('#classDropdown').val();
+	// Gửi yêu cầu AJAX để lấy danh sách các môn học tương ứng với lớp đã chọn
 	$.ajax({
-		url: "http://localhost:8081/api/class/" + classId + "/students",
+		url: "http://localhost:8081/api/public/class/classes/" + classId + "/subjects",
 		type: "GET",
-		data: { classId: classId},
+		dataType: "json",
 		success: function(response) {
-			console.log(response);
+			loadSubjects(response);
+				
+				$.ajax({
+					url: "http://localhost:8081/api/public/class/" + classId  + "/students",
+					type: "GET",
+					data: { classId: classId},
+					success: function(response) {
+						console.log(response);
+					},
+					error: function(xhr, status, error) {
+						console.error("Error fetching students:", error);
+					}
+				});
+			
 		},
 		error: function(xhr, status, error) {
-			console.error("Error fetching students:", error);
 		}
 	});
 });
+
 
 $("#submitExport").click(function() {
 	$("#exportForm").submit();
@@ -212,7 +224,3 @@ if (checkError) {
 		$("#employee_form_create_account").show();
 	}
 }
-
-
-
-

@@ -3,6 +3,8 @@ package com.aptech.group3.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.aptech.group3.Dto.ClassStatus;
+import com.aptech.group3.Dto.ClassSubject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -37,7 +39,7 @@ public class ClassForSubject {
 	private int slotEnd;
 
 	private String description;
-	private String status;
+	private ClassSubject status;
 	private int weekDay;
 	private String type;
 

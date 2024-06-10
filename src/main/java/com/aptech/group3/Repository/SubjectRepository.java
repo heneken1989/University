@@ -3,6 +3,8 @@ package com.aptech.group3.Repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,6 +25,7 @@ public interface SubjectRepository extends JpaRepository<Subject,Long> {
 	
 	
 	Optional<Subject> findById(Long id);
+	
 	Subject findByName(String name);
 	List<Subject> findByNameContainingIgnoreCase(String name);
 	List<Subject> findBySubjectlevelId(Long id);
@@ -61,10 +64,14 @@ public interface SubjectRepository extends JpaRepository<Subject,Long> {
 	 int getCreditById(int id);
 	 
 	 List<Subject> findByFieldId(Long fieldId);
-
-
-
-//eeee
 	 
-	
+	 //du
+		@Query("SELECT o FROM Subject o WHERE o.field.id=:fieldId AND (:levelId IS NULL OR o.subjectlevel.id=:levelId)")
+		Page<Subject> findByFieldIdAndSubjectlevelId(Long fieldId, Long levelId, Pageable pageable);
+		
+		
+		@Query("SELECT s FROM Subject s WHERE s.field.id= :fieldId AND s.subjectlevel.id= :level ")
+		List<Subject> getListSubjectByFieldAndLevel(Long fieldId,Long level);
+
+
 }

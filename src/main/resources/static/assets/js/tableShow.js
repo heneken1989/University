@@ -52,6 +52,7 @@ const aTag = document.querySelectorAll(".change_page_href");
 const urlParams = new URLSearchParams(window.location.search);
 const myParam = urlParams.get('semester');
 const subject_list = urlParams.get('subject');
+const status_subject=urlParams.get('status');
 
 aTag.forEach(a => {
     let text = a.innerHTML;
@@ -60,7 +61,7 @@ aTag.forEach(a => {
     if (!myParam) {
         href += `?page=${text}`;
     } else {
-        href += `?semester=${myParam}&subject=${subject_list}&page=${text}`;
+        href += `?semester=${myParam}&subject=${subject_list}&page=${text}&status=${status_subject}`;
     }
 
     a.setAttribute("href", href);
@@ -124,3 +125,17 @@ $("#back_page_btn").attr("href",`/admin/user/list?page=${Number(currentPageAdmin
         }
     }, 5000);
 
+
+//js for page update status
+$("#btn_show_form_update").on("click",()=>{
+	let select= document.querySelectorAll(".select_class_update");
+	let str="";
+	select.forEach(e=>{
+		if(e.checked){
+				str+=`<input name="class[]" readonly type="hidden"   value="${e.getAttribute("value")}">`
+		}
+	
+	});
+	$("#div_holver_list_class").empty();
+	$("#div_holver_list_class").html(str);
+})

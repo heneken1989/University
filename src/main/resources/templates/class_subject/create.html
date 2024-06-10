@@ -15,7 +15,7 @@
 <body>
 
 	<div layout:fragment="content"
-		class="d-flex align-items-center flex-column card p-3">
+		class="d-flex align-items-center flex-column card p-3 w-100">
 
 
 		<h2 th:text="#{class.create.head}">Create new class</h2>
@@ -29,13 +29,15 @@
 	
 	<input type="hidden" id="check_error_if_has" value="${error}">
 
-		<div class="input-group mb-3 w-100">
+		<div class="input-group mb-3 " style="width: 80%">
 			<div class="input-group-prepend" style="width: 150px">
 				<label style="width: 100%" class="input-group-text"
 					for="inputGroupSelect01" th:text="#{label.select.subject}" >Select subject</label>
 			</div>
 			
-			<select class="custom-select select_subject_create" id="inputGroupSelect01">
+			
+			
+			<select class="custom-select select_subject_create " id="inputGroupSelect01">
     <option th:value="0" th:selected="${data.subject_id == 0 ||dataAll.subject_id==0}" th:text="#{label.select.subject}" >select subject</option>
     
     <option th:each="s : ${subjects}" th:data-id="${s.id}" th:data-check="${s.type}"
@@ -45,8 +47,13 @@
 
 		</div>
 		
+		<input id="Credit_selected_when_error" type="hidden" th:value="${selected_credit}">
+		<input id="start_slot_select_error" type="hidden" th:value="${data.slotStart}">
+		<input id="end_slot_select_error" type="hidden" th:value="${data.slotEnd}">
+		
+		
 
-		<form class="card-body w-100" style=" display:none" id="form_create_one" th:action="@{/admin/class/create}" method="post"
+		<form class="card-body" style=" display:none ;width: 83%" id="form_create_one" th:action="@{/admin/class/create}" method="post"
 			th:object="${data}">
 
 			<input id="semester_value_create" th:field="*{semeter_id}"type="hidden" readonly /> 
@@ -149,12 +156,14 @@
 					<label style="width: 100%" class="input-group-text"
 						for="inputGroupSelect01" th:text="#{class.select.room}"> Select room</label>
 				</div>
-				<select class="custom-select " th:field="*{room_id}"
-					id="select_room_create">
+				<select class="custom-select " th:field="*{room_id}" id="select_room_create">
+				<option th:each="r : ${lastSelectRoom}" th:text="${r.name}" th:value="${r.id}" th:selected="${data.room_id==r.id}"></option>
 				</select>
 			</div>
 			<p th:if="${#fields.hasErrors('room_id')}" th:errors="*{room_id}" class="text-danger">Name Error</p>
 			</div>
+			
+			
 
 			<div class=" mb-4 hiddne_div_create">
 
@@ -163,8 +172,9 @@
 					<label style="width: 100%" class="input-group-text"
 						for="inputGroupSelect01" th:text="#{class.select.teacher}" > Select teacher</label>
 				</div>
-				<select class="custom-select " th:field="*{teacher_id}"
-					id="select_teacher_create">
+				<select class="custom-select " th:field="*{teacher_id}" id="select_teacher_create">
+				<option th:each="t : ${lastSelectTeacher}" th:value="${t.id}" th:text="${t.name}" th:selected="${t.id==data.teacher_id}" ></option>
+			
 				</select>
 			</div>
 			<p th:if="${#fields.hasErrors('teacher_id')}" th:errors="*{teacher_id}" class="text-danger">Name Error</p>
@@ -180,7 +190,7 @@
 		
 		
 		
-			<form style=" display:none" class="card-body w-100" id="form_create_both" th:action="@{/admin/class/createall}" method="post"
+			<form style=" display:none ;width: 83%" class="card-body" id="form_create_both" th:action="@{/admin/class/createall}" method="post"
 			th:object="${dataAll}">
 			
 			
@@ -341,7 +351,7 @@
 				</div>
 				<div style="width: 42%">
 				<select class="custom-select " th:field="*{theory.teacher_id}"
-					id="select_teacher_create_theory">z
+					id="select_teacher_create_theory">
 				</select>
 				 <p th:if="${#fields.hasErrors('theory.teacher_id')}" th:errors="*{theory.teacher_id}" class="text-danger">Action Type Error</p>
 				</div>

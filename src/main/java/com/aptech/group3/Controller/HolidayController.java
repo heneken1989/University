@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.aptech.group3.Dto.ActionStatus;
 import com.aptech.group3.Dto.ClassSubjectCreateDto;
 import com.aptech.group3.Dto.HolidayCreateDto;
 import com.aptech.group3.Dto.HolidayEditDto;
@@ -51,19 +52,19 @@ public class HolidayController {
 		
 		if(BaseMethod.customCompareDate(new Date(), data.getDateStart())>=0) {
 			
-			redirect.addAttribute("error", "can't delete is over");
+			redirect.addAttribute("error", ActionStatus.ERROR);
 			return "redirect:/holiday/index";
 		}
 		lessonService.remove(id);
 		holidayService.delete(id);
 		
-		redirect.addAttribute("success", "delete sucessfully");
+		redirect.addAttribute("error",ActionStatus.DELETED);
 		return "redirect:/admin/holiday/index";
 	}
 	
 	@GetMapping("/index")
 	public String index(Model model,
-			@RequestParam(name = "error",required = false ) String error,
+			@RequestParam(name = "error",required = false ) ActionStatus error,
 			@RequestParam(name = "success",required = false ) String success,
 			@RequestParam(name = "page", defaultValue = "1") int page,
 			@RequestParam(name="year", required = false) Integer year) {
@@ -75,12 +76,9 @@ public class HolidayController {
 		model.addAttribute("data", data);
 		model.addAttribute("semesters",semesterService.findAll());
 		if(error!=null) {
-			model.addAttribute("error",error);
+			model.addAttribute("error",error.toString());
 		}
 		
-		if(success!=null) {
-			model.addAttribute("success",success);
-		}
 		return "holiday/index";
 	}
 	@GetMapping("/edit/{id}")
@@ -96,7 +94,7 @@ public class HolidayController {
 	
 	@PostMapping("/edit/{id}")
 	public String edit(Model model,  @PathVariable(name = "id") Long id,@AuthenticationPrincipal CustomUserDetails currentUser,
-				@ModelAttribute("data") @Valid  HolidayEditDto data ,BindingResult result) {
+				@ModelAttribute("data") @Valid  HolidayEditDto data ,BindingResult result,RedirectAttributes redirect) {
 if(result.hasErrors()) {
 	model.addAttribute("data",data);
 	Semeter semester=semesterService.getCurrentSemester();
@@ -109,6 +107,7 @@ if(result.hasErrors()) {
 		lessonService.updateLesson(data);
 	}
 	
+	redirect.addAttribute("error",ActionStatus.UPDATED);
 		return "redirect:/admin/holiday/index";
 	}
 	
@@ -128,8 +127,7 @@ if(result.hasErrors()) {
 	
 	@PostMapping("/create")
 	public String create(Model model, @AuthenticationPrincipal CustomUserDetails currentUser,
-			@ModelAttribute("data") @Valid  HolidayCreateDto data ,BindingResult result ) {
-		System.out.println(data);
+			@ModelAttribute("data") @Valid  HolidayCreateDto data ,BindingResult result,RedirectAttributes redirect ) {
 		if(result.hasErrors()) {
 		
 			model.addAttribute("data",data); 
@@ -145,6 +143,7 @@ if(result.hasErrors()) {
 		HolidayEditDto recieve=	holidayService.create(data);
 		lessonService.updateLesson(recieve);
 		 
+		redirect.addAttribute("error",ActionStatus.CREATED);
 		 return "redirect:/admin/holiday/index";
 	}
 	

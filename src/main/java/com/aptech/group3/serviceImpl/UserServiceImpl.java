@@ -24,6 +24,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -74,6 +75,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Autowired 
 	private TokenRepository tokenRepository;
 	
+    public List<User> findByCode(String code) {
+        return userRepository.findByCode(code);
+    }
+  public List<User> findByFieldIdAndSubjectIdAndStatusAndCode(UserStatus status, Long fieldId) {
+        return userRepository.findByFieldIdAndSubjectIdAndStatusAndCode(status, fieldId);
+    }
+  
+	
+	public void updateStatusForUsers(UserStatus status, List<Long> id) {
+        userRepository.updateStatusStudent(status, id);
+   }
+	
+	
 	public void updateAvatar(Long userId, String newAvatarFilename) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
@@ -83,6 +97,43 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		userRepository.save(user);
 	}
 	
+	public UserDto updateUserInfo(Long userId, UpdateProfileDto updateProfileDto) {
+		Optional<User> optionalUser = userRepository.findById(userId);
+		if (optionalUser.isPresent()) {
+			User user = optionalUser.get();
+
+			// Kiểm tra xem hình ảnh đã thay đổi hay không
+			if (!updateProfileDto.getAvatar().equals(user.getAvatar())) {
+				// Nếu hình ảnh đã thay đổi, lưu tên hình ảnh mới vào cơ sở dữ liệu
+				user.setAvatar(updateProfileDto.getAvatar());
+			}
+
+			// Cập nhật thông tin người dùng từ DTO
+			user.setName(updateProfileDto.getName());
+			user.setEmail(updateProfileDto.getEmail());
+			user.setPhone(updateProfileDto.getPhone());
+			user.setAddress(updateProfileDto.getAddress());
+			user.setInfomation(updateProfileDto.getInfomation());
+
+			// Lưu thông tin người dùng đã cập nhật vào cơ sở dữ liệu
+			User updatedUser = userRepository.save(user);
+			return convertToDto(updatedUser);
+		}
+		return null;
+	}
+	
+	public UserDto convertToDto(User user) {
+		UserDto userDto = new UserDto();
+		userDto.setId(user.getId());
+		userDto.setName(user.getName());
+		userDto.setEmail(user.getEmail());
+		userDto.setPhone(user.getPhone());
+		userDto.setAddress(user.getAddress());
+		userDto.setInfomation(user.getInfomation());
+		userDto.setAvatar(user.getAvatar());
+		// Thêm các trường khác nếu cần
+		return userDto;
+	}
 	
 	
 	public Page<User> searchUsersByName(String name, Pageable pageable) {
@@ -151,11 +202,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	public Page<User> findByRole(String type, Pageable pageable) {
+		String currentUserRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
+		System.out.println("ADMIN: "+ currentUserRole);
 		if ("ALL".equals(type)) {
-			return findAll(pageable);
-		} else {
-			return userRepository.findByRole(type, pageable);
-		}
+			if ("ADMIN".equals(currentUserRole)) {
+                return userRepository.findAll(pageable); 
+            }
+			else {
+                return userRepository.findByRoleNot("ADMIN", pageable);  // Other users can't see admin roles
+            }
+		 } else {
+	            return userRepository.findByRole(type, pageable);
+	        }
 	}
 
 //	public Page<User> findByRole(String role, Pageable pageable) {
@@ -483,6 +541,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 //  }
 //  return outputStream.toByteArray();
 //}
+
 	public void exportToExcel(List<User> users, ServletOutputStream outputStream) {
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("Students");
@@ -502,6 +561,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(headers[i]);
 		}
+
 		// Thêm dữ liệu từ danh sách users
 		for (User user : users) {
 			Row row = sheet.createRow(rowNum++);

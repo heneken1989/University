@@ -1,6 +1,10 @@
 package com.aptech.group3.entity;
 
-import java.util.Set;
+
+import java.util.List;
+
+import com.aptech.group3.Dto.ClassType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -26,18 +30,22 @@ public class Subject {
 	  private Long id;
 	  private String name; // LomBok khong duoc viet hoa
 	  private int credit;
-	  private String type;
+	  private ClassType type;
 	  private Integer creditAction;
 	  
-		  @ManyToOne
-		  @JoinColumn(name="subjectlevel_id")
-		  private SubjectLevel subjectlevel;
+	  private boolean hidden;
 	  
-		  @ManyToOne
-		  @JoinColumn(name="field_id")
-		  private Field field;
+	  @ManyToOne
+	  @JoinColumn(name="subjectlevel_id")
+	  private SubjectLevel subjectlevel;
 	  
+	  @ManyToOne
+	  @JoinColumn(name="field_id")
+	  private Field field;
+	  
+	  @JsonManagedReference
 	    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
-	    private Set<RequiredSubject> requiredSubjects;
-	
+	    private List<RequiredSubject> requiredSubjects;
+	    
+	    
 }

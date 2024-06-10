@@ -1,4 +1,17 @@
+ .noscrollbar select {
+        scrollbar-width: none; 
+        -ms-overflow-style: none; 
+        text-align:center;
+    }
+    .noscrollbar select::-webkit-scrollbar {
+        display: none; /* Safari and Chrome */
+    }
 
+
+
+#subjectDropdown{
+	/* display:none */
+}
 
 
 
@@ -524,4 +537,16 @@ nav {
 
     box-shadow: none;
     border:none;
+}
+
+
+    .modify_tost_body_success{
+	width:400px;
+	background-color:green;
+}
+
+    .modify_tost_body_error{
+	width:400px;
+	
+	background-color:red;
 }

@@ -22,6 +22,11 @@ import com.aptech.group3.entity.User;
 import jakarta.servlet.ServletOutputStream;
 @Service
 public interface UserService {
+	public void updateStatusForUsers(UserStatus status, List<Long> id);
+	 public List<User> findByCode(String code);
+	public List<User> findByFieldIdAndSubjectIdAndStatusAndCode(UserStatus status, Long fieldId);
+	public UserDto updateUserInfo(Long userId, UpdateProfileDto updateProfileDto);
+	
 	public void updateAvatar(Long userId, String newAvatarFilename) ;
 	public Page<User> searchUsersByName(String name, Pageable pageable);
 	public boolean updateMobileCode( String mobileCode, Long userId);

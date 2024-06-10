@@ -38,6 +38,11 @@ public class LessonSubjectServiceImpl implements LessonSubjectService {
 	@Autowired
 	HolidayRepository holidayRepo;
 
+	public void deleteLessonByClassId(Long classId) {
+		repo.deleteLessonByClassId(classId);
+	}
+	//new
+	
 	public List<LessonSubject> getByClassId(Long id){
 		return repo.findByClassSubject_Id(id);
 	}
