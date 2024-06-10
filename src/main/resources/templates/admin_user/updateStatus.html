@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{adminLayout/adminLayout}">
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+	<div layout:fragment="content" class="card text-center ml-3">
+			<h3 style="font-weight: bold; font-size: 40px; text-transform: uppercase;">Update Status</h3>
+				
+		<form action="/admin/user/updateStatus" method="GET"
+			id="form_search_update_status">
+
+			<label for="status">Status:</label> 
+			<select
+				id="status_update_student" name="status">
+				<option value="">-- Select Status --</option>
+				<th:block th:each="status : ${statuses}">
+					<option th:value="${status}" th:selected="${status==curenStatus}"
+						th:text="${status}"></option>
+				</th:block>
+			</select> <label for="field">Field:</label> <select id="field" name="fieldId">
+				<option value="">-- Select Field --</option>
+				<th:block th:each="field : ${fields}">
+					<option th:value="${field.id}" th:text="${field.name}"></option>
+				</th:block>
+			</select>
+
+
+		</form>
+
+		<!-- Code search form -->
+		<form action="/admin/user/searchByCode" method="POST">
+			<label for="code">Code:</label> <input type="text" id="code"
+				name="code">
+			<button type="submit">Search by Code</button>
+		</form>
+		
+		<button type="button" class="btn btn-primary"
+			id="btn_update_status_student" data-toggle="modal"
+			data-target="#statusModal">Update Status</button>
+
+		<!-- Modal -->
+		<div class="modal fade" id="statusModal" tabindex="-1" role="dialog"
+			aria-labelledby="statusModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<form id="updateStatusForm" action="/admin/user/updateStatus"
+						method="POST">
+						<div class="modal-header">
+							<h5 class="modal-title" id="statusModalLabel">Select Status</h5>
+						</div>
+						<select id="statusSelect" name="select_type_student_update"
+							class="form-control">
+							<option value="">-- Select Status --</option>
+							<!-- Thêm danh sách các status từ server -->
+							<th:block th:each="status : ${statuses}">
+								<option th:value="${status}" th:text="${status}"></option>
+							</th:block>
+						</select>
+
+						<div id="wrap_input_appen"></div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">Close</button>
+							<button type="button"
+								class="btn btn-primary submit_update_statusList">Update</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Status</th>
+					<th>Field</th>
+					<th>Code</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Iterate over users -->
+				<tr th:each="user : ${users}">
+					<td th:text="${user.name}"></td>
+					<td th:text="${user.email}"></td>
+					<td th:text="${user.status}"></td>
+					<td class="noscrollbar"style="height: 50px;"><select class="form-control" multiple disabled
+						style="border: none; height: 60px; background-color: transparent; overflow-y: scroll; -webkit-overflow-scrolling: touch;">
+							<option th:each="field : ${user.fields}" th:text="${field.name}"></option>
+					</select></td>
+					<td th:text="${user.code}"></td>
+					<td><input type="checkbox" class="checkbox_status"
+						th:value="${user.id}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
