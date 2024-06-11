@@ -41,7 +41,7 @@
 		<div th:if="${errorMessage}" class="error-message">
 			<p style="color: red" th:text="${errorMessage}"></p>
 		</div>
- <form th:action="@{/Subject/create}" method="post" style="width: 70%"
+ <form th:action="@{/admin/subject/create}" method="post" style="width: 70%"
  id="subject_form_create_account" th:object="${data}" >
 
  <input type="hidden" name="id" value="${data.id}"> <!-- Hidden input for ID -->

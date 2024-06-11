@@ -24,7 +24,7 @@ if(currentWeek!=1){
 $("#previous_week_schedule").attr("href",`${baseUrlTimeTable}/web/time_table/show?semester=${currentSemester}&week=${currentWeek-1}`)
 }
 if(currentWeek<list.length){
-	$("#next_week_schedule").attr("href",`${baseUrlTimeTable}/web/time_table/show?semester=${currentSemester}&week=${currentWeek+1}`)
+	$("#next_week_schedule").attr("href",`${baseUrlTimeTable}/web/time_table/show?semester=${currentSemester}&week=${Number(currentWeek)+1}`)
 }
 $("#last_week_schedule").attr("href",`${baseUrlTimeTable}/web/time_table/show?semester=${currentSemester}&week=${list.length}`)
 

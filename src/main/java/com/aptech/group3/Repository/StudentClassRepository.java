@@ -18,6 +18,12 @@ import jakarta.transaction.Transactional;
 
 
 public interface StudentClassRepository extends JpaRepository<StudentClass ,Long> {
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE StudentClass s SET s.status= :status WHERE s.status= :st2")
+	void updateSatustoStatus( ClassStatus status,ClassStatus st2);
+	
 
 	@Query("SELECT o.id FROM StudentClass o WHERE o.student.id =:studentid and o.classforSubject.id in :listId")
 	List<Long> getListStudentRegistered(Long studentid , List<Long> listId);
@@ -45,8 +51,8 @@ public interface StudentClassRepository extends JpaRepository<StudentClass ,Long
 	List<ClassForSubject>getListClassSubject(Long studentId,Long semesterId );
 	
 	@Query( "SELECT s FROM StudentClass s WHERE s.student.id= :studentId AND s.classforSubject.semeter.id= :semesterId"
-			+ " AND s.status LIKE 'study' ")
-	 List<StudentClass>  getCurrentLIstClass( Long studentId, Long semesterId );
+			+ " AND s.status =:status")
+	 List<StudentClass>  getCurrentLIstClass( Long studentId, Long semesterId,ClassStatus status );
 	
 	
  

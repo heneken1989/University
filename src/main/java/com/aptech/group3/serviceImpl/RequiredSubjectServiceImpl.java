@@ -39,7 +39,6 @@ public class RequiredSubjectServiceImpl implements RequiredSubjectService {
     }
     
     
-
 	public RequiredSubject getStatus(String status) {
 		return requiredSubjectRepository.findByStatus(status);
 	}

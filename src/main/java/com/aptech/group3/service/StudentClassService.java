@@ -19,6 +19,9 @@ import com.aptech.group3.entity.User;
 
 @Service
 public interface StudentClassService {
+	
+	public void  updateStatusToPaid() ;
+	
 	List<Long> getListStudentRegistered(Long studentid , List<Long> listId);
 	
 	//thanh thêm1

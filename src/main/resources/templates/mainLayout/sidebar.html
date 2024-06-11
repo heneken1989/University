@@ -128,33 +128,28 @@
 	<!-- Menu -->
 	<nav id="menu">
 		<ul>
-			<li><a href="index.html">Homepage</a></li>
+		
 			<li><a th:href="@{/web/time_table/show}">Time table</a></li>
 			<li><a th:href="@{/web/discuss/list/class_attend}">Discuss</a></li>
 
-			<li><span class="opener">Register Subject</span>
+			<li sec:authorize="hasAnyAuthority('STUDENT')" ><span class="opener">Register Subject</span>
 				<ul>
 					<li><a href="/web/ClassRegister/SubjectRegister">New Subject Register</a></li>
 					<li><a href="#">Re-Learn</a></li>
 					<li><a href="/web/ClassRegister/Ongoing">On-Going Register</a></li>
 				</ul></li>
-			<li><span class="opener">User Management</span>
-				<ul>
-					<li><a href="/user/list">User list</a></li>
-					<li><a href="/user/create">Create</a></li>
-				</ul></li>
+	
 
-			<li><span class="opener">Mark and Attendance</span>
-				<ul>
-					<li><a href="/web/mark/getMarkSubject">Mark Subject</a></li>
-					<li><a href="/web/attendance/list">Attendance</a></li>
-				</ul>
-			</li>
+
+			
+				   <li><a href="/web/mark/getMarkSubject">MARK</a></li>
+				
+					<li><a  href="/web/attendance/list">Attendance</a></li>
 
 
 
 
-			<li><span class="opener">Payment</span>
+			<li sec:authorize="hasAnyAuthority('STUDENT')" ><span class="opener">Payment</span>
 				<ul>
 					<li><a th:href="@{/web/payment}">Payment</a></li>
 					<li><a th:href="@{/web/payment/details}">History</a></li>
@@ -162,22 +157,14 @@
 				</ul></li>
 			<li><span class="opener">Quiz</span>
 				<ul>
-					<li><a href="/web/quiz/QuizManage">Quiz Manage</a></li>
-					<li><a href="/web/quiz/create">Create Quiz</a></li>
-					<li><a href="/web/quiz/teacherQuizManage">Quiz Apply</a></li>
-					<li><a href="/web/quiz/listQuiz">Do quiz</a></li>
+					<li sec:authorize="hasAnyAuthority('TEACHER')" ><a href="/web/quiz/QuizManage">Quiz Manage</a></li>
+					<li sec:authorize="hasAnyAuthority('TEACHER')"><a href="/web/quiz/create">Create Quiz</a></li>
+					<li sec:authorize="hasAnyAuthority('TEACHER')"><a href="/web/quiz/teacherQuizManage">Quiz Apply</a></li>
+					<li sec:authorize="hasAnyAuthority('STUDENT')"><a href="/web/quiz/listQuiz">Do quiz</a></li>
 				</ul></li>
 				
 				
-		<li><span class="opener">Subject</span>
-					<ul>
-						<li><a href="/Subject/list">Subject List</a></li>
-						<li><a href="/Subject/create">Create Subject</a></li>
-						<li><a href="/Subject/hiddenSubject" >HiddenSubject</a></li>
-						<!-- <li><a href="/Subject/update">Update Subject</a></li> -->
-						<li><a href="/Subject/listrequiredsubject">Required Subject List</a></li>
-						<li><a href="/Subject/listlevel" >SubjectLevel</a></li>
-					</ul></li>
+		
 
 		</ul>
 	</nav>

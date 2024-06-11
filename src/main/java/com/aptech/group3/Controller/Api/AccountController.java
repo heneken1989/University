@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,8 +31,10 @@ import com.aptech.group3.Dto.LoginResultDto;
 import com.aptech.group3.Dto.MobileAppDto;
 import com.aptech.group3.Dto.RefreshDto;
 import com.aptech.group3.Dto.RefreshRecieveDto;
+import com.aptech.group3.Dto.UpdateProfileDto;
 import com.aptech.group3.Dto.UserApiDto;
 import com.aptech.group3.Dto.UserCreateDto;
+import com.aptech.group3.Dto.UserDto;
 import com.aptech.group3.Repository.TokenRepository;
 import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.Token;
@@ -76,7 +79,8 @@ public class AccountController {
 
 	@Autowired
 	private EmailService emailService;
-
+	
+	
 	@PostMapping("/api/user/save/app")
 	public ResponseEntity<?> updataeMobileApp( @RequestBody MobileAppDto data){
 		System.out.print(data);
@@ -90,6 +94,10 @@ public class AccountController {
 		
 	
 	}
+	
+	
+
+
 	
 	// new
 	
@@ -210,6 +218,51 @@ public class AccountController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 		}
 	}
+	
+	  @GetMapping("/avatar/{id}")
+	    public ResponseEntity<String> getUserAvatar(@PathVariable(name = "id") Long id) {
+	        // Tìm người dùng theo ID
+	        User user = userService.findById(id);
+	        
+	        // Nếu không tìm thấy người dùng, trả về mã lỗi 404 Not Found
+	        if (user == null) {
+	            return ResponseEntity.notFound().build();
+	        } else {
+	            // Nếu tìm thấy, trả về URL của avatar
+	            return ResponseEntity.ok().body(user.getAvatar());
+	        }
+	    }
+	
+	@PutMapping("/updateApi/{userId}")
+  public ResponseEntity<UserDto> updateUserProfile(@PathVariable Long userId, @RequestBody UpdateProfileDto updateProfileDto) {
+      try {
+          UserDto updatedUser = userService.updateUserInfo(userId, updateProfileDto);
+          return ResponseEntity.ok().body(updatedUser);
+      } catch (Exception ex) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+      }
+  }
+
+	 @GetMapping("info/{id}")
+	    public ResponseEntity<UserDto> getInfo(@PathVariable(name = "id") Long id) {
+	        User data = userService.findById(id);
+	        if (data == null) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	        } else {
+	            UserDto user = new UserDto();
+	            user.setId(data.getId());
+	            user.setEmail(data.getEmail());
+	            user.setCode(data.getCode());
+	            user.setName(data.getName());
+	            user.setPhone(data.getPhone());
+	            user.setInfomation(data.getInfomation());
+	            user.setRole(data.getRole());
+	            user.setAddress(data.getAddress());
+	            user.setAvatar(data.getAvatar());
+	            return ResponseEntity.ok().body(user);
+	        }
+	        
+	    }
 
 	// FORGOT PASSWORD API
 

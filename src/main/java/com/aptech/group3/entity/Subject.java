@@ -2,6 +2,7 @@ package com.aptech.group3.entity;
 
 
 import java.util.List;
+import java.util.Set;
 
 import com.aptech.group3.Dto.ClassType;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -43,9 +44,7 @@ public class Subject {
 	  @JoinColumn(name="field_id")
 	  private Field field;
 	  
-	  @JsonManagedReference
 	    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
-	    private List<RequiredSubject> requiredSubjects;
-	    
-	    
+	    private Set<RequiredSubject> requiredSubjects;
+  
 }

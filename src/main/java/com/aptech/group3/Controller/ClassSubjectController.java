@@ -114,6 +114,7 @@ public class ClassSubjectController {
 					
 				} else {
 					studentClassService.DeleteByClassIdAndStatus(listData.get(i), ClassStatus.WAITINGLIST);
+					studentClassService.updateStatusToPaid();
 				}
 			}
 		}

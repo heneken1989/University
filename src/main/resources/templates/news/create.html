@@ -126,7 +126,7 @@ a {
 			<br>
 
 
-			<div class=" input-group mb-5 ">
+			<div class=" input-group mb-5 d-none ">
 				<div class="input-group ">
 					<div class="input-group-prepend">
 						<span style="width: 150px" th:text="#{notify.createDate}"
@@ -140,9 +140,16 @@ a {
 			</div>
 
 
+<div class="input-group mb-3">
+  <div class="input-group-prepend " style="margin-top:5px">
+    <span class="input-group-text">Upload</span>
+  </div>
+  <div class="custom-file">
+    <input type="file" name="imageFile"  class="custom-file-input" id="inputGroupFile01">
+    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+  </div>
+</div>
 
-
-			<label>Image URL:</label> <input type="file" name="imageFile" /><br>
 			
 				
 					<button class="btn btn-primary" type="submit">Save</button>

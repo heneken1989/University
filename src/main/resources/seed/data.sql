@@ -1,4 +1,6 @@
 
+ALTER TABLE QuizQuestion MODIFY content LONGTEXT;
+ALTER TABLE News MODIFY content LONGTEXT;
 
 INSERT IGNORE INTO  field (id, name) 
 VALUES 
@@ -45,49 +47,49 @@ VALUES
 
 INSERT IGNORE INTO  subject (id, name, credit, field_id, subjectlevel_id,type,creditAction) 
 VALUES 
-    (1, 'Computer Science', '2', '4', '1','both',1),
-    (2, 'Software Engineering', '3', '4', '1','both',2),
-    (3, 'Network Security', '3', '4', '2','both',1),
-    (4, 'Database Management', '1', '4', '2','Theory',0),
-    (5, 'Web Development', '2', '4', '2','both',1),
-    (6, 'Artificial Intelligence', '3', '4', '2','Theory',0),
-    (7, 'Cybersecurity', '3', '4', '3','Theory',0),
-    (8, 'Cloud Computing', '4', '4', '3','Theory',0),
-    (9, 'Mobile Application Development', '3', '4', '4','Theory',0),
-    (10, 'Operating Systems', '2', '4', '4','both',1), 
-    (11, 'Macroeconomics', '2', '2', '1','Theory',0),
-    (12, 'Microeconomics', '3', '2', '1','Theory',0),
-    (13, 'International Economics', '4', '2', '2','Theory',0),
-    (14, 'Development Economics', '1', '2', '2','Theory',0),
-    (15, 'Econometrics', '2', '2', '2','Theory',0),
-    (16, 'Behavioral Economics', '3', '2', '2','Theory',0),
-    (17, 'Game Theory', '3', '2', '3','Theory',0),
-    (18, 'Financial Economics', '4', '2', '3','Theory',0),
-    (19, 'Labor Economics', '3', '2', '4','Theory',0),
-    (20, 'Environmental Economics', '2', '2', '4','Theory',0),
+    (1, 'Computer Science', '2', '4', '1',0,1),
+    (2, 'Software Engineering', '3', '4', '1',1,2),
+    (3, 'Network Security', '3', '4', '2',2,1),
+    (4, 'Database Management', '1', '4', '2',0,0),
+    (5, 'Web Development', '2', '4', '2',2,1),
+    (6, 'Artificial Intelligence', '3', '4', '2',0,0),
+    (7, 'Cybersecurity', '3', '4', '3',0,0),
+    (8, 'Cloud Computing', '4', '4', '3',0,0),
+    (9, 'Mobile Application Development', '3', '4', '4',0,0),
+    (10, 'Operating Systems', '2', '4', '4',2,1), 
+    (11, 'Macroeconomics', '2', '2', '1',0,0),
+    (12, 'Microeconomics', '3', '2', '1',0,0),
+    (13, 'International Economics', '4', '2', '2',0,0),
+    (14, 'Development Economics', '1', '2', '2',0,0),
+    (15, 'Econometrics', '2', '2', '2',0,0),
+    (16, 'Behavioral Economics', '3', '2', '2',0,0),
+    (17, 'Game Theory', '3', '2', '3',0,0),
+    (18, 'Financial Economics', '4', '2', '3',0,0),
+    (19, 'Labor Economics', '3', '2', '4',0,0),
+    (20, 'Environmental Economics', '2', '2', '4',0,0),
     
-    (21, 'Ancient History', '2', '3', '1','Theory',0),
-    (22, 'Medieval History', '3', '3', '1','Theory',0),
-    (23, 'Modern History', '4', '3', '2','Theory',0),
-    (24, 'European History', '1', '3', '2','Theory',0),
-    (25, 'American History', '2', '3', '2','Theory',0),
-    (26, 'Asian History', '3', '3', '2','Theory',0),
-    (27, 'African History', '3', '3', '3','Theory',0),
-    (28, 'Art History', '4', '3', '3','Theory',0),
-    (29, 'Military History', '3', '3', '4','Theory',0),
-    (30, 'Political History', '2', '3', '4','Theory',0),
+    (21, 'Ancient History', '2', '3', '1',0,0),
+    (22, 'Medieval History', '3', '3', '1',0,0),
+    (23, 'Modern History', '4', '3', '2',0,0),
+    (24, 'European History', '1', '3', '2',0,0),
+    (25, 'American History', '2', '3', '2',0,0),
+    (26, 'Asian History', '3', '3', '2',0,0),
+    (27, 'African History', '3', '3', '3',0,0),
+    (28, 'Art History', '4', '3', '3',0,0),
+    (29, 'Military History', '3', '3', '4',0,0),
+    (30, 'Political History', '2', '3', '4',0,0),
     
     
-    (31, 'Genetics', '2', '1', '1','Action',2),
-    (32, 'Microbiology', '3', '1', '1','both',1),
-    (33, 'Ecology', '4', '1', '2','both',2),
-    (34, 'Anatomy', '1', '1', '2','Action',1),
-    (35, 'Biochemistry', '2', '1', '2','Action',2),
-    (36, 'Botany', '3', '1', '2','Action',3),
-    (37, 'Zoology', '3', '1', '3','Theory',0),
-    (38, 'Immunology', '4', '1', '3','Theory',0),
-    (39, 'Evolutionary Biology', '3', '1', '4','Theory',0),
-    (40, 'Physiology', '2', '1', '4','Theory',0);
+    (31, 'Genetics', '2', '1', '1',1,2),
+    (32, 'Microbiology', '3', '1', '1',2,1),
+    (33, 'Ecology', '4', '1', '2',2,2),
+    (34, 'Anatomy', '1', '1', '2',1,1),
+    (35, 'Biochemistry', '2', '1', '2',1,2),
+    (36, 'Botany', '3', '1', '2',1,3),
+    (37, 'Zoology', '3', '1', '3',0,0),
+    (38, 'Immunology', '4', '1', '3',0,0),
+    (39, 'Evolutionary Biology', '3', '1', '4',0,0),
+    (40, 'Physiology', '2', '1', '4',0,0);
     
     
     
@@ -106,7 +108,7 @@ VALUES
     
             INSERT IGNORE INTO  class_subject (currentQuantity, minQuantity, quantity, slotEnd, slotStart, status, weekDay, dateEnd, dateStart, id, room_id, semeter_id, subject_id, teacher_id, description, name, type) 
 VALUES 
-    (0,5,50,3,1,NULL,1,'2024-06-25 12:31:29.000000','2024-01-17 12:31:29.000000',1,1,1,36,5,'Botany class','BOTANY CLASS','BOTH');
+    (0,5,50,3,1,NULL,1,'2024-06-25 12:31:29.000000','2024-01-17 12:31:29.000000',1,1,1,36,5,'Botany class','BOTANY CLASS',2);
          
     
     

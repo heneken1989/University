@@ -117,8 +117,13 @@ public class SubjectController {
 		String[] listField = new String[] {};
 		String[] listField1 = new String[] {};
 	
-		listField = request.getParameterValues("field[]");
-		listField1 = request.getParameterValues("field1[]");
+		if(request.getParameterValues("field[]")!=null) {
+			listField = request.getParameterValues("field[]");
+		}
+		
+		if(request.getParameterValues("field1[]")!=null) {
+			listField1 = request.getParameterValues("field1[]");
+		}
 		Subject newsub = subService.create(data);
 		if(listField.length !=0) {
 			

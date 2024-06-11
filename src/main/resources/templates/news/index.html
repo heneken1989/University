@@ -55,41 +55,7 @@
 	<a th:href="@{/news/create}">Create News</a>
 </div>
 <br>
-<!-- <table class="table table-bordered schedule-table " style="height: 30vh">
 
-    <thead>
-    <tr>
-
-        <th >Id</th>
-        <th >Title</th>
-        
-        <th >Image</th>
-        <th >createDate</th>
-         <th >Action</th>
-    </tr>
-    </thead>
-<tbody>
-
-    <tr th:each="item : ${newsList}">
-
-        <td th:text="${item.id}"></td>
-        <td th:text="${item.title}"></td>
-        
-        <td ><img style="height: 100px;width:100px" class="news-image" th:src="@{${item.image}}" ></td>
-        <td th:text="${item.createDate}"></td>
-                    <td>
-      
-        
-       <a class="btn btn-warning" th:href="@{/news/update/{id}(id=${item.id})}"  title="Update"
-        > <i class="fas fa-edit"></i></a>
-        
-               <a class="btn btn-warning" th:href="@{/news/delete/{id}(id=${item.id})}"  title="Delete"
-        > <i class="fas fa-trash"></i></a>
-
-            </td>
-    </tr>
-</tbody>
-</table> -->
 
 
         <table class="table  border card-body" id="class_for_subject_table">
@@ -109,12 +75,12 @@
 				<td class="text-center" th:text="${rowStat.index + 1}"></td>
 					<td class="text-center" th:text="${item.title}" ></td>
 					
-					<td class="text-center" ><img style="height: 100px;width:100px" class="news-image" th:src="@{${item.image}}" ></td>
-					<td class="text-center" th:text="${item.createDate}"  ></td>
+					<td class="text-center" ><img style="height: 100px;width:100px" class="news-image" th:src="@{${'/getimage/' +item.image}}" ></td>
+					<td class="text-center" th:text="*{#dates.format(item.createDate, 'dd-MM-yyyy')}"   ></td>
 					<td class="text-center"><a class="btn btn-warning" th:href="@{/admin/news/update/{id}(id=${item.id})}"  title="Update"
         > <i class="fas fa-edit"></i></a>
         
-               <a class="btn btn-warning" th:href="@{/admin/news/delete/{id}(id=${item.id})}"  title="Delete"
+               <a class="btn btn-danger" th:href="@{/admin/news/delete/{id}(id=${item.id})}"  title="Delete"
         > <i class="fas fa-trash"></i></a> </td>
 					
 					

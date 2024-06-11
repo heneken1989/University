@@ -45,6 +45,12 @@ public class StudentClassServiceImpl implements StudentClassService {
 	@Autowired
 	private AttendanceRepository attendanceRepo;
 	
+	public void  updateStatusToPaid() {
+		repo.updateSatustoStatus(ClassStatus.UNPAID ,ClassStatus.LIST);
+	}
+	
+	
+	
 	public List<Long> getListStudentRegistered(Long studentid , List<Long> listId)
 	{
 		return repo.getListStudentRegistered(studentid, listId);
@@ -128,7 +134,7 @@ public class StudentClassServiceImpl implements StudentClassService {
 	// new
 
 	public List<StudentClassApiDto> getCurrentClassList(Long studentId, Long SemesterId) {
-		List<StudentClassApiDto> data = repo.getCurrentLIstClass(studentId, SemesterId).stream().map(e -> {
+		List<StudentClassApiDto> data = repo.getCurrentLIstClass(studentId, SemesterId,ClassStatus.LEARNING).stream().map(e -> {
 			StudentClassApiDto dto = new StudentClassApiDto();
 			dto.setId(e.getClassforSubject().getId());
 			dto.setClassName(e.getClassforSubject().getName());

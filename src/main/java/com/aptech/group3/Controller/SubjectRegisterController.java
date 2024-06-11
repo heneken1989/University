@@ -1,5 +1,6 @@
 package com.aptech.group3.Controller;
 
+import java.io.Console;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -102,6 +103,7 @@ public class SubjectRegisterController {
 	public ClassForSubjectDto ClassRegister(@RequestBody ClassForSubjectDto dto,
 			@AuthenticationPrincipal UserDetails currentUser) {
 		User user = userservice.getUserByUserEmail(currentUser.getUsername());
+	
 		studentsubservice.RegisterClass(dto, user.getId());
 		return dto;
 	}
@@ -139,8 +141,9 @@ public class SubjectRegisterController {
 	public List<SubjectDto> listSubjectByStudentAndLevel(@RequestParam Long fieldId, @RequestParam Long subjectLevelId,@RequestParam boolean requiredSubject,
 			 @AuthenticationPrincipal CustomUserDetails currentUser) {
 
+
 		User student = currentUser.getUser();
-		System.out.print(requiredSubject);
+
 		List<SubjectDto> listSubjects = new ArrayList<>();
 		
 		if(requiredSubject)
@@ -166,12 +169,13 @@ public class SubjectRegisterController {
 		
 		for(Subject aSubject :subjectThatHaveClass)
 		{
-		   if(aSubject.getField().getId().equals(subjectLevelId))
+		   if(aSubject.getSubjectlevel().getId().equals(subjectLevelId))
 		   {
 			   subjectsByLevel.add(aSubject);
 		   }
 		}
 		
+        
 		
 		List<SubjectDto> filteredSubjects = new ArrayList<>();
 		for (SubjectDto subjectDto : listSubjects) {
@@ -182,6 +186,7 @@ public class SubjectRegisterController {
 				}
 			}
 		}
+
 		return filteredSubjects;
 
 	}
@@ -226,21 +231,30 @@ public class SubjectRegisterController {
 		System.out.print(optionalRequiredSubjectList);
 		
 		  Boolean isPassedAllRequiredSubject = passesSubjectStrings.containsAll(listRequiredSubject);
-		  Boolean isPassesOptionalRequiredSubject = true;
+		  Boolean isPassesOptionalRequiredSubject = false;
 		  
-		  for(String a: optionalRequiredSubjectList)
+		  if(optionalRequiredSubjectList.isEmpty())
 		  {
-			  if(!passesSubjectStrings.contains(a))
-			  {
-				  isPassesOptionalRequiredSubject = false;
-			  }
+			  isPassesOptionalRequiredSubject = true;
 		  }
+		  
+		  else {
+			  
+			  for(String a: optionalRequiredSubjectList)
+			  {
+				  if(passesSubjectStrings.contains(a))
+				  {
+					  isPassesOptionalRequiredSubject = true;
+				  }
+
+			  }
+	        
+		}
+		  
+
 			System.out.print("isPassesOptionalRequiredSubject"+isPassesOptionalRequiredSubject);
 			System.out.print("isPassedAllRequiredSubject"+isPassedAllRequiredSubject);
 		  
-		  
-		
-		
 		
 		for (ClassForSubjectDto i : listclass) {
 			int newSlotStart = i.getSlotStart();
@@ -286,6 +300,14 @@ public class SubjectRegisterController {
 	public String showSchedule(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		User student = userservice.getUserByUserEmail(currentUser.getUsername());
 		List<StudentClass> studentClasses = studentsubservice.findSubjectByStudentId(student.getId());
+		
+		for(StudentClass aClass : studentClasses)
+		{
+			if(aClass.getStatus()!=ClassStatus.LIST && aClass.getStatus()!=ClassStatus.WAITINGLIST)
+			{
+				studentClasses.remove(aClass);
+			}
+		}
 	
 		String[][] scheduleTable = addToSchedule(student.getId(), studentClasses);
 
