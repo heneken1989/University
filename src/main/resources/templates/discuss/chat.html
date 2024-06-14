@@ -41,7 +41,14 @@
     .btn_under{
         border-radius: 0 0 8px 8px;
     }
- 
+    
+    .parent-hover:hover .fa-ellipsis-v {
+    display: block !important;
+}
+
+
+
+
     </style>
    
 </head>
@@ -58,15 +65,16 @@
         <div th:each="message : ${messages}" th:object="${message}">
             <div th:class="${message.sender_id == student} ? 'outgoing_msg' : 'incoming_msg'">
             
-            <div th:if="${message.sender_id == student}"  class="d-flex justify-content-end">
+            <div th:if="${message.sender_id == student}"  class="d-flex justify-content-end parent-hover">
                    
                     
-                    <div  th:class="'cover_hdden_'+*{id}" style="border: solid black 1px; border-radius:8px; margin:10px 20px 0 0 ;display:none ">
+                    <div  th:class="'cover_hdden_'+*{id}" th:classappend="handle_hide" style="border: solid black 1px; border-radius:8px; margin:10px 20px 0 0 ;display:none ">
                         <div  class="p-2 action_btn_discuss" onClick="hanldeDelete(this)" th:data_use=*{id}>delete</div>
                       
                     </div>
                     
-                     <i class="fas fa-ellipsis-v mr-3 mt-2 " th:id="'icon_option_mess_'+*{id}" th:data_use=*{id} onClick="handleClickDetail(this)" style="font-size:25px; color:gray; cursor:pointer"></i>
+                     <i class="fas fa-ellipsis-v" th:id="'icon_option_mess_'+*{id}" th:data_use=*{id} onClick="handleClickDetail(this,event)" 
+                     style="font-size:25px; color:gray; cursor:pointer; margin-right:10px; margin-top:10px; display:none"></i>
                      
                     <div class=" sent_mess_discuss " th:id="'handle_mess_'+*{id}"  >
                         <p th:text="*{text}" style="float:right; margin-bottom:0; color:white; font-size:14px;"></p>

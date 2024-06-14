@@ -33,4 +33,10 @@ public class NewsServiceImpl implements NewsService {
     public void deleteById(Long id) {
         newsRepository.deleteById(id);
     }
+    
+    public List<News> getTopNews(int quantity){
+    	return newsRepository.selectTopNew();
+    }
+    
+ 
 }

@@ -33,7 +33,7 @@ public class JwtTokenProvider {
 
 	@Autowired private TokenRepository tokenRepository;
 	// Thời gian có hiệu lực của chuỗi jwt
-	public final int JWT_EXPIRATION = 60*1000;
+	public final int JWT_EXPIRATION = 60*10000;
 
 	// Sử dụng UUID để tạo một refresh token ngẫu nhiên
 	public String generateRefreshToken() {

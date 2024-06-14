@@ -184,8 +184,8 @@ function showQuizList(classId) {
     xhrfirst.open('POST', urlfirst, true);
     xhrfirst.setRequestHeader('Content-Type', 'application/json');
     xhrfirst.onreadystatechange = function () {
-        if (xhrfirst.readyState === 4 && xhr.status === 200) {
-                   console.log("uodate successfully!!");
+        if (xhrfirst.status === 200) {
+                   console.log("Update successfully!!");
         }
     };
     var datafirst = JSON.stringify({ classId: classId });
@@ -199,7 +199,7 @@ function showQuizList(classId) {
     xhr.open('POST', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
+        if (xhr.status === 200) {
             var quizzes = JSON.parse(xhr.responseText);
             if (quizzes.length > 0) {
                 for (var i = 0; i < quizzes.length; i++) {
@@ -227,7 +227,7 @@ function showQuizList(classId) {
     xhr2.open('GET', url2, true);
     xhr2.setRequestHeader('Content-Type', 'application/json');
     xhr2.onreadystatechange = function () {
-        if (xhr2.readyState === 4 && xhr.status === 200) {
+        if (xhr2.status === 200) {
 
             var quizzes = JSON.parse(xhr.responseText);
             if (quizzes.length > 0) {
@@ -260,7 +260,7 @@ function showQuizList(classId) {
                         disabled = false;
                         buttonText = 'Continue Do Quiz';
                         }
-                        if(quiz.status === "Waiting")
+                        if(quiz.status === "Wait")
                         {        
                             disabled = true;
                             buttonText = 'Another Quiz Onprocess';

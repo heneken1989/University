@@ -31,7 +31,7 @@ public class QuizQuestion {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	  private Long id;
 	
-	  @Column(columnDefinition = "LONGTEXT")
+
 	  private String content;
 	  private float mark;
 	  private String type;

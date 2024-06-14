@@ -79,7 +79,7 @@ public interface StudentClassRepository extends JpaRepository<StudentClass ,Long
 
 	@Query("SELECT o FROM StudentClass o WHERE o.student.id = :studentId AND "
 			+ " o.classforSubject.semeter.id= :semesterId "
-			+ " AND :dateStart >= o.classforSubject.dateStart  AND :dateEnd<= o.classforSubject.dateEnd")
+			+ " AND DATE(:dateStart) >= DATE(o.classforSubject.dateStart)  AND DATE(:dateEnd)<= DATE(o.classforSubject.dateEnd)")
 	List<StudentClass> getcalendar(Long studentId, Date dateStart, Date dateEnd, Long semesterId);
 	
 	

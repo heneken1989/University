@@ -10,8 +10,8 @@ VALUES
     (4, 'Information Technology');
     
 INSERT IGNORE INTO semeter (name, year, day_end, day_start, id,startRegisDate,closeRegisDate) VALUES
-    (1, 2024, '2024-6-01', '2024-01-01', 1,'2024-05-01','2024-05-11'),
-    (2, 2024, '2024-12-01', '2024-06-02', 2,'2024-06-01','2024-06-28');
+    (1, 2024, '2024-6-30', '2024-01-01', 1,'2024-05-01','2024-05-11'),
+    (2, 2024, '2024-12-01', '2024-07-01', 2,'2024-06-01','2024-06-28');
 
     
 INSERT IGNORE INTO  room (id, name ,capacity) 
@@ -28,8 +28,7 @@ VALUES
     (2, 'Level 100'),
     (3, 'Level 200'),
     (4, 'Level 300');
-    
-    
+
     
 INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role,status) 
 VALUES 
@@ -43,7 +42,6 @@ VALUES
     (9, 'st3', 'nobita.jpg', 'st3', 'ad', 'teacher3', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '4', 'STUDENT',0);
     
 
-  
 
 INSERT IGNORE INTO  subject (id, name, credit, field_id, subjectlevel_id,type,creditAction) 
 VALUES 
@@ -92,9 +90,6 @@ VALUES
     (40, 'Physiology', '2', '1', '4',0,0);
     
     
-    
- 
-    
         INSERT IGNORE INTO  user_field (field_id,users_id) 
 VALUES 
     (1,6);
@@ -102,21 +97,94 @@ VALUES
 
         INSERT IGNORE INTO  teacher_subject (id, subject_id,teacher_id) 
 VALUES 
-    (1,36,5);
+    (1,36,5),
+    (2,1,5),
+    (3,11,5),
+    (4,12,5),
+    (5,31,5),
+    (6,36,5);
+    
 
     
     
             INSERT IGNORE INTO  class_subject (currentQuantity, minQuantity, quantity, slotEnd, slotStart, status, weekDay, dateEnd, dateStart, id, room_id, semeter_id, subject_id, teacher_id, description, name, type) 
 VALUES 
-    (0,5,50,3,1,NULL,1,'2024-06-25 12:31:29.000000','2024-01-17 12:31:29.000000',1,1,1,36,5,'Botany class','BOTANY CLASS',2);
+    (0,5,50,3,1,NULL,1,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',1,1,1,36,5,'Class for ...','CPKH24',2),
+    (0,5,50,12,10,NULL,2,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',2,2,1,1,5,'Class for ...','CPKH4',2),
+    (0,5,50,6,4,NULL,3,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',3,3,1,2,5,'Class for ...','CPKH3',2),
+    (0,5,50,12,7,NULL,5,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',4,4,1,11,5,'Class for ...','CPKH2',2),
+    (0,5,50,6,1,NULL,6,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',5,1,1,12,5,'Class for ...','CPHK1',2);
          
     
     
         INSERT IGNORE INTO  studentclass (status,class_id,id,student_id) 
 VALUES 
       (4,1,1,3),
-      (4,1,2,4),
-      (4,1,3,7);
+      (4,2,2,3),
+      (4,3,3,3),
+      (4,4,4,3),
+      (4,4,5,4),
+      (4,4,6,7),
+      
+      (4,5,7,3),
+      (4,5,8,4),
+      (4,5,9,7);
+
+      
+       INSERT IGNORE INTO  quiz (duration, totalMark,createDate,id,subject_id,teacher_id,name,status, type) 
+VALUES 
+      (60,100,NULL,2,36,5,'Test','Finished',1);
+      
+      
+             INSERT IGNORE INTO  quizquestion (id,mark,quiz_id,type,content) 
+VALUES 
+  (11,20,2,'Single','<p>What kind of structure is the molecule shown in the diagram?</p>\r\n\r\n<p><img alt=\"\" src=\"https://dru69sbqnarp.cloudfront.net/imgs/Biology/600x600/DNA.png\" style=\"height:300px; width:300px\" /></p>\r\n'),
+  (12,20,2,'Single','<p>A mitochondrion is labeled by letter _____________ &nbsp;.</p><p><img alt="" src="https://dru69sbqnarp.cloudfront.net/imgs/Biology/600x300/animal-cell.png" style="height:150px; width:300px" /></p>'),
+  (13,20,2,'Single','<p><img alt="" src="https://dru69sbqnarp.cloudfront.net/imgs/Biology/400x200/bird-beak-buzzard.png" style="height:150px; width:300px" /></p><p>Different types of bird beaks are an example of</p>'),
+  (14,20,2,'Multi','<p>In the diagram below, which is a decomposer?</p><p><img alt="" src="https://dru69sbqnarp.cloudfront.net/imgs/Biology/600x300/food_web.png" style="height:150px; width:300px" /></p>'),
+  (15,20,2,'Multi','<p>Which image below represents the state of the cell after cytokinesis?</p><p><img alt="" src="Which image below represents the state of the cell after cytokinesis?" /><img alt="" src="https://dru69sbqnarp.cloudfront.net/imgs/Biology/600x300/cell-division.png" style="height:150px; width:300px" /></p>');
+  
+  
+         INSERT IGNORE INTO  quizanswer (id,isTrue,quiz_question_id,content) 
+VALUES 
+      (1,1,11,'double helix'),
+      (2,0,11,'multi-strand'),
+      (3,0,11,'ladder'),
+      (4,0,11,'double vertex'),
+      
+      (5,1,12,'J'),
+      (6,0,12,'K'),
+      (7,0,12,'L'),
+      (8,0,12,'M'),
+      
+      (9,1,13,'food webs'),
+      (10,0,13,'weathering.'),
+      (11,0,13,'learned behaviors.'),
+      (12,0,13,'physical adaptations.'),
+      
+      (13,1,14,'grass'),
+      (14,1,14,'mushroom'),
+      (15,0,14,'bird'),
+      (16,0,14,'snake'),
+      
+      (17,1,15,'A'),
+      (18,1,15,'B'),
+      (19,0,15,'C'),
+      (20,0,15,'D'),
+      (21,0,15,'E'),
+      (22,0,15,'F');
+      
+      
+      
+      
+             INSERT IGNORE INTO  lessonsubject (lesson,class_id,day,id,type) 
+VALUES 
+ 
+      ('',1,'2024-01-1 00:00:00',NULL,1),
+      ('',2,'2024-01-2 00:00:00',NULL,1),
+      ('',3,'2024-01-3 00:00:00',NULL,1),
+      ('',4,'2024-06-14 00:00:00',NULL,1),
+      ('',5,'2024-06-15 00:00:00',NULL,1);
 
     
    

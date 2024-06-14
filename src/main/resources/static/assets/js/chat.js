@@ -28,11 +28,13 @@ if(radioButtons !=null){
 
 }
 
-const handleClickDetail=(e)=>{
+const handleClickDetail=(e,event)=>{
+ event.stopPropagation();
 	let id= e.getAttribute("data_use");
 	if($(`.cover_hdden_${id}`).is(':visible')){
 		$(`.cover_hdden_${id}`).hide();
 	}else{
+		$(".handle_hide").hide();
 		$(`.cover_hdden_${id}`).show();
 	}
 
@@ -40,6 +42,10 @@ const handleClickDetail=(e)=>{
 }
 
 
+$("#messageArea").on("click",()=>{
+ 
+$(".handle_hide").hide();
+})
 
 var usernamePage = document.querySelector('#username-page');
 var chatPage = document.querySelector('#chat-page');

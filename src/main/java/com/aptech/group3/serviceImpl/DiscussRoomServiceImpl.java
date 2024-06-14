@@ -69,7 +69,7 @@ public class DiscussRoomServiceImpl implements DiscussRoomService {
 	}
 
 	public DiscussRoom getById(int id) {
-		return repo.findById(id);
+		return repo.findById((long)id).orElse(null);
 	}
 
 	public DiscussRoomDto getRoomDto(Long id) {

@@ -299,16 +299,30 @@ public class SubjectRegisterController {
 	@Transactional
 	public String showSchedule(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		User student = userservice.getUserByUserEmail(currentUser.getUsername());
-		List<StudentClass> studentClasses = studentsubservice.findSubjectByStudentId(student.getId());
+		List<StudentClass> studentClasses = new ArrayList<StudentClass>();
+		List<StudentClass> studentClassesAll = studentsubservice.findSubjectByStudentId(student.getId());
 		
-		for(StudentClass aClass : studentClasses)
+	
+		for(StudentClass aClass : studentClassesAll)
 		{
-			if(aClass.getStatus()!=ClassStatus.LIST && aClass.getStatus()!=ClassStatus.WAITINGLIST)
+		
+			if(aClass.getStatus()== ClassStatus.LIST || aClass.getStatus()== ClassStatus.WAITINGLIST)
 			{
-				studentClasses.remove(aClass);
+				
+				studentClasses.add(aClass);
+
 			}
 		}
-	
+		
+
+         
+         
+     	for(StudentClass aClass : studentClasses)
+		{
+    		System.out.print(aClass.getStatus());
+		}
+		
+     
 		String[][] scheduleTable = addToSchedule(student.getId(), studentClasses);
 
 		model.addAttribute("scheduleTable", scheduleTable);

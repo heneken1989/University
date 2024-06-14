@@ -160,6 +160,7 @@ public void QuizSubmit(@RequestBody Map<String, Object> requestBody) {
 	
 	String typeRequet = requestBody.get("type").toString();
 	Long quizExamId = Long.valueOf(requestBody.get("quizExamId").toString());
+	System.out.print("quiz exam id"+quizExamId);
     @SuppressWarnings("unchecked")
 	Map<String, List<Integer>> answers = (Map<String, List<Integer>>) requestBody.get("answers");
     Long currentQuestionId = null;
@@ -172,6 +173,8 @@ public void QuizSubmit(@RequestBody Map<String, Object> requestBody) {
                  .map(Long::valueOf)
                  .collect(Collectors.toList());
     }
+    
+    System.out.println("curent question id:" +currentQuestionId);
     
     // after having List answers , save new answers to database ,
         // first delete all old answers
@@ -262,10 +265,19 @@ public Long ClassRegister(@RequestBody Map<String, Long> requestBody) {
 @Transactional
 @PostMapping("/api/Quiz")
 public List<QuizQuestion> FindQuizById(@RequestBody Map<String, Long> requestBody) {
-    Long quizId = requestBody.get("quizId");
-    System.out.print("quizId"+quizId);
-  Quiz quiz =quizRepository.getById(quizId);
+    Long quizId = requestBody.get("examIDD");
+    System.out.println("quizId from client:" + quizId);
+    QuizExam exam = quizExamRepository.getById(quizId);
+    
+     System.out.print("exam Id"+exam.getId());
+  Quiz quiz =quizRepository.getById(exam.getQuiz().getId());
+  
+  System.out.println("quiz Id:"+quiz.getId());
     List<QuizQuestion>  listqQuestions = quiz.getQuizquestions();
+    for(QuizQuestion aQuestion :listqQuestions )
+    {
+    	System.out.println("question id :" + aQuestion.getId());
+    }
 	return listqQuestions ;
 }
 

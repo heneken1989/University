@@ -160,7 +160,7 @@ $("#select_classtype_create").on("change",()=>{
 		$("#select_startslot_create").parent().show();
 		dstart=e.target.value;
 		let date = new Date(dstart);
-		weekday=date.getDay()+1;
+		weekday=date.getDay();
 		$("#hidden_weekday_create").val(weekday);
 		$("#select_enddate_create").parent().show();
 		

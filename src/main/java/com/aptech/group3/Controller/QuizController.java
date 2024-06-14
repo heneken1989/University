@@ -311,6 +311,7 @@ public class QuizController {
 	private int getCurrentPage(HttpSession session) {
 	    // Assuming "currentPage" is stored in the session
 	    Integer currentPage = (Integer) session.getAttribute("currentPage");
+	    System.out.print("current page:"+ currentPage );
 	    if (currentPage == null) {
 	        return 0; // Default to the first page
 	    }
@@ -552,6 +553,7 @@ public class QuizController {
 	            exam.setClassForSubject(classForSubject);	                  
 	            exam.setStartFromDate(Date.from(dto.getStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 	            exam.setCloseDate(Date.from(dto.getEndDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+	            exam.setStatus("Wait");
 	            quizExamRepository.save(exam);
 	        }
 	        return dto;

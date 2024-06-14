@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,6 +62,7 @@ public class TimeTableController {
 		Date date = new Date();
 
 		if (se != null) {
+		
 			weeks.forEach(e -> {
 
 				if (e.getWeek() == week) {
@@ -70,24 +72,35 @@ public class TimeTableController {
 				}
 			});
 		} else {
+			System.out.println(" run 2");	
+			AtomicBoolean exit = new AtomicBoolean(false);
 			weeks.forEach(e -> {
-
 				int cws = BaseMethod.customCompareDate(date, e.getStart_day());
 				int cwe = BaseMethod.customCompareDate(date, e.getEnd_day());
 				if (cws >= 0 && cwe <= 0) {
+					exit.set(true);
 					currentWeek.setWeek(e.getWeek());
 					currentWeek.setEnd_day(e.getEnd_day());
 					currentWeek.setStart_day(e.getStart_day());
 				}
 			});
+			
+			if(!exit.get()) {
+				currentWeek.setEnd_day(weeks.get(0).getEnd_day())	;
+				currentWeek.setStart_day(weeks.get(0).getStart_day());
+				currentWeek.setWeek(weeks.get(0).getWeek());
+			}
 
 		}
 
 		if (se != null) {
+			System.out.println(" run 3");	
 			model.addAttribute("currentSemester", semesterService.getSemesterById(se.intValue()));
 		} else {
+			
 			model.addAttribute("currentSemester", currentSemester);
 		}
+		
 		model.addAttribute("semester", semesterService.findAll());
 
 		model.addAttribute("weeks", weeks);
@@ -109,6 +122,7 @@ public class TimeTableController {
 
 		}
 
+		System.out.print("current week" + currentWeek);		
 		model.addAttribute("listsubject", data);
 
 		return "time_table/index";

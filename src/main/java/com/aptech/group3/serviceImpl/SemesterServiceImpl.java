@@ -46,11 +46,12 @@ public class SemesterServiceImpl implements SemesterService {
 	} 
 	
 	public List<TimeTableDto> getListWeek(int SemesterId){
+		
+		System.out.print("SemesterId"+SemesterId);
 		List<TimeTableDto> data= new ArrayList<>();
 	
 		Semeter currentSemster= sr.findById(SemesterId);
 		
-		System.out.print(currentSemster);
 
 		Calendar cal = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
