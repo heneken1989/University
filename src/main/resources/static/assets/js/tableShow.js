@@ -10,7 +10,7 @@ $("#select_user_type").on("change",()=>{
 	$("#form_change_semester").submit();
 })
 
-$("#select_subject_form").on("change",()=>{
+$("#select_subject_form_list").on("change",()=>{
 	$("#form_change_semester").submit();
 })
 let currentlanguage=$(".btn_change_language").text()

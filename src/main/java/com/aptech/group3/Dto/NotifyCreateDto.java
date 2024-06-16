@@ -1,6 +1,7 @@
 package com.aptech.group3.Dto;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,6 +18,10 @@ public class NotifyCreateDto {
 	@NotNull(message="{notify.error.title.null}")
 	@NotEmpty(message="{notify.error.title.empty}")
 	private String title;
+	
+	
+	@NotEmpty(message="{notify.error.title.empty}")
+	private List<String> typeSent;
 	
 	@NotNull(message="{notify.error.content.null}")
 	@NotEmpty(message="{notify.error.content.empty}")

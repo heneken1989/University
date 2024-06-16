@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.aptech.group3.Dto.ActionStatus;
 import com.aptech.group3.Dto.ClassSubjectAllDto;
 import com.aptech.group3.Dto.ClassSubjectCreateDto;
 import com.aptech.group3.Dto.ClassType;
@@ -42,11 +43,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.aptech.group3.entity.Subject;
 import com.aptech.group3.entity.Field;
 import com.aptech.group3.entity.RequiredSubject;
 import com.aptech.group3.entity.SubjectLevel;
+import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.service.RequiredSubjectService;
 import com.aptech.group3.service.SubjectLevelService;
@@ -64,30 +67,68 @@ public class SubjectController {
 
 	@Autowired
 	private RequiredSubjectService reqService;
-	
+
 	@Autowired
 	private SubjectLevelService sublvService;
-	
-	
+
 	@Autowired
 	private SubjectRepository subjectRepository;
 
 	@GetMapping("/list")
+	@Transactional
 	public String Subject(Model model, @AuthenticationPrincipal CustomUserDetails currentUser,
 
 			@RequestParam(name = "level", required = false) Long se,
+			@RequestParam(name = "error", required = false) ActionStatus error,
 
 			@RequestParam(name = "page", required = false, defaultValue = "1") int page) {
 		Pageable paging = PageRequest.of(page - 1, 10);
+
 		Long fieldId = currentUser.getUser().getFields().get(0).getId();
+
+		Page<SubjectDto> data = subService.getListPage(fieldId, se == null || se == 0 ? null : se, paging);
+	
+		
+		List<RequiredSubject> listreRequiredSubjects = new ArrayList<>();
+
+	
+		
+		for(SubjectDto a : data ) {
+			listreRequiredSubjects = reqService.findListRequiredSubjectBySubjectId(a.getId());
+			System.out.println("iddd"+a.getId());
+			List<String> listRequiredSubject = new ArrayList<>();
+			List<String> optionalRequiredSubjectList = new ArrayList<>();
+			
+			for(RequiredSubject a2: listreRequiredSubjects)
+			{
+				  if(a2.getStatus().equals("PASS"))
+				  {
+					  listRequiredSubject.add(a2.getRequiredsubject().getName());
+				  }
+				  else if(a2.getStatus().equals("OPTIONAL"))
+				  {
+					  optionalRequiredSubjectList.add(a2.getRequiredsubject().getName());
+				  }		
+			}
+			System.out.println("dataaaa;"+listRequiredSubject.toString());
+			System.out.println("dataaaa;"+optionalRequiredSubjectList.toString());
+			a.setOptionalRequiredSuject(optionalRequiredSubjectList);
+			a.setPassedSubjects(listRequiredSubject);
+		}
 		
 		
+		List<SubjectLevel> sblevel = sublvService.findAll();
+		List<Subject> subject = subService.findAll();
 		
-		Page<Subject> data = subService.getListPage(fieldId, se == null || se==0 ? null : se, paging);
-		List <SubjectLevel> sblevel = sublvService.findAll();
+		model.addAttribute("subject",subject);
 		model.addAttribute("data", data);
-		model.addAttribute("sblevels",sblevel);
-		model.addAttribute("selectLevel",se == null ?0 : se);
+		model.addAttribute("sblevels", sblevel);
+		model.addAttribute("selectLevel", se == null ? 0 : se);
+	
+		
+		if(error!=null) {
+			model.addAttribute("error", error.toString());
+		}
 		return "subject/index";
 	}
 
@@ -112,66 +153,61 @@ public class SubjectController {
 
 	@PostMapping("/create")
 	public String createsubject(Model model, @ModelAttribute("data") @Valid SubjectCreateDto data,
-			BindingResult bindingResult, HttpServletRequest request) {
+			BindingResult bindingResult, HttpServletRequest request, RedirectAttributes rm) {
 
 		String[] listField = new String[] {};
 		String[] listField1 = new String[] {};
-	
-		if(request.getParameterValues("field[]")!=null) {
+
+		if (request.getParameterValues("field[]") != null) {
 			listField = request.getParameterValues("field[]");
 		}
-		
-		if(request.getParameterValues("field1[]")!=null) {
+
+		if (request.getParameterValues("field1[]") != null) {
 			listField1 = request.getParameterValues("field1[]");
 		}
 		Subject newsub = subService.create(data);
-		if(listField.length !=0) {
-			
-			for (String a : listField)
-			{
-				System.out.print("list filed :"+listField.length);		
+		if (listField.length != 0) {
+
+			for (String a : listField) {
+				System.out.print("list filed :" + listField.length);
 				RequiredSubjectDto dto = new RequiredSubjectDto();
 				dto.setRequiredsubjectId((long) Integer.parseInt(a));
-				
+
 				dto.setSubjectId(newsub.getId());
 				dto.setStatus("PASS");
-				
-				reqService.createreq(dto);	
+
+				reqService.createreq(dto);
 			}
 		}
-		if(listField1.length !=0) {
-			
-			
-			
-			for (String a : listField1)
-			{
-				System.out.print("list filed :"+listField.length);		
+		if (listField1.length != 0) {
+
+			for (String a : listField1) {
+				System.out.print("list filed :" + listField.length);
 				RequiredSubjectDto dto = new RequiredSubjectDto();
 				dto.setRequiredsubjectId((long) Integer.parseInt(a));
 				dto.setSubjectId(newsub.getId());
 				dto.setStatus("OPTIONAL");
-				reqService.createreq(dto);	
+				reqService.createreq(dto);
 			}
 		}
-		
-		
+		rm.addAttribute("error",ActionStatus.CREATED);
+		//khi thêm trường hợp mới thì vào thì qua trang index html thêm vào
 		return "redirect:/admin/subject/list";
 	}
 
 	@GetMapping("/updatesubject/{id}")
-	public String showupdatesubject(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal CustomUserDetails currentUser) {
+	public String showupdatesubject(@PathVariable("id") Long id, Model model,
+			@AuthenticationPrincipal CustomUserDetails currentUser) {
 		// lay thong tin mon hoc
 		Subject sb = subjectRepository.getById(id);
-		
+
 		// lay tat ca truong cua subject
 
 		List<SubjectLevel> subjectLevels = subService.listSubjectLevel();
-		
-		
-		
+
 		model.addAttribute("type", ClassType.values());
 		model.addAttribute("subject", sb);
-		model.addAttribute("fields",currentUser.getUser().getFields().get(0).getId());
+		model.addAttribute("fields", currentUser.getUser().getFields().get(0).getId());
 		model.addAttribute("subjectLevels", subjectLevels);
 
 		return "subject/update";
@@ -180,22 +216,21 @@ public class SubjectController {
 	/* @RequestParam(name = "id") */
 	@PostMapping("/update/{id}")
 	public String saveupdate(Model model, @ModelAttribute("subject") @Valid SubjectCreateDto dto, BindingResult result,
-			@RequestParam(name = "id")	 Long id) {
-		
+			@RequestParam(name = "id") Long id, RedirectAttributes rm) {
+
 		subService.updatesubject(dto);
+		rm.addAttribute("error",ActionStatus.UPDATED);
 		return "redirect:/admin/subject/list";
 	}
-	
-	
-	
+
 	@GetMapping("/hidesubject/{id}")
-    public String hideSubject(@PathVariable("id") Long id, Model model) {
-        subService.hideById(id);
+	public String hideSubject(@PathVariable("id") Long id, Model model,RedirectAttributes rm ) {
+		subService.hideById(id);
 		/* return "redirect:/subjects"; */
-        return "redirect:/admin/subject/list";
-    }
-	
-	
+		rm.addAttribute("error",ActionStatus.DELETED);
+		return "redirect:/admin/subject/list";
+	}
+
 	@GetMapping("/hiddenSubject")
 	public String showSubject(Model model, @AuthenticationPrincipal CustomUserDetails currentUser,
 
@@ -204,33 +239,40 @@ public class SubjectController {
 			@RequestParam(name = "page", required = false, defaultValue = "1") int page) {
 		Pageable paging = PageRequest.of(page - 1, 10);
 		Long fieldId = currentUser.getUser().getFields().get(0).getId();
-		
-		Page<Subject> data = subService.getListPage(fieldId, se == null || se==0 ? null : se, paging);
-		List <SubjectLevel> sblevel = sublvService.findAll();
+
+		Page<SubjectDto> data = subService.getListPage(fieldId, se == null || se == 0 ? null : se, paging);
+		List<SubjectLevel> sblevel = sublvService.findAll();
 		model.addAttribute("data", data);
-		model.addAttribute("sblevels",sblevel);
-		model.addAttribute("hiddenselectLevel",se == null ?0 : se);
+		model.addAttribute("sblevels", sblevel);
+		model.addAttribute("hiddenselectLevel", se == null ? 0 : se);
 		return "subject/hiddensubject";
 	}
 
-	
 	@GetMapping("/unhidesubject/{id}")
-    public String ShowSubject(@PathVariable("id") Long id, Model model) {
-        subService.showById(id);
+	public String ShowSubject(@PathVariable("id") Long id, Model model) {
+		subService.showById(id);
 		/* return "redirect:/subjects"; */
-        return "redirect:/admin/subject/list";
-    }
-	
-	
-	/*
-	 * @GetMapping("/detailsubject/{id}") public String
-	 * detailsubject(@PathVariable("id") Long id, Model
-	 * model, @AuthenticationPrincipal CustomUserDetails currentUser) {
-	 * 
-	 * }+
-	 */
-	 
-	
+		return "redirect:/admin/subject/list";
+	}
+
+	@GetMapping("/detailsubject/{id}")
+	public String detailsubject(@PathVariable("id") Long id, Model model,
+			@AuthenticationPrincipal CustomUserDetails currentUser) {
+		
+		// lay thong tin mon hoc
+		Subject sb = subjectRepository.getById(id);
+
+		// lay tat ca truong cua subject
+
+		List<SubjectLevel> subjectLevels = subService.listSubjectLevel();
+
+		model.addAttribute("type", ClassType.values());
+		model.addAttribute("subject", sb);
+		model.addAttribute("fields", currentUser.getUser().getFields().get(0).getId());
+		model.addAttribute("subjectLevels", subjectLevels);
+		
+		return "subject/detail";
+	}
 
 	@GetMapping("/listrequiredsubject")
 	public String listreqsub(Model model, @AuthenticationPrincipal CustomUserDetails currentUser) {

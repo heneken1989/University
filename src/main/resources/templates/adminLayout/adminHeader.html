@@ -24,20 +24,22 @@
 </div>
 <div style="height:100%" class="d-flex align-items-center justify-content-center">
 <img th:src="@{/getimage/logo_single.png}" style="height:95%" >
-<p class="ml-4 h2" style="color:#011462" >Fulbright University Viet Nam</p>
+<p class="ml-4 h2" style="color:#011462" >FreeDoom University Viet Nam</p>
 </div>
 
 <div class="dropdown">
 
   <button class="btn btn-secondary dropdown-toggle mr-4 btn_change_language" type="button" id="dropdownMenuButton " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-  th:text="#{laebel.current.languag}">
+  th:text="#{label.current.language}">
 
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-     <a class="dropdown-item"href="?lang=en" th:text="#{label.lang.en}">eng</a>
-  <a class="dropdown-item" href="?lang=vi" th:text="#{label.lang.vi}"> vi</a>
+     
+  <a class="dropdown-item" href="?lang=vi" th:text="#{label.lang.vi}">eng</a>
+  <a class="dropdown-item" href="?lang=en" th:text="#{label.lang.en}"> vi</a>
   </div>
 </div>
+
 
 	</Header>
 </body>

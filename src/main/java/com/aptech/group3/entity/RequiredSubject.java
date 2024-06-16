@@ -29,7 +29,7 @@ public class RequiredSubject {
 	private String status;
 	
 	@ManyToOne
-	@JoinColumn(name="subject_id")
+	@JoinColumn(name="subject_id" )
 	 private Subject subject;
 
 	@ManyToOne

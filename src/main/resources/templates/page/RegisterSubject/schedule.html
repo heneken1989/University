@@ -70,15 +70,15 @@ layout:decorate="~{/layout}">
         <td th:text="${class.ClassforSubject.Quantity}"></td>
         <td th:text="${class.ClassforSubject.CurrentQuantity}"></td>
         
-        <td th:text="${class.status == T(com.aptech.group3.Dto.ClassStatus).LIST ? 'Pending Approval(Student can be Approved to Class if Class Quantity more than 30% of Max Quantity)' : class.status}"></td>
-                    <td>
-                <!-- Cancel Button -->
-                <form th:action="@{/web/ClassRegister/cancelClass}" method="post" onsubmit="confirmCancel(event)">
-                    <!-- Assuming 'classId' uniquely identifies a class, adjust the name as per your model -->
-                    <input type="hidden" name="classId" th:value="${class.id}" />
-                    <button type="submit">Cancel</button>
-                </form>
-            </td>
+<td th:text="${class.status == T(com.aptech.group3.Dto.ClassStatus).LIST ? 'Pending Approval(Student can be Approved to Class if Class Quantity more than 30% of Max Quantity)' : class.status}"></td>
+<td>
+    <!-- Cancel Button -->
+    <form th:action="@{/web/ClassRegister/cancelClass}" method="post" onsubmit="confirmCancel(event)" th:if="${class.status == T(com.aptech.group3.Dto.ClassStatus).LIST or class.status == T(com.aptech.group3.Dto.ClassStatus).WAITINGLIST}">
+        <!-- Assuming 'classId' uniquely identifies a class, adjust the name as per your model -->
+        <input type="hidden" name="classId" th:value="${class.id}" />
+        <button type="submit">Cancel</button>
+    </form>
+</td>
     </tr>
 </tbody>
 

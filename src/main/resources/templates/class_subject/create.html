@@ -88,8 +88,8 @@
 					id="select_classtype_create">
 					<option class="option_of_select_type"  value=""  th:text="#{class.select.type}">Select type</option>
 					<option class="option_of_select_type"  value="all"  th:text="#{class.all.year}">all year</option>
-					<option class="option_of_select_type"   value="fhalf" th:text="#{class.half.first}">first half year</option>
-					<option class="option_of_select_type"  value="lhalf" th:text="#{class.half.last}">last half year</option>
+					<option class="option_of_select_type hidden_when_more_3"    value="fhalf" th:text="#{class.half.first}">first half year</option>
+					<option class="option_of_select_type  hidden_when_more_3"  value="lhalf" th:text="#{class.half.last}">last half year</option>
 				</select>
 			</div>
 			 <p th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="text-danger">Name Error</p>
@@ -132,8 +132,7 @@
 					<label style="width: 100%" class="input-group-text"
 						for="inputGroupSelect01" th:text="#{class.select.start.slot}" > Select start slot</label>
 				</div>
-				<select class="custom-select " th:field="*{slotStart}"
-					id="select_startslot_create" data-id="0">
+				<select class="custom-select " th:data-check="*{slotStart}" th:field="*{slotStart}" id="select_startslot_create" data-id="0">
 				</select>
 			</div>
 					<p th:if="${#fields.hasErrors('slotStart')}" th:errors="*{slotStart}" class="text-danger">Name Error</p>

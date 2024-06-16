@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ import com.aptech.group3.entity.StudentClass;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.model.NotificationMessage;
+import com.aptech.group3.service.EmailService;
 import com.aptech.group3.service.FirebaseMessageService;
 import com.aptech.group3.service.NotificationService;
 import com.aptech.group3.service.SemesterService;
@@ -59,13 +61,16 @@ public class NotificationController {
 	private StudentClassService studentClassService;
 	
 	@Autowired
+	private EmailService emailService;
+	
+	@Autowired
 	private UserService userService;
 
 	@GetMapping("/list")
 	public String index(Model model,
 			@AuthenticationPrincipal CustomUserDetails currentUser,
 			@RequestParam(name = "semester", required = false) Integer se,
-			@RequestParam(name = "eror", required = false) ActionStatus error,
+			@RequestParam(name = "error", required = false) ActionStatus error,
 			@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		List<Semeter> semester = semesterService.findAll();
@@ -77,6 +82,9 @@ public class NotificationController {
 		model.addAttribute("currentSemester", se == null ? semesterId : se);
 		model.addAttribute("data", data);
 
+		if(error!= null) {
+			model.addAttribute("error",error.toString());
+		}
 		return "page/notification/index";
 	}
 
@@ -99,6 +107,8 @@ public class NotificationController {
 	public String createAction(Model model, @AuthenticationPrincipal CustomUserDetails currentUser,
 			@ModelAttribute("data") @Valid NotifyCreateDto data,BindingResult bindingResult,RedirectAttributes redirect) {
 		data.setCreated_at(new Date());
+		
+		System.out.print(data);
 		if (data.getType() == NoftifyType.ALL) {
 			data.setField_id(null);
 		}
@@ -134,70 +144,128 @@ public class NotificationController {
 		
 		Semeter current = semesterService.getCurrentSemester();
 
-		service.create(data, currentUser.getUser(), current); 
+	
 		
 		  Map<String, String> map = new HashMap<String, String>();
 		  map.put("key1", "value1");
 
+		  AtomicBoolean check= new AtomicBoolean(false);
 		if (data.getType() == NoftifyType.CLASS) {
 
 			List<StudentClass> listUser = studentClassService.findByClassForSubjectId(data.getClass_id());
+			if(listUser.size()==0){
+				check.set(true);
+			}else {
 			List<NotificationMessage> listMess = new ArrayList<NotificationMessage>();
 
-			listUser.forEach(e -> {
-				if (e.getStudent().getMobileCode() != null) {
-					NotificationMessage mess = new NotificationMessage();
-					mess.setBody(data.getContent());
-					mess.setTitle(data.getContent());
-					 mess.setData(map);
-					mess.setRecripientToken(e.getStudent().getMobileCode());
-					  listMess.add(mess);
-				}
-			});
-			fireBasseService.sentManyNotification(listMess);
+			if(data.getTypeSent().contains("mobile")) {
+				listUser.forEach(e -> {
+					if (e.getStudent().getMobileCode() != null) {
+						NotificationMessage mess = new NotificationMessage();
+						mess.setBody(data.getContent());
+						mess.setTitle(data.getContent());
+						 mess.setData(map);
+						mess.setRecripientToken(e.getStudent().getMobileCode());
+						  listMess.add(mess);
+					}
+				});
+				fireBasseService.sentManyNotification(listMess);
+			}
+			
+			if(data.getTypeSent().contains("email")) {
+				List<String> listEmail= new ArrayList<String>();
+				listUser.forEach(e->{
+					if(e.getStudent().getEmail()!=null) {
+						listEmail.add(e.getStudent().getEmail());
+					}
+				});
+				
+				emailService.sentManyEmail(data, listEmail);
+			}
+
+		}
 		}
 		
 		if(data.getType()==NoftifyType.FIELD) {
 			
 			List<User> listUser= userService.getListUSerByField(UserStatus.LEARNING, data.getField_id(), "STUDENT");
-		
-			List<NotificationMessage> listMess = new ArrayList<NotificationMessage>();
-			
-			for (User  e : listUser) {
+			if(listUser.size()==0){
+				check.set(true);
+			}else {
+				List<NotificationMessage> listMess = new ArrayList<NotificationMessage>();
+				if(data.getTypeSent().contains("mobile")) {
+				for (User  e : listUser) {
+					  if (e.getMobileCode() != null) {
+					  NotificationMessage mess = new NotificationMessage();
+					  mess.setBody(data.getContent()); mess.setTitle(data.getContent());
+					  mess.setData(map);
+					  mess.setRecripientToken(e.getMobileCode()); 
+					  listMess.add(mess);
+					  }
+				}
+				fireBasseService.sentManyNotification(listMess);
+			}
 				
-				  if (e.getMobileCode() != null) {
-				  
-				  NotificationMessage mess = new NotificationMessage();
-				  mess.setBody(data.getContent()); mess.setTitle(data.getContent());
-				  mess.setData(map);
-				  mess.setRecripientToken(e.getMobileCode()); 
-				  listMess.add(mess);
-				  }
-			
+				if(data.getTypeSent().contains("email")) {
+					List<String> listEmail= new ArrayList<String>();
+					listUser.forEach(e->{
+						if(e.getEmail()!=null) {
+							listEmail.add(e.getEmail());
+						}
+					});
+					
+					emailService.sentManyEmail(data, listEmail);
+				}
+				
+				
 			}
 			
-			fireBasseService.sentManyNotification(listMess);
+		
 		}
 		
 		if(data.getType()==NoftifyType.ALL) {
 			List<User> listUser= userService.getListUserByRoleAnddStatus(UserStatus.LEARNING, "STUDENT");
 			
 			List<NotificationMessage> listMess = new ArrayList<NotificationMessage>();
-			
-			listUser.forEach(e -> {
-				if (e.getMobileCode() != null) {
-					NotificationMessage mess = new NotificationMessage();
-					mess.setBody(data.getContent());
-					mess.setTitle(data.getContent());
-					 mess.setData(map);
-					mess.setRecripientToken(e.getMobileCode());
-					  listMess.add(mess);
+			if(listUser.size()==0){
+				check.set(true);
+			}else {
+				if(data.getTypeSent().contains("mobile")) {
+				listUser.forEach(e -> {
+					if (e.getMobileCode() != null) {
+						NotificationMessage mess = new NotificationMessage();
+						mess.setBody(data.getContent());
+						mess.setTitle(data.getContent());
+						 mess.setData(map);
+						mess.setRecripientToken(e.getMobileCode());
+						  listMess.add(mess);
+					}
+				});
+				fireBasseService.sentManyNotification(listMess);
+			}
+				
+				if(data.getTypeSent().contains("email")) {
+					List<String> listEmail= new ArrayList<String>();
+					listUser.forEach(e->{
+						if(e.getEmail()!=null) {
+							listEmail.add(e.getEmail());
+						}
+					});
+					
+					emailService.sentManyEmail(data, listEmail);
 				}
-			});
-			fireBasseService.sentManyNotification(listMess);
+			}
 		}
 		
-		redirect.addAttribute("error",ActionStatus.UPDATED);
+		if(!check.get()) {
+			
+			service.create(data, currentUser.getUser(), current); 
+			redirect.addAttribute("error",ActionStatus.CREATED);
+		}else {
+			redirect.addAttribute("error",ActionStatus.ERROR);
+		}
+	
+		
 		return "redirect:/admin/notify/list";
 	}
 

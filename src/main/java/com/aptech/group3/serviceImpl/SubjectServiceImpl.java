@@ -9,7 +9,6 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.aptech.group3.Dto.SubjectCreateDto;
 import com.aptech.group3.Dto.SubjectDto;
@@ -25,6 +24,7 @@ import com.aptech.group3.entity.User;
 import com.aptech.group3.service.SubjectService;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 @Service
@@ -141,7 +141,7 @@ public class SubjectServiceImpl implements SubjectService {
 			return newsub;
 		}
 		
-		 @Transactional
+		
 		    public void saveSubjectWithRequiredSubjects(Subject subject, Set<RequiredSubject> requiredSubjects) {
 		        subject = subjectRepo.save(subject);
 		        for (RequiredSubject requiredSubject : requiredSubjects) {
@@ -195,9 +195,13 @@ public class SubjectServiceImpl implements SubjectService {
 		        });
 		    }
 
+		 
+		   public Page<SubjectDto> getListPage(Long fieldId, Long levelId, Pageable pageable) {
+		        Page<Subject> subjectPage = subjectRepo.findByFieldIdAndSubjectlevelId(fieldId, levelId, pageable);
 
-			public Page<Subject> getListPage(Long fieldId, Long levelId, Pageable pageable) {
-		        return subjectRepo.findByFieldIdAndSubjectlevelId(fieldId, levelId, pageable);
+		        List<SubjectDto> subjectDtoList = mapper.map(subjectPage.getContent(), new TypeToken<List<SubjectDto>>() {}.getType());
+
+		        return new PageImpl<>(subjectDtoList, pageable, subjectPage.getTotalElements());
 		    }
 
 

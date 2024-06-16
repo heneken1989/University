@@ -48,12 +48,21 @@ public class NotificationServiceImpl implements  NotificationService {
 			fieldRepo.findById(dto.getField_id()).ifPresent(data::setField);
 		}
 		
+		if(dto.getTypeSent().contains("mobile")) {
+		data.setSentMobile(true);
+		}
+		
+		if(dto.getTypeSent().contains("email")) {
+			data.setSentEmail(true);
+		}
+		
 		repo.save(data);
 		
 	}
 	
 	public Page<Notification> getByFieldAndSemester(Long fieldId, Long semesterId,Pageable pageable){
-		Page<Notification> data =repo.findBySemesterIdAndFieldId(semesterId, fieldId, pageable);
+		
+		Page<Notification> data =repo.findBySemester_IdAndField_Id(semesterId, fieldId, pageable);
 				
 		return data;
 	}

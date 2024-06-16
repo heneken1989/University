@@ -13,5 +13,7 @@ public interface NotiticationRepository  extends JpaRepository<Notification, Lon
 	
 	public Page<Notification> findBySemesterIdAndFieldId(Long semesterId , Long fieldId, Pageable pageable);
 	
+	public Page<Notification> findBySemester_IdAndField_Id(Long semesterId, Long fieldId, Pageable pageable);
+	
 
 }

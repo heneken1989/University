@@ -64,10 +64,25 @@ th {
 					<!-- <td class="text-center" th:text="*{field.name}"></td> -->
 
 
-					<td class="text-center">
-						<p th:each="reqSubject : ${subject.requiredSubjects}"
-							th:text="${reqSubject.requiredsubject.name}"></p> <!-- th:href="@{'/Subject/updatestatus/' +*{reqSubject.requiredsubject.id}}" -->
-					</td>
+<td class="text-center">
+    <p>
+        <span th:text="'Optional Subject: '"></span>
+        <span th:each="optSubject, iterStat : ${subject.optionalRequiredSuject}">
+            <span th:text="${optSubject}"></span>
+            <span th:if="${not iterStat.last}">, </span>
+        </span>
+    </p>
+    <p>
+        <span th:text="'Passed Subject: '"></span>
+        <span th:each="passSubject, iterStat : ${subject.passedSubjects}">
+            <span th:text="${passSubject}"></span>
+            <span th:if="${not iterStat.last}">, </span>
+        </span>
+    </p>
+</td>
+					
+					
+					
 					<td class="text-center" th:text="${subject.type}"></td>
 					<td class="text-center" th:text="${subject.credit}"></td>
 					<td class="text-center"><a
@@ -87,7 +102,7 @@ th {
 			</tbody>
 		</table>
 		<div class="card-footer">
-			<a th:data-s="${data.number+1}" id="back_page_btn"
+			<a th:data-s="${data.number+1}" id="back_page_btn_subject"
 				th:classappend="${data.first} ? 'disabled' : ''" class="btn "
 				style="border: solid 1px black; padding: 3px 10px; margin-right: 10px">
 				Previous</a> <a
@@ -96,7 +111,7 @@ th {
 				class="btn change_page_href_subject"
 				style="border: solid 1px black; padding: 3px 10px; margin: 0px 5px"
 				th:text="${pageNo + 1}"> </a> <a th:data-s="${data.number+1}"
-				id="next_page_btn" th:classappend="${data.last} ? 'disabled' : ''"
+				id="next_page_btn_subject" th:classappend="${data.last} ? 'disabled' : ''"
 				class="btn "
 				style="border: solid 1px black; padding: 3px 10px; margin-left: 10px">
 				Next</a>

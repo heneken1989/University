@@ -70,8 +70,8 @@ public interface SubjectRepository extends JpaRepository<Subject,Long> {
 		Page<Subject> findByFieldIdAndSubjectlevelId(Long fieldId, Long levelId, Pageable pageable);
 		
 		
-		@Query("SELECT s FROM Subject s WHERE s.field.id= :fieldId AND s.subjectlevel.id= :level ")
-		List<Subject> getListSubjectByFieldAndLevel(Long fieldId,Long level);
+		@Query("SELECT s FROM Subject s WHERE s.field.id = :fieldId AND ((:level = 4 AND s.subjectlevel.id IN (1, 2, 3)) OR (:level = 3 AND s.subjectlevel.id IN (1, 2)) OR (:level = 2 AND s.subjectlevel.id = 1))")
+		List<Subject> getListSubjectByFieldAndLevel(Long fieldId, Long level);
 
 
 }

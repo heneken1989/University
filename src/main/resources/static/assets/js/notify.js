@@ -54,4 +54,20 @@ createNotifyEdit(e.value,"success")
 	});
 
 	
+//js for notifiation page
+
+$("#select_type_creaet_notify").on("change",()=>{
+	let value=$("#select_type_creaet_notify").val();
+	if(value== "FIELD"){
+		$("#cover_field_create_notify").show();
+	}
+	if(value== "CLASS"){
+	$("#cover_class_create_notify").show();
+	$("#cover_field_create_notify").hide();
+	}
 	
+	if(value== "ALL"){
+		$("#cover_class_create_notify").hide();
+	$("#cover_field_create_notify").hide();
+	}
+})	

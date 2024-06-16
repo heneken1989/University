@@ -21,8 +21,8 @@
        </div>
     
        
-       <input type="hidden" th:if=${error!=null} th:value="${error}" id="error_index_holiday">
-        <input type="hidden" th:if=${success!=null} th:value="${success}" id="success_index_holiday">
+       <input th:if="${error=='ERROR'}" class="show_error_toast" readonly type="hidden"  th:value="#{toast.success.error}"> 
+      <input th:if="${error=='CREATED'}" class="show_success_toast" readonly type="hidden"  th:value="#{toast.success.create}"> 
    
       </form>
       
@@ -30,7 +30,6 @@
       
        </div>  
        
-        <input th:if="${error=='CREATED'}" class="show_success_toast" readonly type="hidden"  th:value="#{toast.success.create}">
         <table class="table  border card-body" id="class_for_subject_table">
             <thead class="bg bg-primary">
                 <tr>
@@ -39,8 +38,9 @@
                     <th  class="text-center" th:text="#{notify.content}"  >Content</th>
                     <th class="text-center" th:text="#{notify.created}" >Created_at</th>
                     <th class="text-center" th:text="#{notify.creator}">Creator</th>
-                    <th class="text-center" th:text="#{label.type}">Type</th>
+           
                     <th class="text-center" th:text="#{notify.focus}">focus</th>
+                      <th class="text-center" th:text="#{label.type}">Type</th>
          
 
                 </tr>
@@ -53,11 +53,16 @@
                     <td class="text-center"  th:text="*{#dates.format(created_at, 'dd-MM-yyyy hh:mm')}" ></td>
                      <td class="text-center" th:text="*{creator.name}" ></td>
                 
-                    <td class="text-center" th:text="*{type}" ></td>
+              
                      <td th:if="*{field!=null}" class="text-center" th:text="*{field.name}" > </td>
                      <td th:if="*{classSbject!=null}" class="text-center" th:text="*{classSbject.name}" > </td>
                      <td th:if="*{classSbject==null && field==null}" class="text-center" th:text="All" > </td>
-               
+                     <td class="text-center " >
+                     <div class="d-flex flex-column">
+                      <span th:if="*{sentEmail}" class="bg bg-primary p-1 h6"> Sent to Email</span>
+                      <span th:if="*{sentMobile}" class="bg bg-primary p-1 h6"> Sent to Mobile</span></div>
+                    
+                     </td>
                   
                 </tr>
             </tbody>

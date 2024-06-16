@@ -25,9 +25,9 @@ VALUES
     INSERT IGNORE INTO  subjectlevel (id, name) 
 VALUES 
     (1, 'Core'),
-    (2, 'Level 100'),
-    (3, 'Level 200'),
-    (4, 'Level 300');
+    (2, '100'),
+    (3, '200'),
+    (4, '300');
 
     
 INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role,status) 
@@ -102,7 +102,9 @@ VALUES
     (3,11,5),
     (4,12,5),
     (5,31,5),
-    (6,36,5);
+    (6,36,5),
+    (7,39,5),
+    (8,40,5);
     
 
     
@@ -185,6 +187,17 @@ VALUES
       ('',3,'2024-01-3 00:00:00',NULL,1),
       ('',4,'2024-06-14 00:00:00',NULL,1),
       ('',5,'2024-06-15 00:00:00',NULL,1);
+      
+      
+      
+      INSERT IGNORE INTO  requiredsubject (id, required_subject_id,subject_id,status) 
+VALUES 
+ 
+      (1,36,40,'PASS'),
+      (2,36,39,'PASS'),
+      (3,33,39,'PASS'),
+      (4,34,39,'OPTIONAL'),
+      (5,35,39,'OPTIONAL');
 
     
    

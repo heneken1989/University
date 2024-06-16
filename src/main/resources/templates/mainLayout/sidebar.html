@@ -142,7 +142,7 @@
 
 
 			
-				   <li><a href="/web/mark/getMarkSubject">MARK</a></li>
+				   <li sec:authorize="hasAnyAuthority('STUDENT')"><a href="/web/mark/getMarkSubject">MARK</a></li>
 				
 					<li><a  href="/web/attendance/list">Attendance</a></li>
 

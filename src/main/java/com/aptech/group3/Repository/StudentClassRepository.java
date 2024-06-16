@@ -18,18 +18,18 @@ import jakarta.transaction.Transactional;
 
 
 public interface StudentClassRepository extends JpaRepository<StudentClass ,Long> {
-	
-	@Modifying
-	@Transactional
-	@Query("UPDATE StudentClass s SET s.status= :status WHERE s.status= :st2")
-	void updateSatustoStatus( ClassStatus status,ClassStatus st2);
-	
 
 	@Query("SELECT o.id FROM StudentClass o WHERE o.student.id =:studentid and o.classforSubject.id in :listId")
 	List<Long> getListStudentRegistered(Long studentid , List<Long> listId);
 
 	@Query("SELECT s FROM StudentClass s WHERE s.classforSubject.id = :classId AND (:status IS NULL  OR s.status = :status)" )
 	List<StudentClass> searchbyClassIdAndStatus(Long classId, ClassStatus status );
+	
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE StudentClass s SET s.status= :status WHERE s.status= :st2")
+	void updateSatustoStatus( ClassStatus status,ClassStatus st2);
 	
 	@Modifying
 	@Transactional
@@ -51,7 +51,7 @@ public interface StudentClassRepository extends JpaRepository<StudentClass ,Long
 	List<ClassForSubject>getListClassSubject(Long studentId,Long semesterId );
 	
 	@Query( "SELECT s FROM StudentClass s WHERE s.student.id= :studentId AND s.classforSubject.semeter.id= :semesterId"
-			+ " AND s.status =:status")
+			+ " AND s.status = :status ")
 	 List<StudentClass>  getCurrentLIstClass( Long studentId, Long semesterId,ClassStatus status );
 	
 	
@@ -79,8 +79,10 @@ public interface StudentClassRepository extends JpaRepository<StudentClass ,Long
 
 	@Query("SELECT o FROM StudentClass o WHERE o.student.id = :studentId AND "
 			+ " o.classforSubject.semeter.id= :semesterId "
-			+ " AND DATE(:dateStart) >= DATE(o.classforSubject.dateStart)  AND DATE(:dateEnd)<= DATE(o.classforSubject.dateEnd)")
-	List<StudentClass> getcalendar(Long studentId, Date dateStart, Date dateEnd, Long semesterId);
+			+ " AND DATE(:dateEnd)<= DATE(o.classforSubject.dateEnd)")
+	
+	
+	List<StudentClass> getcalendar(Long studentId,  Date dateEnd, Long semesterId);
 	
 	
 	@Query("SELECT DISTINCT o FROM StudentClass o JOIN o.classforSubject cs JOIN cs.lessons l WHERE o.student.id = :studentId AND "

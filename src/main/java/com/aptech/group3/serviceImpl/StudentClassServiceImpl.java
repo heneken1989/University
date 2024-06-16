@@ -46,10 +46,9 @@ public class StudentClassServiceImpl implements StudentClassService {
 	private AttendanceRepository attendanceRepo;
 	
 	public void  updateStatusToPaid() {
-		repo.updateSatustoStatus(ClassStatus.UNPAID ,ClassStatus.LIST);
+		repo.updateSatustoStatus(ClassStatus.PAID ,ClassStatus.LIST);
 	}
-	
-	
+
 	
 	public List<Long> getListStudentRegistered(Long studentid , List<Long> listId)
 	{
@@ -178,7 +177,7 @@ public class StudentClassServiceImpl implements StudentClassService {
 
 	public List<TimeTableShowDto> getCurrentTimeTable(Long studentId, Date dateStart, Date dateEnd, Long semesterId) {
 
-		List<TimeTableShowDto> data = repo.getcalendar(studentId, dateStart, dateEnd, semesterId).stream().map(e -> {
+		List<TimeTableShowDto> data = repo.getcalendar(studentId,  dateEnd, semesterId).stream().map(e -> {
 			TimeTableShowDto dto = new TimeTableShowDto();
 			dto.setEndSlot(e.getClassforSubject().getSlotEnd());
 			dto.setStartSlot(e.getClassforSubject().getSlotStart());
@@ -188,6 +187,9 @@ public class StudentClassServiceImpl implements StudentClassService {
 			dto.setClass_id(e.getClassforSubject().getId());
 			return dto;
 		}).toList();
+		
+		
+		System.out.print(data);		
 		return data;
 	}
 

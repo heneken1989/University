@@ -5,9 +5,13 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.aptech.group3.Dto.NotifyCreateDto;
+
 import jakarta.mail.*;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.InternetAddress;
+
+import java.util.List;
 import java.util.Properties;
 @Service
 public class EmailService {
@@ -30,6 +34,20 @@ public class EmailService {
 	        message.setText("Thông tin : " + password);
 	        emailSender.send(message);
 	 }
+	 
+	 
+	 public void sentManyEmail(NotifyCreateDto content, List<String> listReciever) {
+	        SimpleMailMessage message = new SimpleMailMessage();
+	        String[] listEmail = listReciever.toArray(new String[0]);
+	        System.out.println("list email " + listEmail.length +" hhhhhhhhh");
+	      
+	        message.setTo(listEmail);
+	        message.setSubject(content.getTitle());
+	        message.setText(content.getContent());
+	        emailSender.send(message);
+	 }
+	 
+	 
 	 public boolean sendEmail(String subject, String message, String to) {
 		boolean f = false;
 		String from = "nguyenthaithanh101104@gmail.com";
@@ -55,8 +73,7 @@ public class EmailService {
 			m.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 			m.setSubject(subject);
 			m.setText(message);
-			Transport.send(m);
-			System.out.println("Sent success..........");
+			Transport.send(m);	
 			f=true;
 		}catch(Exception e) {
 			e.printStackTrace();

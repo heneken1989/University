@@ -18,7 +18,7 @@ $("#subjectlevel").on("change",async(e) =>{
 	/*alert(field);*/
 	await $.get(`${baseUrlsubject}/api/public/list/subject?field=${field}&level=${data} `, 
 	function(data,status ){
-		
+		alert("a");
 		let  stl= data.map(e =>`<option value="${e.id}"> ${e.name}</option>`);	
 	
 		
@@ -39,11 +39,6 @@ $("#subjectlevel").on("change",async(e) =>{
 	}
 )
 })
-
-
-
-
-
 
 /*$("#subjectlevel1").on("change",async(e) =>{
 	let data= e.target.value

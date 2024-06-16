@@ -45,6 +45,7 @@ import com.aptech.group3.Dto.QuizExamCreateDto;
 import com.aptech.group3.Dto.QuizQuestionCreateDto;
 import com.aptech.group3.Repository.ClassForSubjectRepository;
 import com.aptech.group3.Repository.ExamQuestionAnswerRepository;
+import com.aptech.group3.Repository.MarkSubjectRepository;
 import com.aptech.group3.Repository.QuizAnswerRepository;
 import com.aptech.group3.Repository.QuizExamRepository;
 import com.aptech.group3.Repository.QuizQuestionRepository;
@@ -52,6 +53,7 @@ import com.aptech.group3.Repository.QuizRepository;
 import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.ExamQuestionAnswer;
+import com.aptech.group3.entity.MarkSubject;
 import com.aptech.group3.entity.Quiz;
 import com.aptech.group3.entity.QuizAnswer;
 import com.aptech.group3.entity.QuizExam;
@@ -124,6 +126,9 @@ public class QuizController {
 	 
 	 @Autowired
 	 private SubjectService subjectService;
+	 
+	 @Autowired
+	 private MarkSubjectRepository markSubjectRepository;
 	 
 
           
@@ -206,8 +211,8 @@ public class QuizController {
 	}
 	
 	@PostMapping("/submitQuiz")
-	public String handleQuizAction(HttpServletRequest request,
-	                               @RequestParam String action, @RequestParam String questionIds,@RequestParam Long quizId,@RequestParam Long quizExamId,
+	public String handleQuizAction(HttpServletRequest request, @RequestParam String action, @RequestParam String questionIds,
+			@RequestParam Long quizId,@RequestParam Long quizExamId,@AuthenticationPrincipal CustomUserDetails currentUser ,
 	                               HttpSession session) {
 
 	         Map<Integer, Set<String>> answersMap = new HashMap<>();
@@ -296,8 +301,16 @@ public class QuizController {
 	        	     }
 	        	}	        	
 	        	exam.setTotalMark(mark);
-	        	exam.setStatus("Submitted");
+	        	exam.setStatus("Submitted");	        
 	        	quizExamRepository.save(exam);	
+	        	
+	        	// save to mark subject
+	        	MarkSubject saveMarkClass = new MarkSubject();
+	        	saveMarkClass.setMark(mark);
+	        	saveMarkClass.setUser(currentUser.getUser());
+	        	saveMarkClass.setSubject(exam.getQuiz().getSubject());
+	        	markSubjectRepository.save(saveMarkClass);
+	        	
 	         session.removeAttribute("currentPage");
 	         session.removeAttribute("totalPages");	         
 	         return "redirect:/web/quiz/result?quizId=" + quizId;

@@ -306,7 +306,7 @@ public class SubjectRegisterController {
 		for(StudentClass aClass : studentClassesAll)
 		{
 		
-			if(aClass.getStatus()== ClassStatus.LIST || aClass.getStatus()== ClassStatus.WAITINGLIST)
+			if(aClass.getStatus()== ClassStatus.LIST || aClass.getStatus()== ClassStatus.WAITINGLIST || aClass.getStatus()== ClassStatus.UNPAID || aClass.getStatus()== ClassStatus.PAID )
 			{
 				
 				studentClasses.add(aClass);

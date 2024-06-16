@@ -101,7 +101,24 @@
 				</div>
 				<input th:field="*{created_at}" type="date"  class="form-control">
 			</div>
+			
+			
+		<div class="mt-5">
+<span th:text="#{holiday.chose.type}">Chose type : </span>
+				<div class="form-check form-check-inline">
+					<input checked class="form-check-input radio_check_type_holiday" type="checkbox"
+						name="type_time_expried" th:field="*{typeSent}" value="email">
+					<label class="form-check-label" for="inlineRadio2"  > to email</label>
+				</div>
 
+				<div class="form-check form-check-inline">
+					<input class="form-check-input radio_check_type_holiday" type="checkbox"
+						name="type_time_expried" th:field="*{typeSent}" value="mobile"> <label
+						class="form-check-label" for="inlineRadio2"
+						>to Mobile</label>
+				</div>
+			</div>
+<p th:if="${#fields.hasErrors('typeSent')}" th:errors="*{typeSent}"class="text-danger mt-1">Name Error</p>
 			
 
 			<button type="submit" class="btn btn-primary mt-5"

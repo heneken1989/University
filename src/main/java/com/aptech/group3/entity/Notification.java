@@ -31,6 +31,10 @@ public class Notification {
 	@ManyToOne()
 	@JoinColumn(name = "field_id")
 	private Field field;
+	
+	private boolean sentEmail;
+	
+	private boolean sentMobile;
 
 	@ManyToOne()
 	@JoinColumn(name = "class_id")

@@ -21,6 +21,7 @@ const baseUrl = url.origin;
  	
  
  
+ 
 if($("#error_create_class_hidden")){
 	if($("#error_create_class_hidden").val()==1){
 		$(".hiddne_div_create").show()
@@ -46,30 +47,27 @@ if($("#error_create_class_hidden")){
 	    oneForm.show();
 	    $("#select_enddate_create").parent().show();
 	    
-	    slotday.forEach(x=>{
+
+	}	
+	 $("#select_endslot_createss").parent().show();   
+	let slectec_startSlot=  $("#select_startslot_create").attr("data-check")
+	 
+	 	slotday.forEach(x=>{
 			 if($("#select_classtype_create").val()=="all"){
 				 	if(x<6 && x+Number(credit)<=6 || x>6 && x<12&& x+Number(credit)<=12){
 				result.push(x)
 			}
 			 }else{
 				
-				  	if(x<6 && (x+Number(credit)-1)*2<=6 || x>6 && x<12&& (x+Number(credit)*2-1)<=12){
+				  	if(x<6 && x+Number(credit)*2 -1<=6 || x>6 && x<12&& (x+Number(credit)*2-1)<=12){
 				result.push(x)
 			 }
 		}
 		})
-	
-	selected_start_slot=$("#start_slot_select_error").val();
-		let data= result.map(e=>`<option value="${e}" ${selected_start_slot==e?"selected":""}>${e}</option>`).join()
+		let data= result.map(e=>`<option value="${e}" ${slectec_startSlot==e? "selected" :""}>${e}</option>`).join()
+		    $("#select_startslot_create").empty();
 		$("#select_startslot_create").html(`<option value="0"> select slot</option> ${data} `)
-		
-
-		$("#select_endslot_createss").val($("#end_slot_select_error").val());
-	}
-	
-	 $("#select_endslot_createss").parent().show();
-	
-	    
+	  
    }
  
  
@@ -87,10 +85,16 @@ select_subject.addEventListener('change', function(e) {
  credit=selectedOption.getAttribute("data-credit");
  creditAction= selectedOption.getAttribute("data-creditac");
  
-if (credit > 3) {
+if (credit > 2) {
     $(".option_of_select_type").each(function() {
         if ($(this).val() === "fhalf" || $(this).val() === "lhalf") {
             $(this).hide();
+        }
+    });
+}else{
+	    $(".option_of_select_type").each(function() {
+        if ($(this).val() === "fhalf" || $(this).val() === "lhalf") {
+            $(this).show();
         }
     });
 }
@@ -120,6 +124,9 @@ if (credit > 3) {
 //set credit for start slot
  $("#select_startslot_create").attr("data-id",credit)
   
+
+
+  
 });
 
 //handle onchange capacity
@@ -137,20 +144,46 @@ $("#input_capacity_create_both").on('change',(e)=>{
 
 //handle after select class type 
 $("#select_classtype_create").on("change",()=>{
-	
+		
 	let date =new Date(startDay);
+	console.log(date)
+
     $("#select_startdate_create").parent().parent().show();
     
-    if($("#select_classtype_create").val()=="SecondHalf"){
+    if($("#select_classtype_create").val()=="lhalf"){
 		date=newData = new Date(date.getTime() + (8 * 7 * 24 * 60 * 60 * 1000));	
 	}
 	
     let next6day = new Date(date);
-    next6day.setDate(next6day.getDate() + 5);
-    let min = date.toISOString().split('T')[0];
+    next6day.setDate(next6day.getDate() + 6);
+
+const options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Bangkok' };
+const min = new Intl.DateTimeFormat('en-CA', options).format(date).replace(/\//g, '-');
+console.log(min
+
+
+)
     let max = next6day.toISOString().split('T')[0];
     $("#select_startdate_create").attr("min",min)
     $("#select_startdate_create").attr("max",max)
+result=[]
+      // loai bo nhung tiet khong duoc lua chon
+		slotday.forEach(x=>{
+			 if($("#select_classtype_create").val()=="all"){
+				 	if(x<6 && x+Number(credit)<=6 || x>6 && x<12&& x+Number(credit)<=12){
+				result.push(x)
+			}
+			 }else{
+				
+				  	if(x<6 && x+Number(credit)*2 -1<=6 || x>6 && x<12&& (x+Number(credit)*2-1)<=12){
+				result.push(x)
+			 }
+		}
+		})
+		let data= result.map(e=>`<option value="${e}">${e}</option>`).join()
+		    $("#select_startslot_create").empty();
+		$("#select_startslot_create").html(`<option value="0"> select slot</option> ${data} `)
+  
   
 });
 
@@ -176,23 +209,9 @@ $("#select_classtype_create").on("change",()=>{
 		
 	  });
 	
-// loai bo nhung tiet khong duoc lua chon
-		slotday.forEach(x=>{
-			 if($("#select_classtype_create").val()=="all"){
-				 	if(x<6 && x+Number(credit)<=6 || x>6 && x<12&& x+Number(credit)<=12){
-				result.push(x)
-			}
-			 }else{
-				
-				  	if(x<6 && (x+Number(credit)-1)*2<=6 || x>6 && x<12&& (x+Number(credit)*2-1)<=12){
-				result.push(x)
-			 }
-		}
-		})
-	
-		let data= result.map(e=>`<option value="${e}">${e}</option>`).join()
-		$("#select_startslot_create").html(`<option value="0"> select slot</option> ${data} `)
+
 		$("#select_startslot_create").parent().parent().show();
+			
 			if(weekday!=null){
 			getAvailableRoom(capacity,weekday,start,dstart,dend)
 		}
@@ -205,11 +224,11 @@ $("#select_startslot_create").on("change", () => {
     let selectedStartSlot = $("#select_startslot_create").val();
       
     start=selectedStartSlot;
-    let credit = $("#select_startslot_create").attr("data-id"); 
+    
     if($("#select_classtype_create").val()=="all"){
 		 $("#select_endslot_createss").val( Number(selectedStartSlot)+ Number(credit) );
 	}else{
-		$("#select_endslot_createss").val( (Number(selectedStartSlot)+Number(credit)-1)*2 );
+		$("#select_endslot_createss").val( Number(selectedStartSlot)+Number(credit)*2 -1 );
 	}
 	
 	 $("#select_endslot_createss").parent().show();

@@ -49,7 +49,7 @@ public interface SubjectService {
 		public void saveSubjectWithRequiredSubjects(Subject subject, Set<RequiredSubject> requiredSubjects);
 		public void updatesubject(SubjectCreateDto dto);
 		/* public boolean CheckNameExists(String name); */
-		public Page<Subject> getListPage(Long fieldId,Long levelId, Pageable pageable);
+		public Page<SubjectDto> getListPage(Long fieldId,Long levelId, Pageable pageable);
 		
 		public void hideById(Long id);
 		public void showById(Long id);
