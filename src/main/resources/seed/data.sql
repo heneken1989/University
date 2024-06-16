@@ -25,9 +25,9 @@ VALUES
     INSERT IGNORE INTO  subjectlevel (id, name) 
 VALUES 
     (1, 'Core'),
-    (2, '100'),
-    (3, '200'),
-    (4, '300');
+    (2, 'Level 100'),
+    (3, 'Level 200'),
+    (4, 'Level 300');
 
     
 INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role,status) 

@@ -10,7 +10,7 @@ $("#select_user_type").on("change",()=>{
 	$("#form_change_semester").submit();
 })
 
-$("#select_subject_form_list").on("change",()=>{
+$("#select_subject_form").on("change",()=>{
 	$("#form_change_semester").submit();
 })
 let currentlanguage=$(".btn_change_language").text()
@@ -53,6 +53,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const myParam = urlParams.get('semester');
 const subject_list = urlParams.get('subject');
 const status_subject=urlParams.get('status');
+const level=urlParams.get('level');
 
 aTag.forEach(a => {
     let text = a.innerHTML;
@@ -116,6 +117,21 @@ $("#back_page_btn").attr("href",`/admin/user/list?page=${Number(currentPageAdmin
 	$("#next_page_btn").attr("href",`/admin/user/list?semester=${myParamAdmin}?type=${user_list_type}&page=${Number(currentPageAdminUser)+1}`)
 	$("#back_page_btn").attr("href",`/admin/user/list?semester=${myParamAdmin}?type=${user_list_type}&page=${Number(currentPageAdminUser)+-1}`)
 }
+
+
+
+/*next corent page admin_user*/
+let currentPageSubject= $("#next_page_btn_subject").attr("data-s")
+if(!level){
+$("#next_page_btn_subject").attr("href",`/admin/subject/list?page=${Number(currentPageSubject)+1}`)
+$("#back_page_btn_subject").attr("href",`/admin/subject/list?page=${Number(currentPageSubject)-1}`)
+}else{
+	$("#next_page_btn_subject").attr("href",`/admin/subject/list?level=${level}&page=${Number(currentPageSubject)+1}`)
+	$("#back_page_btn_subject").attr("href",`/admin/subject/list?level=${level}&page=${Number(currentPageSubject)+-1}`)
+}
+
+
+
 
 //set time eror
   setTimeout(function() {
