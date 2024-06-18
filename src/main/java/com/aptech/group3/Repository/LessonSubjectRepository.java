@@ -24,6 +24,8 @@ public interface LessonSubjectRepository extends JpaRepository<LessonSubject,Lon
 	
 	List<LessonSubject>findByClassSubject_Id(Long subjectId);
 	
+	List<LessonSubject> findByClassSubjectId(Long classSubjectId);
+	
 	 
 
 }

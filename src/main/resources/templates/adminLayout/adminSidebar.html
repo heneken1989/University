@@ -176,6 +176,40 @@
 					</ul>
 					</li>
 					
+				<!-- admin semester-->
+
+					<li class="nav-item has-treeview" style=" border-bottom:2px solid gray ;color:white">
+						<a class="nav-link"> 
+					
+						<i class="fas fa-chalkboard nav-icon"></i>
+					
+								<p >
+									Manager Semester <i  class="fas fa-angle-left right"></i> 
+									
+								</p>
+						</a>
+							<ul class="nav nav-treeview">
+								
+								<li style=" border-bottom:2px solid gray" class="nav-item">
+								<a 
+									th:href="@{/admin/semester/listsemester}"
+									class="nav-link"> 
+									<i  class="far fa-circle nav-icon"></i>
+										<p >List Semester</p>
+								</a>
+								</li>	
+								
+									<li style=" border-bottom:2px solid gray" class="nav-item">
+								<a 
+									th:href="@{/admin/semester/createsemester}"
+									class="nav-link"> 
+									<i  class="far fa-circle nav-icon"></i>
+										<p >Create Semester</p>
+								</a>
+								</li>	
+							</ul>
+							</li>
+
 					<!-- admin subject -->
 					
 					<li class="nav-item has-treeview" style=" border-bottom:2px solid gray ;color:white">
@@ -355,7 +389,31 @@
 					</ul>
 					</li>
 					
+										<li class="nav-item has-treeview" style=" border-bottom:2px solid gray ;color:white">
+				<a class="nav-link"> 
+			
+				<i class="fas fa-user nav-icon"></i>
+						<p >
+							Manager Mark <i  class="fas fa-angle-left right"></i> 
+							
+						</p>
+				</a>
+					<ul class="nav nav-treeview">
+						
+						
 					
+						<li style=" border-bottom:2px solid gray" class="nav-item">
+						<a 
+							th:href="@{/admin/mark/list}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >List mark for class</p>
+						</a>
+						</li>
+
+						</ul>
+						</li>
+						
 					
 					
 						<li class="nav-item has-treeview" style=" border-bottom:2px solid gray ;color:white">

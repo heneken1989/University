@@ -18,6 +18,12 @@ import jakarta.transaction.Transactional;
 
 public interface ClassForSubjectRepository extends JpaRepository<ClassForSubject, Long> {
 	
+	List<ClassForSubject> findByNameContainingIgnoreCase(String className);
+	
+	@Query(" SELECT s FROM class_subject s WHERE s.subject.id = :subjectId")
+	List<ClassForSubject> lissClassBySubjectId(Long subjectId);
+	
+	
 	@Query(" SELECT s FROM class_subject s WHERE s.semeter.id = :semesterId AND " + " s.subject.field.id = :fieldId "
 			+ " AND (:subjectId IS NULL OR s.subject.id = :subjectId ) AND (:status IS NULL OR s.status =:status) ")
 	Page<ClassForSubject> findByFieldIdAndSubjectIdAndStatus(Long semesterId, Long fieldId, Long subjectId,ClassSubject status, Pageable pageable);

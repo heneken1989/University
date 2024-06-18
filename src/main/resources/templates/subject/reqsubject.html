@@ -35,8 +35,8 @@ th {
 					<th>Action</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr th:each="reqsubject : ${req}">
+			<tbody  th:each="reqsubject : ${req}">
+				<tr>
 				
 				<td th:each="subject : ${reqsubject.subject}" 
 				th:text="${subject.name}"></td>
@@ -46,7 +46,7 @@ th {
 							
 					<td th:text="${reqsubject.status}"></td>
 					 <td>
-					<a th:href="@{'/Subject/updatereq/' +*{reqsubject.id}}"  class="btn btn-primary">Update</a>
+					<a th:href="@{'/admin/subject/updatereq/' +*{reqsubject.id}}"  class="btn btn-primary"><i class="fas fa-edit" title="Update"></i></a>
 					</td> 
 			</tr>
 			</table>

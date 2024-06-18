@@ -1,6 +1,7 @@
 package com.aptech.group3.Controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,38 +153,72 @@ public class UserController {
 	}
 
 	@GetMapping("/update/{id}")
-	public String showUpdateForm(@PathVariable("id") Long id, Model model) {
-		User user = userService.findById(id);
-		List<Field> userFields = userService.findFieldsByUserId(id);
-		List<Field> allFields = filedService.getAllFields();
-		model.addAttribute("user", user);
-		model.addAttribute("userFields", userFields);
-		model.addAttribute("allFields", allFields);
-		return "admin_user/update";
-	}
+ 	public String showUpdateForm(@PathVariable("id") Long id, Model model) {
+ 		User user = userService.findById(id);
+ 		List<Field> userFields = userService.findFieldsByUserId(id);
+ 		List<Field> allFields = filedService.getAllFields();
+ 		model.addAttribute("user", user);
+ 		model.addAttribute("userFields", userFields);
+ 		model.addAttribute("allFields", allFields);
+ 		return "admin_user/update";
+ 	}
+ 
+ 	@PostMapping("/update/{id}")
+ 	public String saveUpdate( Model model,@ModelAttribute("user") @Valid UserCreateDto dto, BindingResult result,
+ 			@RequestParam(name = "avatar", required = false) MultipartFile avatarFile,
+ 			@RequestParam(name = "id") Long id, RedirectAttributes redirectAttributes,
+ 			HttpServletRequest request) {
+ 
+ 		System.out.println("ID: "+ id+ "DTO" + dto);
+ 		if (result.hasErrors()) {
+ 			List<String> fieldErrorsList = new ArrayList<>();
+ 			for (ObjectError error : result.getAllErrors()) {
+ 				String fieldErrors = ((FieldError) error).getField();   
+ 				fieldErrorsList.add(fieldErrors);
+ 				if (!fieldErrors.equals("avatar")) {
+ 					System.out.println("avatar");
+ 					model.addAttribute("data", dto);
+ 			        List<Field> userFields = userService.findFieldsByUserId(id);
+ 			        List<Field> allFields = filedService.getAllFields();
+ 			        model.addAttribute("userFields", userFields);
+ 			        model.addAttribute("allFields", allFields);
+ 					model.addAttribute("fieldErrors", fieldErrorsList);
+ 					return "admin_user/update";
+ 				} else {
+ 					continue;
+ 				}
+ 			}
+ 		}
+ 		
+ 		String[] listField = request.getParameterValues("fields");
+ 	    List<Long> listLong = new ArrayList<>();
+ 	    if (listField != null) {
+ 	        for (String a : listField) {
+ 	            listLong.add(Long.parseLong(a));
+ 	        }
+ 	    }
 
-	@PostMapping("/update/{id}")
-	public String saveUpdate(@Valid @ModelAttribute("user") UserCreateDto dto, BindingResult result,
-			@RequestParam(name = "avatar", required = false) MultipartFile avatarFile,
-			@RequestParam(name = "id") Long id, Model model, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+ 	    // Set fields in dto, use empty list if listLong is empty
+ 	    dto.setFields(listLong.isEmpty() ? Collections.emptyList() : listLong);
+ 
+ 		User currentUser = userService.findById(id);
+ 		if (avatarFile != null && !avatarFile.isEmpty()) {
+ 			try {
+ 				Path path = Paths.get("uploads/");  
+ 				InputStream inputStream = avatarFile.getInputStream();
+ 				Files.copy(inputStream, path.resolve(avatarFile.getOriginalFilename()),
+ 						StandardCopyOption.REPLACE_EXISTING);
+ 				dto.setAvatar(avatarFile.getOriginalFilename().toLowerCase());
+ 			} catch (IOException e) {
+ 				e.printStackTrace();
+ 			}
+ 		} else {
+ 			dto.setAvatar(currentUser.getAvatar());
+ 		}
+ 		userService.update(dto);
+ 		return "redirect:/admin/user/list";
+ 	}
 	
-		if (avatarFile != null && !avatarFile.isEmpty()) {
-			try {
-				Path path = Paths.get("uploads/"); // Lưu avatar mới vào thư mục uploads
-				InputStream inputStream = avatarFile.getInputStream();
-				Files.copy(inputStream, path.resolve(avatarFile.getOriginalFilename()),
-						StandardCopyOption.REPLACE_EXISTING);
-				dto.setAvatar(avatarFile.getOriginalFilename().toLowerCase());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			User currentUser = userService.findById(id);
-			dto.setAvatar(currentUser.getAvatar());
-		}
-		userService.update(dto);
-		return "redirect:/admin/user/list";
-	}
 	
 	@GetMapping("/list")
 	public String showByRole(@AuthenticationPrincipal CustomUserDetails currentUser, Model model,

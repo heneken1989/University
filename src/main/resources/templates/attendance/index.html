@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+a<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	layout:decorate="~{/layout}">
@@ -80,7 +80,7 @@
 						th:text="#{attend.index.attend}">Attend</th>
 					<th scope="col" class="text-center"
 						th:text="#{attend.index.absent}">Absent</th>
-					<th scope="col" class="text-center" th:text="#{attend.index.half}">Half</th>
+					<th scope="col" class="text-center" th:text="#{attend.index.half}"style="display:none">Half</th>
 				</tr>
 			</thead>
 			<tbody th:each="s,i : ${data}" th:data_id="${lesson.id}">
@@ -99,7 +99,7 @@
 						onchange="submitFormAttendance(this)"
 						th:name="${'status_attendance_select'+i.index}" value="absent"
 						type="radio" /></td>
-					<td class="text-center"><input style="accent-color: yellow;"
+					<td class="text-center" style="display:none"><input style="accent-color: yellow;"
 						th:checked="${s.status == 'half'}"
 						onchange="submitFormAttendance(this)"
 						th:name="${'status_attendance_select'+i.index}" value="half"

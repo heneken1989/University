@@ -91,8 +91,6 @@ public class SubjectController {
 		
 		List<RequiredSubject> listreRequiredSubjects = new ArrayList<>();
 
-	
-		
 		for(SubjectDto a : data ) {
 			listreRequiredSubjects = reqService.findListRequiredSubjectBySubjectId(a.getId());
 			System.out.println("iddd"+a.getId());
@@ -110,8 +108,8 @@ public class SubjectController {
 					  optionalRequiredSubjectList.add(a2.getRequiredsubject().getName());
 				  }		
 			}
-			System.out.println("dataaaa;"+listRequiredSubject.toString());
-			System.out.println("dataaaa;"+optionalRequiredSubjectList.toString());
+			//System.out.println("dataaaa;"+listRequiredSubject.toString());
+			//System.out.println("dataaaa;"+optionalRequiredSubjectList.toString());
 			a.setOptionalRequiredSuject(optionalRequiredSubjectList);
 			a.setPassedSubjects(listRequiredSubject);
 		}
@@ -153,7 +151,27 @@ public class SubjectController {
 
 	@PostMapping("/create")
 	public String createsubject(Model model, @ModelAttribute("data") @Valid SubjectCreateDto data,
-			BindingResult bindingResult, HttpServletRequest request, RedirectAttributes rm) {
+			BindingResult bindingResult, HttpServletRequest request, RedirectAttributes rm
+			,@AuthenticationPrincipal CustomUserDetails currentUser) {
+	     System.out.print("aaaaaaaa"+ data.getCreditAction());
+		  if(bindingResult.hasErrors()) {
+		  
+		       System.out.print("bbbbbb"+ bindingResult.toString());
+			  model.addAttribute("data", data);
+
+				List<SubjectLevel> subjectLevels = subService.listSubjectLevel();
+				// List<Field>fields = subService.findall();
+				// model.addAttribute("subjects",
+				// subService.getByField(currentUser.getUser().getFields().get(0).getId()));
+				model.addAttribute("requiredSubjects", new HashSet<RequiredSubject>());
+
+				model.addAttribute("field", currentUser.getUser().getFields().get(0).getId());
+				// model.addAttribute("fields",fields);
+				model.addAttribute("subjectlevels", subjectLevels);
+				model.addAttribute("type", ClassType.values());
+		 return "subject/create"; }
+		 
+		
 
 		String[] listField = new String[] {};
 		String[] listField1 = new String[] {};
@@ -232,7 +250,7 @@ public class SubjectController {
 	}
 
 	@GetMapping("/hiddenSubject")
-	public String showSubject(Model model, @AuthenticationPrincipal CustomUserDetails currentUser,
+	public String showHiddenSubject(Model model, @AuthenticationPrincipal CustomUserDetails currentUser,
 
 			@RequestParam(name = "level", required = false) Long se,
 
@@ -241,6 +259,32 @@ public class SubjectController {
 		Long fieldId = currentUser.getUser().getFields().get(0).getId();
 
 		Page<SubjectDto> data = subService.getListPage(fieldId, se == null || se == 0 ? null : se, paging);
+		
+		List<RequiredSubject> listreRequiredSubjects = new ArrayList<>();
+
+		for(SubjectDto a : data ) {
+			listreRequiredSubjects = reqService.findListRequiredSubjectBySubjectId(a.getId());
+			System.out.println("iddd"+a.getId());
+			List<String> listRequiredSubject = new ArrayList<>();
+			List<String> optionalRequiredSubjectList = new ArrayList<>();
+			
+			for(RequiredSubject a2: listreRequiredSubjects)
+			{
+				  if(a2.getStatus().equals("PASS"))
+				  {
+					  listRequiredSubject.add(a2.getRequiredsubject().getName());
+				  }
+				  else if(a2.getStatus().equals("OPTIONAL"))
+				  {
+					  optionalRequiredSubjectList.add(a2.getRequiredsubject().getName());
+				  }		
+			}
+			//System.out.println("dataaaa;"+listRequiredSubject.toString());
+			//System.out.println("dataaaa;"+optionalRequiredSubjectList.toString());
+			a.setOptionalRequiredSuject(optionalRequiredSubjectList);
+			a.setPassedSubjects(listRequiredSubject);
+		}
+		
 		List<SubjectLevel> sblevel = sublvService.findAll();
 		model.addAttribute("data", data);
 		model.addAttribute("sblevels", sblevel);
@@ -261,15 +305,33 @@ public class SubjectController {
 		
 		// lay thong tin mon hoc
 		Subject sb = subjectRepository.getById(id);
-
-		// lay tat ca truong cua subject
-
-		List<SubjectLevel> subjectLevels = subService.listSubjectLevel();
+		
+		//List<RequiredSubject> listreRequiredSubjects = reqService.findListRequiredSubjectBySubjectId(id);
+		//List<RequiredSubject> req = reqService.findAll();
+		
+		List<String> listRequiredSubject = new ArrayList<>();
+		List<String> optionalRequiredSubjectList = new ArrayList<>();
+		List<RequiredSubject> listreRequiredSubjects = new ArrayList<>();
+		
+		for(RequiredSubject a2: listreRequiredSubjects)
+		{
+			listreRequiredSubjects = reqService.findListRequiredSubjectBySubjectId(a2.getId());
+			  if(a2.getStatus().equals("PASS"))
+			  {
+				  listRequiredSubject.add(a2.getRequiredsubject().getName());
+			  }
+			  else if(a2.getStatus().equals("OPTIONAL"))
+			  {
+				  optionalRequiredSubjectList.add(a2.getRequiredsubject().getName());
+			  }		
+		}
+		
+		model.addAttribute("req", listreRequiredSubjects);
 
 		model.addAttribute("type", ClassType.values());
 		model.addAttribute("subject", sb);
 		model.addAttribute("fields", currentUser.getUser().getFields().get(0).getId());
-		model.addAttribute("subjectLevels", subjectLevels);
+		//model.addAttribute("subjectLevels", subjectLevels);
 		
 		return "subject/detail";
 	}

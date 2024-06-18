@@ -127,16 +127,19 @@ public class SubjectServiceImpl implements SubjectService {
 			return reqsubRepo.findAll();
 		}
 
+		
+		
 		public Subject create(SubjectCreateDto data) {
 			
 			Subject subject = new Subject();
 			subject.setName(data.getName());
 			subject.setCredit(data.getCredit());
 			subject.setType(data.getType());
-			subject.setCreditAction(data.getCreditAction());
+			/* subject.setCreditAction(data.getCreditAction()); */
 			
-			fieldRepo.findById(data.getField_id()).ifPresent(subject::setField);
+		
 			LevelRepo.findById(data.getSubjectlevel_id()).ifPresent(subject::setSubjectlevel);
+		
 			Subject newsub =subjectRepo.save(subject);
 			return newsub;
 		}
@@ -165,7 +168,7 @@ public class SubjectServiceImpl implements SubjectService {
 				 sub.setName(dto.getName());
 				 sub.setType(dto.getType());
 				 sub.setCredit(dto.getCredit());
-				 sub.setCreditAction(dto.getCreditAction());
+					/* sub.setCreditAction(dto.getCreditAction()); */
 				 subjectRepo.save(sub);
 				
 			 }else {
@@ -203,9 +206,12 @@ public class SubjectServiceImpl implements SubjectService {
 
 		        return new PageImpl<>(subjectDtoList, pageable, subjectPage.getTotalElements());
 		    }
+		   
+		   public boolean CheckNameExists(String name) {
+			   Subject subject = subjectRepo.findByName(name);
+			   return subject != null;
+		   }
+		   
 
-
-
-	
-
+		    
 }

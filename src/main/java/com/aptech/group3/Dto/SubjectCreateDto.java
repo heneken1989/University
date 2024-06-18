@@ -5,6 +5,7 @@ import com.aptech.group3.entity.Field;
 import com.aptech.group3.entity.RequiredSubject;
 import com.aptech.group3.entity.SubjectLevel;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -12,17 +13,20 @@ import lombok.Data;
 public class SubjectCreateDto {
 	 private Long id;
 	 
-	 @NotEmpty(message="{subject.name.error}")
-	    private String name;
-	    @NotNull(message="vui lòng nhập tín chỉ")
-		@Min(value=1,message="nhỏ nhất là 1")
-	    @Max(value=4,message="lớn nhất là 4")
+	 @NotEmpty(message="{admin.subject.name.error}")
+    private String name;
+	 @NotNull(message="{admin.subject.credit.error}")  
 	    private int credit;
+	    
+	 @NotNull(message="{admin.subject.type.error}")
 	    private ClassType type;
-	    private Integer creditAction;
+          
+
+	    private String  creditAction;
 	    
 	    private Long field_id;
-	    @NotNull(message="vui lòng chọn level")
+	    
+	    @NotNull(message="{admin.subject.subjectlevel_id.error}")
 	    private Long subjectlevel_id ;
 	    
 	    private Set<RequiredSubject> requiredSubjects;

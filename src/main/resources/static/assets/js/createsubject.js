@@ -8,27 +8,35 @@ $("#subjectlevel").on("change",async(e) =>{
 	let sblevelpass = $("#subjectlevel").val()
 	
 	
-	let sblevelop =sblevelpass;
+	//let sblevelop =sblevelpass;
 
 	
 	let data= e.target.value
 	let field = $("#field_create_subject").val()
-	
-	
+
+        if (sblevelpass==1) {
+            $("#passsubject").hide();
+            $("#subopt").hide();
+        } else {
+            $("#passsubject").show();
+            $("#subopt").show();
+        }
+
 	/*alert(field);*/
 	await $.get(`${baseUrlsubject}/api/public/list/subject?field=${field}&level=${data} `, 
 	function(data,status ){
-		alert("a");
-		let  stl= data.map(e =>`<option value="${e.id}"> ${e.name}</option>`);	
-	
+		//alert("a");
 		
+		let  stl= data.map(e =>`<option value="${e.id}"> ${e.name}</option>`);		
 		let stl1 = stl;
+		
 		
 	let use= 	`<option value="0">select required subject</option>`+stl;
 	
 	let use1= 	`<option value="0">select required subject</option>`+stl1;
-
 	
+	 
+		
 	let select = $("#select_create_subject");
 	let select1 = $("#select_create_subject1");
 	select.html(use);
@@ -110,13 +118,21 @@ $("#select_type_create_subject").on("change",()=>{
 
 $("#credit_create_subject").on("change",()=>{
 let value=	$("#credit_create_subject").val();
+	$("#credit_action_proper").show();
+let str=""
 
-let str=`<option th:value="0">Select Credit for Action</option>	`
-for(i=0; i<value-1;i++){
-	str+=`<option th:value="${i+1}">${i+1}</option>	`
+
+if($("#select_type_create_subject").val()=="BOTH"){
+	str+= `<option th:value="10"> Select create for action</option>`
+}else{
+	str=`<option th:value="0">0</option>`
 }
 
-$("#creditAction_create_subject").html(str);
+for(i=0; i<value-1;i++){
+str+=`<option th:value="${i+1}">${i+1}</option>	`
+}
+
+$("#creditAction_create_subject_new").html(str);
 if($("#select_type_create_subject").val()=="BOTH"){
 	$("#credit_action_proper").show();
 }

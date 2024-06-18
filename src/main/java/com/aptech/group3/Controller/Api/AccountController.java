@@ -1,6 +1,7 @@
 package com.aptech.group3.Controller.Api;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,9 +26,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aptech.group3.Dto.LoginResultDto;
+import com.aptech.group3.Dto.MarkSubjectShowApiDto;
 import com.aptech.group3.Dto.MobileAppDto;
 import com.aptech.group3.Dto.RefreshDto;
 import com.aptech.group3.Dto.RefreshRecieveDto;
@@ -37,11 +40,17 @@ import com.aptech.group3.Dto.UserCreateDto;
 import com.aptech.group3.Dto.UserDto;
 import com.aptech.group3.Repository.TokenRepository;
 import com.aptech.group3.Repository.UserRepository;
+import com.aptech.group3.entity.ClassForSubject;
+import com.aptech.group3.entity.LessonSubject;
+import com.aptech.group3.entity.MarkSubject;
 import com.aptech.group3.entity.Token;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.model.LoginRequest;
+import com.aptech.group3.service.ClassForSubjectService;
 import com.aptech.group3.service.EmailService;
+import com.aptech.group3.service.LessonSubjectService;
+import com.aptech.group3.service.MarkSubjectService;
 import com.aptech.group3.service.TokenService;
 import com.aptech.group3.service.UserService;
 import com.aptech.group3.serviceImpl.JwtTokenProvider;
@@ -79,6 +88,50 @@ public class AccountController {
 
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private MarkSubjectService markService;
+	
+	@Autowired
+	private ClassForSubjectService classService;
+	
+	@Autowired
+	private LessonSubjectService lessonService;
+	
+	
+	
+	@GetMapping("/getClassMarksss")
+	public  List<MarkSubject> getClassMarks(@RequestParam("classId") Long classId) {
+	    List<MarkSubject> marks = markService.getListMarkSubjectByClassId(classId);
+	    return marks;
+	}
+	
+	 @GetMapping("/getMarkSubject2/{id}")
+	    public ResponseEntity<List<MarkSubjectShowApiDto>> getMarkSubject2(@PathVariable("id") Long studentId) {
+	        List<MarkSubject> markSubjects = markService.getMarksByStudentId(studentId);
+	        List<MarkSubjectShowApiDto> markSubjectDtos = new ArrayList<>();
+	        for (MarkSubject markSubject : markSubjects) {
+	            List<ClassForSubject> classSubjects = markService.getClassForSubjectBySubjectId(markSubject.getSubject().getId());
+	            Long classSubjectId = classService.getClassSubjectIdBySubjectId(markSubject.getSubject().getId());
+	            List<LessonSubject> lessonSubjects = lessonService.getLessonsByClassSubjectId(classSubjectId);
+	            System.out.println("CLASS: "+classSubjectId);
+	            MarkSubjectShowApiDto markSubjectDto = new MarkSubjectShowApiDto();
+	            markSubjectDto.setMarkSubject(markSubject);
+	            markSubjectDto.setClassSubjects(classSubjects);
+	            markSubjectDto.setLesson(lessonSubjects);
+	            markSubjectDtos.add(markSubjectDto);
+	        }
+
+	        return ResponseEntity.ok().body(markSubjectDtos);
+	    }
+	 
+	 
+	 @GetMapping("/getMarkSubject/{id}")
+	    public List<MarkSubject> getMarkSubject(@PathVariable("id") Long studentId) {
+		 return markService.getMarksByStudentId(studentId);
+	    }
+
+	
 	
 	
 	@PostMapping("/api/user/save/app")

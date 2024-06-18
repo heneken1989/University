@@ -7,40 +7,43 @@
 </head>
 <body>
 	<div layout:fragment="content" class="card text-center ml-3">
-			<h3 style="font-weight: bold; font-size: 40px; text-transform: uppercase;">Update Status</h3>
-				
-		<form action="/admin/user/updateStatus" method="GET"
-			id="form_search_update_status">
+		<h3
+			style="color: rebeccapurple; font-family: 'georgia'; padding: 30px 0px 30px 0px; font-weight: 300; font-size: 40px;">Update
+			Status</h3>
+		<div class="d-flex align-items-center justify-content-between"
+			style="padding: 20px 100px;">
+			<form action="/admin/user/updateStatus" method="GET"
+				id="form_search_update_status">
 
-			<label for="status">Status:</label> 
-			<select
-				id="status_update_student" name="status">
-				<option value="">-- Select Status --</option>
-				<th:block th:each="status : ${statuses}">
-					<option th:value="${status}" th:selected="${status==curenStatus}"
-						th:text="${status}"></option>
-				</th:block>
-			</select> <label for="field">Field:</label> <select id="field" name="fieldId">
-				<option value="">-- Select Field --</option>
-				<th:block th:each="field : ${fields}">
-					<option th:value="${field.id}" th:text="${field.name}"></option>
-				</th:block>
-			</select>
+				<label for="status">Status:</label> <select
+					id="status_update_student" name="status">
+					<option value="">-- Select Status --</option>
+					<th:block th:each="status : ${statuses}">
+						<option th:value="${status}" th:selected="${status==curenStatus}"
+							th:text="${status}"></option>
+					</th:block>
+				</select> 
+				<label style="display:none" for="field">Field:</label> <select style="display:none" id="field" name="fieldId">
+					<option value="">-- Select Field --</option>
+					<th:block th:each="field : ${fields}">
+						<option th:value="${field.id}" th:text="${field.name}"></option>
+					</th:block>
+				</select>
 
 
-		</form>
+			</form>
 
-		<!-- Code search form -->
-		<form action="/admin/user/searchByCode" method="POST">
-			<label for="code">Code:</label> <input type="text" id="code"
-				name="code">
-			<button type="submit">Search by Code</button>
-		</form>
-		
-		<button type="button" class="btn btn-primary"
-			id="btn_update_status_student" data-toggle="modal"
-			data-target="#statusModal">Update Status</button>
+			<!-- Code search form -->
+			<form action="/admin/user/searchByCode" method="POST">
+				<label for="code">Code:</label> <input type="text" id="code"
+					name="code">
+				<button type="submit">Search by Code</button>
+			</form>
 
+			<button type="button" class="btn btn-primary"
+				id="btn_update_status_student" data-toggle="modal"
+				data-target="#statusModal">Update Status</button>
+		</div>
 		<!-- Modal -->
 		<div class="modal fade" id="statusModal" tabindex="-1" role="dialog"
 			aria-labelledby="statusModalLabel" aria-hidden="true">
@@ -91,7 +94,8 @@
 					<td th:text="${user.name}"></td>
 					<td th:text="${user.email}"></td>
 					<td th:text="${user.status}"></td>
-					<td class="noscrollbar"style="height: 50px;"><select class="form-control" multiple disabled
+					<td class="noscrollbar" style="height: 50px;"><select
+						class="form-control" multiple disabled
 						style="border: none; height: 60px; background-color: transparent; overflow-y: scroll; -webkit-overflow-scrolling: touch;">
 							<option th:each="field : ${user.fields}" th:text="${field.name}"></option>
 					</select></td>

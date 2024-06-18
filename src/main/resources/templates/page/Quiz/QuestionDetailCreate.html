@@ -120,9 +120,8 @@ $(document).ready(function() {
    
         if (questionType === 'Single') {
             var correctAnswers = $('#correct-answers input[type="text"]');
-          //  $('#correct-answers').empty();
             $('#add-correct-answer-btn').prop('disabled', true);
-            if ($('#correct-answers input[type="text"]').length = 0) {
+            if ($('#correct-answers input[type="text"]').length < 1) {
             	 addCorrectAnswer();
             }
             else if ($('#correct-answers input[type="text"]').length > 1)

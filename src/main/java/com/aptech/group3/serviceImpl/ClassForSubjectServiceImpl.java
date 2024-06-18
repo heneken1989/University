@@ -26,9 +26,11 @@ import com.aptech.group3.Dto.TimeTableShowDto;
 import com.aptech.group3.Repository.ClassForSubjectRepository;
 import com.aptech.group3.Repository.RoomRepository;
 import com.aptech.group3.Repository.SemesterRepository;
+import com.aptech.group3.Repository.StudentClassRepository;
 import com.aptech.group3.Repository.SubjectRepository;
 import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.ClassForSubject;
+import com.aptech.group3.entity.StudentClass;
 import com.aptech.group3.service.ClassForSubjectService;
 import com.aptech.group3.service.LessonSubjectService;
 import com.aptech.group3.service.RoomRegistedService;
@@ -53,6 +55,8 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 	
 	@Autowired
 	private LessonSubjectService lesssonService;
+	@Autowired
+	private StudentClassRepository studentClassRepo;
 	
 
 	
@@ -62,6 +66,38 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 	
 	@Autowired 
 	private RoomRegistedService roomRegistedService;
+	
+	
+	//thanh thêm   
+	 public List<StudentClass> findStudentClassesByClassId(Long classId) {
+	        return studentClassRepo.findByClassforSubjectId(classId);
+	    }
+	 public List<ClassForSubject> findClassesByName(String className) {
+	        return classRepository.findByNameContainingIgnoreCase(className);
+	    }
+	
+	public List<ClassForSubject> findAllBySemesterId(Long semesterId) {
+	    return classRepository.lissClassBySemesterId(semesterId);
+	}
+	
+	public Long getClassSubjectIdBySubjectId(Long subjectId) {
+        List<ClassForSubject> classSubjects = classRepository.findBySubjectId(subjectId);
+        if (!classSubjects.isEmpty()) {
+            // Assuming you want to return the ID of the first class subject found
+            return classSubjects.get(0).getId();
+        } else {
+            return null; // Or handle the case where no class subject is found based on your requirements
+        }
+    }
+	public Long getClassSubjectIdByTeacherId(Long teacherId) {
+        List<ClassForSubject> classSubjects = classRepository.findByTeacherId(teacherId);
+        if (!classSubjects.isEmpty()) {
+            return classSubjects.get(0).getId();
+        } else {
+            return null; // Or handle the case where no class subject is found based on your requirements
+        }
+    }
+	
 	
 	
 	

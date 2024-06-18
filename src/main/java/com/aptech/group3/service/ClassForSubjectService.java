@@ -17,8 +17,18 @@ import com.aptech.group3.Dto.ClassSubjectCreateDto;
 import com.aptech.group3.Dto.ClassSubjectEditOneDto;
 import com.aptech.group3.Dto.TimeTableShowDto;
 import com.aptech.group3.entity.ClassForSubject;
+import com.aptech.group3.entity.StudentClass;
 
 public interface ClassForSubjectService {
+	
+	//thanh thêm 
+	 public List<StudentClass> findStudentClassesByClassId(Long classId);
+	 public List<ClassForSubject> findClassesByName(String className) ;
+	public List<ClassForSubject> findAllBySemesterId(Long semesterId);
+	public Long getClassSubjectIdBySubjectId(Long subjectId);
+	public Long getClassSubjectIdByTeacherId(Long teacherID);
+	
+	
 	
 	public void create(ClassSubjectCreateDto data);
 	

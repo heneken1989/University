@@ -37,18 +37,26 @@ public class LessonSubjectServiceImpl implements LessonSubjectService {
 
 	@Autowired
 	HolidayRepository holidayRepo;
+	
+	
+	//thanh thêm
+	public List<LessonSubject> getLessonsByClassSubjectId(Long classSubjectId) {
+        return repo.findByClassSubjectId(classSubjectId);
+    }
+	
+
 
 	public void deleteLessonByClassId(Long classId) {
 		repo.deleteLessonByClassId(classId);
 	}
-	//new
+
 	
 	public List<LessonSubject> getByClassId(Long id){
 		return repo.findByClassSubject_Id(id);
 	}
-	
 
-	
+	//new
+
 	
 	public List<LessonSubject> getCurrentLesson(Long classId, Date day) {
 		return repo.getLessonByDay(classId, day);

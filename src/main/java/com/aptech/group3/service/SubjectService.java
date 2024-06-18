@@ -54,8 +54,8 @@ public interface SubjectService {
 		public void hideById(Long id);
 		public void showById(Long id);
 		public List<Subject> getByFieldIDAndLevel(Long FieldId, Long level);
-
-
+		
+		public boolean CheckNameExists(String name);
 	 
     
 

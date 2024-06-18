@@ -43,6 +43,15 @@ public class RequiredSubjectServiceImpl implements RequiredSubjectService {
 		return requiredSubjectRepository.findByStatus(status);
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	//Du
 	public void createreq(RequiredSubjectDto dto) {
 		RequiredSubject data = new RequiredSubject();
 		subRepo.findById(dto.getSubjectId()).ifPresent(data :: setSubject);
@@ -71,9 +80,6 @@ public class RequiredSubjectServiceImpl implements RequiredSubjectService {
 	}
 
 
-
 	
-
-
    
 }

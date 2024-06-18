@@ -24,6 +24,8 @@ public class subjectApiController {
 	@GetMapping("/api/public/list/subject")
 	//@GetMapping("/create")
 	public List<Subject> getList( @RequestParam(name = "field") Long fieldId, @RequestParam(name = "level") Long level){
-		return subjectService.getByFieldIDAndLevel(fieldId, level);		
+		
+		return subjectService.getByFieldIDAndLevel(fieldId, level);
+	
 	}
 }

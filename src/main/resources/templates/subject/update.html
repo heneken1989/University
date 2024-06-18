@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-layout:decorate="~{/layout}">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{adminLayout/adminLayout}">
 <head>
 <meta charset="ISO-8859-1">
 <title>Update Subject</title>
 </head>
 <body>
 	<div layout:fragment="content" class="card text-center ml-3">
-	<h2>Update Subject</h2>
+	
 	<div style="width: 100%" class="card-header">
 			<h3 style="font-weight: bold; font-size: 40px"
 				th:text="'Update Subject'"></h3>
@@ -38,7 +39,7 @@ layout:decorate="~{/layout}">
 						<label style="width: 100%" class="input-group-text" for="name">Name</label>
 					</div>
 					<input type="text" th:field="*{name}" class="form-control"
-						id="name" placeholder="Name" readonly>
+						id="name"  readonly>
 				</div>
 				
 					</div> 
@@ -68,11 +69,9 @@ layout:decorate="~{/layout}">
  <option th:value="3">3</option>
  <option th:value="4">4</option>
  <option th:value="5">5</option>
- 
  </select>
- <br>
  </div>
- 
+
   <div class="input-group mb-5" id="credit_action_proper" style="display: none" >
 			<div class="input-group-prepend" style="width: 150px">
 			<label style="width: 100%" class="input-group-text">Credit for Action</label>

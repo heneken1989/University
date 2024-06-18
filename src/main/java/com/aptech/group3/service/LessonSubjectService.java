@@ -9,6 +9,9 @@ import com.aptech.group3.entity.Holiday;
 import com.aptech.group3.entity.LessonSubject;
 
 public interface LessonSubjectService {
+	
+	public List<LessonSubject> getLessonsByClassSubjectId(Long classSubjectId);
+	
 	public void deleteLessonByClassId(Long classId);
 	// new 
 	public void updateLesson(HolidayEditDto dto);

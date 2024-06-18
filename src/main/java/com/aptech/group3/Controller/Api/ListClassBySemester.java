@@ -2,9 +2,11 @@ package com.aptech.group3.Controller.Api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.StudentClass;
 import com.aptech.group3.entity.Subject;
 import com.aptech.group3.entity.User;
+import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.service.ClassForSubjectService;
 import com.aptech.group3.service.SemesterService;
 import com.aptech.group3.service.StudentClassService;
@@ -35,6 +38,26 @@ public class ListClassBySemester {
 	
 	@Autowired
 	private SemesterService semesterService;
+	
+	
+	
+    @GetMapping("/classes")
+    public List<ClassForSubject> getClasses(@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        return classService.findAll();
+    }
+
+    @GetMapping("/subjects")
+    public List<Subject> getSubjects(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long teacherId = userDetails.getUserId();
+        List<ClassForSubject> classes = classService.findByTeacherId(teacherId);
+        return classes.stream()
+                      .map(ClassForSubject::getSubject)
+                      .distinct()
+                      .collect(Collectors.toList());
+    }
+
+
 	@GetMapping("/current")
 	public List<ClassForSubject> getCurrentClasses(Model model) {
 		Long currentSemesterId = semesterService.getCurrentSemester().getId();

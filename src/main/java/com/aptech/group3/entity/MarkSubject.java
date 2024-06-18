@@ -19,12 +19,17 @@ public class MarkSubject {
 	    private Long id;
    	@ManyToOne
    	@JoinColumn(name="student_id" , referencedColumnName="id")
-   	 private User user;
+   	private User user;
    	
    	
-   	@ManyToOne
-   	@JoinColumn(name="subject_id" , referencedColumnName="id")
-   	 private Subject subject;
+	@ManyToOne
+	@JoinColumn(name="class_id" , referencedColumnName="id")
+	private ClassForSubject classSubject;
+	
+	@ManyToOne
+	@JoinColumn(name="subject_id" , referencedColumnName="id")
+	private Subject subject;
    	
    	private float mark;
+   	private String style;
 }

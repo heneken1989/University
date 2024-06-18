@@ -143,7 +143,6 @@ public class SubjectRegisterController {
 
 
 		User student = currentUser.getUser();
-
 		List<SubjectDto> listSubjects = new ArrayList<>();
 		
 		if(requiredSubject)
@@ -174,9 +173,7 @@ public class SubjectRegisterController {
 			   subjectsByLevel.add(aSubject);
 		   }
 		}
-		
-        
-		
+
 		List<SubjectDto> filteredSubjects = new ArrayList<>();
 		for (SubjectDto subjectDto : listSubjects) {
 			for (Subject subject : subjectsByLevel) {
