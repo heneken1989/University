@@ -36,7 +36,7 @@
             <thead class="bg bg-primary">
                 <tr>
                     <th class="title-margin">#</th>
-                    <th class="title-margin" >Name </th>
+                    <th class="title-margin" >Subject Name </th>
 				     <th class="title-margin">Credit </th>
 				     <th class="title-margin" hidden>Id </th>
 				     <th class="title-margin">Cash </th>
@@ -49,16 +49,17 @@
 				<td class="text-center" th:text="${rowStat.index + 1}"></td>
 					<td class="text-center" th:text="${classes.ClassforSubject.Subject.name}" ></td>
 					<td class="text-center" th:text="${classes.ClassforSubject.Subject.credit}"  ></td>
-					<td class="text-center" th:text="${classes.ClassforSubject.Subject.credit}*3000000" ></td>
+					<td class="text-center" th:text="${classes.ClassforSubject.Subject.credit}*3000000 +vnd" ></td>
 					
 					
 					
-					<td class="text-center"><div class="form-check">
-                    <input class="form-check-input"  type="checkbox" th:id="'flexCheckChecked_' + ${rowStat.index}" 
-                    th:value="${classes.ClassforSubject.id}" data-credit="${classes.ClassforSubject.Subject.credit}">
+					<td class="text-center">
+					<div class="form-check">
+                    	<input class="form-check-input"  type="checkbox" th:id="'flexCheckChecked_' + ${rowStat.index}" 
+                    			th:value="${classes.ClassforSubject.id}" data-credit="${classes.ClassforSubject.Subject.credit}">
                     
-                    <label class="form-check-label" th:for="'flexCheckChecked_' + ${rowStat.index}"></label>
-                </div>
+                    	<label class="form-check-label" th:for="'flexCheckChecked_' + ${rowStat.index}"></label>
+                	</div>
 					</td>
 					
 				</tr>
@@ -77,8 +78,10 @@
     </div>
     <!-- Hidden input fields for selected item IDs -->
     <input type="hidden" id="selectedItems" name="selectedItems">
-    <button type="submit" class="btn btn-primary">Payment</button>
+    <button type="submit" class="btn btn-primary">Payment VnPay</button>
+    
 </form>
+<a href="../paypal/indexx" >Paypal</a>
 
 <!-- Add the payment button here -->
 
@@ -106,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 } else {
                     totalCredits -= credit;
                 }
-                totalInput.value = totalCredits * 3000000;
+                totalInput.value = totalCredits * 3000000 ;
             } else {
                 console.error("Invalid credit value:", creditText);
             }
@@ -127,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 totalCredits += credit;
             }
         });
-        totalInput.value = totalCredits * 3000000;
+        totalInput.value = totalCredits * 3000000 ;
     }
 
     // Save credit states to sessionStorage when leaving the page

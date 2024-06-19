@@ -20,9 +20,16 @@ import com.aptech.group3.entity.User;
 @Service
 public interface StudentClassService {
 	
+	void updateStatus(List<Long> ids, int status);
+	List<StudentClass> findStudentClassesByUserName(String code);
+	
+	//vuong
+	
 	public void  updateStatusToPaid() ;
 	
 	List<Long> getListStudentRegistered(Long studentid , List<Long> listId);
+	
+
 	
 	//thanh thêm1
 	public List<ClassForSubject> getTodayClassStudent(Long studentId, Long SemesterId) ;

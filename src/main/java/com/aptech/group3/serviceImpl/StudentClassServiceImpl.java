@@ -45,6 +45,25 @@ public class StudentClassServiceImpl implements StudentClassService {
 	@Autowired
 	private AttendanceRepository attendanceRepo;
 	
+	public List<StudentClass> findStudentClassesByUserName(String code) {
+        return repo.findByStudentName(code);
+    }
+	public void updateStatus(List<Long> ids, int status) {
+        List<StudentClass> classes = repo.findAllById(ids);
+        for (StudentClass studentClass : classes) {
+            studentClass.setStatus(ClassStatus.UNPAID);
+        }
+        repo.saveAll(classes);
+    }
+	
+
+	public List<StudentClass> findByStatus(ClassStatus status)
+	{
+		return repo.findByStatus(status);
+	}
+	
+	
+	
 	public void  updateStatusToPaid() {
 		repo.updateSatustoStatus(ClassStatus.PAID ,ClassStatus.LIST);
 	}

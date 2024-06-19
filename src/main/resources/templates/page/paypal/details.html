@@ -47,7 +47,7 @@
 				<tr th:each="classs,rowStat : ${class}">
 				<td class="text-center" th:text="${rowStat.index + 1}"></td>
 					<td class="text-center" th:text="${classs.classforSubject.name}" ></td>
-					<td class="text-center" th:text="${classs.cash}"  ></td>
+					<td class="text-center" th:text="${classs.cash} +vnd"  ></td>
 					<td class="text-center" th:text="${classs.payments}"></td>
 					<td class="text-center" th:text="${#dates.format(classs.date, 'yyyy-MM-dd')}"  ></td>
 					
