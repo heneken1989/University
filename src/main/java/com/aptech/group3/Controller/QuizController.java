@@ -309,6 +309,17 @@ public class QuizController {
 	        	saveMarkClass.setMark(mark);
 	        	saveMarkClass.setUser(currentUser.getUser());
 	        	saveMarkClass.setSubject(exam.getQuiz().getSubject());
+	        	saveMarkClass.setClassSubject(exam.getClassForSubject());
+	        	if(exam.getQuiz().getType().equals("1"))
+	        	{
+	        		saveMarkClass.setStyle("normalMark");
+	        	}
+	        	else if (exam.getQuiz().getType().equals("2")) {
+	        		saveMarkClass.setStyle("middleMark");
+				}
+	           	else if (exam.getQuiz().getType().equals("3")) {
+	        		saveMarkClass.setStyle("finalMark");
+				}
 	        	markSubjectRepository.save(saveMarkClass);
 	        	
 	         session.removeAttribute("currentPage");

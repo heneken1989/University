@@ -246,9 +246,7 @@ public class SubjectRegisterController {
 
 			  }
 	        
-		}
-		  
-
+		}		  
 			System.out.print("isPassesOptionalRequiredSubject"+isPassesOptionalRequiredSubject);
 			System.out.print("isPassedAllRequiredSubject"+isPassedAllRequiredSubject);
 		  

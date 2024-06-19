@@ -2,12 +2,14 @@ package com.aptech.group3.Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.aptech.group3.Dto.ActionStatus;
@@ -55,8 +58,48 @@ public class MarkController {
 	private ClassForSubjectService classService;
 	@Autowired
 	private SemesterService semesterService;
+	
+	@PostMapping("/admin/mark/updateStudentMark")
+	@ResponseBody
+	public ResponseEntity<String> updateStudentMark(
+	        @RequestParam Long studentId,
+	        @RequestParam String markType,
+	        @RequestParam Float updatedMark) {
+		System.out.println( "studentId: "+studentId+
+							"markType: "+markType+
+							"updatedMark: "+updatedMark);
+	    try {
+	        markSubjectService.updateStudentMark(studentId, markType, updatedMark);
+	        return ResponseEntity.ok("Mark updated successfully");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update mark");
+	    }
+	}
+	  @GetMapping("/admin/mark/edit/{classId}")
+	  public String showEditForm(@PathVariable("classId") Long classId, Model model) {
+	      List<StudentClass> studentClasses = classService.findStudentClassesByClassId(classId);
+	      List<MarkSubject> markSubjects = markSubjectService.getListMarkSubjectByClassId(classId);
 
+	      Map<Long, Map<String, Float>> studentMarks = new HashMap<>();
+	      for (MarkSubject mark : markSubjects) {
+	          studentMarks.computeIfAbsent(mark.getUser().getId(), k -> new HashMap<>()).put(mark.getStyle(), mark.getMark());
+	      }
 
+	      model.addAttribute("studentClasses", studentClasses);
+	      model.addAttribute("studentMarks", studentMarks);
+	      return "mark/edit";
+	  }
+	@GetMapping("/admin/mark/checkStudentMarks")
+	@ResponseBody
+	public ResponseEntity<?> checkStudentMarks(@RequestParam("classId") Long classId, @RequestParam("markType") String markType) {
+	    Map<Long, Integer> studentMarks = markSubjectService.getStudentMarksByClassAndMarkType(classId, markType);
+	    return ResponseEntity.ok(Map.of("marks", studentMarks));
+	}
+	//thêm mới ở trên
+	
+	
+	
 	@GetMapping("/admin/mark/insert/{id}")
 	public String showInsertForm(@PathVariable("id") Long classId, Model model) {
 	    List<StudentClass> studentClasses = classService.findStudentClassesByClassId(classId);
@@ -80,7 +123,6 @@ public class MarkController {
 	    model.addAttribute("studentClasses", studentClasses);
 	    model.addAttribute("subjectId", subjectId);
 	    model.addAttribute("studentIds", studentIds.stream().map(String::valueOf).collect(Collectors.joining(",")));
-	   
 	    return "mark/insert";
 	}
 
@@ -94,11 +136,14 @@ public class MarkController {
 	    }
 	@GetMapping("/admin/mark/list")
 	public String getMarkAdmin(@RequestParam(name = "semesterId", required = false) Long semesterId,
-			@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+			@AuthenticationPrincipal CustomUserDetails userDetails, Model model,
+			@RequestParam(name = "error", required = false) ActionStatus error) {
 		if (userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("EMPLOYEE"))) {
 			List<Semeter> semesters = semesterService.findAll();
 			model.addAttribute("semesters", semesters);
-
+			if(error!=null) {
+				model.addAttribute("error",error.toString());
+			}
 			if (semesterId == null && !semesters.isEmpty()) {
 				semesterId = semesters.get(0).getId(); // Select the first semester by default
 			}
@@ -131,7 +176,8 @@ public class MarkController {
 
 	@GetMapping("/web/mark/export")
 	public void exportToExcel(@RequestParam(name = "classId", required = false) Long classId,
-			@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletResponse response, HttpSession session, Model model)
+			@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletResponse response,
+			HttpSession session, Model model)
 			throws IOException {
 		Long userId = userDetails.getUserId();
 		List<MarkSubject> markSubjects;
@@ -150,7 +196,7 @@ public class MarkController {
 		}
 
 		if (markSubjects.isEmpty()) {
-	       
+			response.sendRedirect("/admin/mark/list");
 			return ;
 		}
 

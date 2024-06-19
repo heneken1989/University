@@ -10,13 +10,16 @@
 </script>
 <body>
 	<div layout:fragment="content" class="card text-center ml-3">
-<div
+		<div
 			style="width: 100%; color: rebeccapurple; font-family: 'georgia'; padding: 40px 0px 10px 0px; font-weight: 300;"
 			class="card-header">
 
 			<h3
 				style="font-weight: bold; font-size: 40px; text-transform: uppercase;"
 				th:text="#{user.list.title}+ ' '+${type}"></h3>
+			<input th:if="${error=='UPDATED'}" class="show_success_toast" readonly type="hidden" th:value="#{toast.success.update}"> 
+			<input th:if="${error=='CREATED'}" class="show_success_toast" readonly type="hidden" th:value="#{toast.success.create}">
+		
 			<div
 				class="row height d-flex justify-content-center align-items-center">
 
@@ -41,7 +44,7 @@
 
 					<form id="exportForm" action="/admin/user/export" method="GET"
 						style="width: 60%; height: 30px;">
-						<select id="subjectDropdown"style="display:none;">
+						<select id="subjectDropdown" style="display: none;">
 							<option th:text="#{user.list.chooce.subject}">Chọn Môn
 								học</option>
 						</select> <input type="submit" id="submitExport" value="Export">
@@ -92,13 +95,12 @@
 					<td class="text-center" th:text="*{name}"></td>
 					<td class="text-center" th:text="*{email}"></td>
 					<td class="text-center" th:text="*{phone}"></td>
-					
-					<td class="noscrollbar"style="height: 50px;">
-						<select class="form-control" multiple disabled 
-						style="border:none;height: 60px; background-color: transparent;overflow-y: scroll; -webkit-overflow-scrolling: touch;">
-								<option th:each="d : *{fields}" th:text="${d.name}"></option>
-						</select>
-					</td>
+
+					<td class="noscrollbar" style="height: 50px;"><select
+						class="form-control" multiple disabled
+						style="border: none; height: 60px; background-color: transparent; overflow-y: scroll; -webkit-overflow-scrolling: touch;">
+							<option th:each="d : *{fields}" th:text="${d.name}"></option>
+					</select></td>
 
 					<td class="text-center"><a class="btn btn-warning"
 						data-toggle="tooltip" data-placement="top" title="Update"
@@ -108,8 +110,7 @@
 					</a> <a th:href="@{'/admin/user/detail/' + *{id}}" class="btn btn-info"
 						data-toggle="tooltip" data-placement="top" title="Details"> <i
 							class="fas fa-info-circle"></i>
-					</a>
-					</td>
+					</a></td>
 				</tr>
 			</tbody>
 		</table>

@@ -1,4 +1,4 @@
-package com.aptech.group3.Controller;
+package com.aptech.group3.Controller.Api;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -37,6 +37,7 @@ import com.aptech.group3.Dto.SubjectDto;
 import com.aptech.group3.Repository.ClassForSubjectRepository;
 import com.aptech.group3.Repository.ExamQuestionAnswerRepository;
 import com.aptech.group3.Repository.FiledRepository;
+import com.aptech.group3.Repository.MarkSubjectRepository;
 import com.aptech.group3.Repository.QuizAnswerRepository;
 import com.aptech.group3.Repository.QuizExamRepository;
 import com.aptech.group3.Repository.QuizQuestionRepository;
@@ -47,6 +48,7 @@ import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.ExamQuestionAnswer;
 import com.aptech.group3.entity.Field;
+import com.aptech.group3.entity.MarkSubject;
 import com.aptech.group3.entity.Quiz;
 import com.aptech.group3.entity.QuizAnswer;
 import com.aptech.group3.entity.QuizExam;
@@ -79,43 +81,27 @@ import jakarta.transaction.Transactional;
 
 @RestController
 @CrossOrigin(origins = "*")
-public class ApiController {
+
+public class ExamApiController {
 	
 	@Autowired
 	private ClassForSubjectRepository classForSubjectRepository;
 	
-@Autowired
-private SubjectService subService;
+
 
 @Autowired
 private QuizRepository quizRepository;
 
 
-@Autowired
-private StudentClassRepository studentClassRepository;
-
 
 @Autowired
 AuthenticationManager authenticationManager;
 
-@Autowired
-private JwtTokenProvider tokenProvider;
+
 
 @Autowired
 private StudentClassServiceImpl studentsubservice;
 
-@Autowired
-private ClassForSubjectService classservice;
-
-@Autowired
-private UserServiceImpl userservice;
-
-
-@Autowired
-private FiledRepository filedRepository;
-
-@Autowired
-private SubjectLevelRepository subjectLevelRepository;
 
 @Autowired
 private QuizAnswerService quizAnswerService;
@@ -140,16 +126,10 @@ private QuizExamService quizExamService;
 @Autowired
 private QuizService quizService;
 
-@Autowired
-private UserRepository userRepository;
 
-@Autowired
-private ClassForSubjectService classForSubjectService;
 
 @Autowired
-private RequiredSubjectService requiredSubjectService;
-
-
+private MarkSubjectRepository markSubjectRepository;
 
 @GetMapping("/api/public/listQuizBySubject")
 @ResponseBody
@@ -172,7 +152,6 @@ public void QuizSubmit(@RequestBody Map<String, Object> requestBody) {
 	
 	String typeRequet = requestBody.get("type").toString();
 	Long quizExamId = Long.valueOf(requestBody.get("quizExamId").toString());
-	System.out.print("quiz exam id"+quizExamId);
     @SuppressWarnings("unchecked")
 	Map<String, List<Integer>> answers = (Map<String, List<Integer>>) requestBody.get("answers");
     Long currentQuestionId = null;
@@ -186,7 +165,6 @@ public void QuizSubmit(@RequestBody Map<String, Object> requestBody) {
                  .collect(Collectors.toList());
     }
     
-    System.out.println("curent question id:" +currentQuestionId);
     
     // after having List answers , save new answers to database ,
         // first delete all old answers
@@ -217,6 +195,23 @@ public void QuizSubmit(@RequestBody Map<String, Object> requestBody) {
 	if(typeRequet.equals("submit"))
 	{
 		exam.setStatus("Submitted");
+		
+       	MarkSubject saveMarkClass = new MarkSubject();
+    	saveMarkClass.setMark(markFloat);
+    	saveMarkClass.setUser(exam.getStudent());
+    	saveMarkClass.setSubject(exam.getQuiz().getSubject());
+    	saveMarkClass.setClassSubject(exam.getClassForSubject());
+    	if(exam.getQuiz().getType().equals("1"))
+    	{
+    		saveMarkClass.setStyle("normalMark");
+    	}
+    	else if (exam.getQuiz().getType().equals("2")) {
+    		saveMarkClass.setStyle("middleMark");
+		}
+       	else if (exam.getQuiz().getType().equals("3")) {
+    		saveMarkClass.setStyle("finalMark");
+		}
+    	markSubjectRepository.save(saveMarkClass);
 		
 	}
 	quizExamRepository.save(exam);
@@ -262,14 +257,7 @@ public void updateQuiz(@RequestBody Map<String, Long> requestBody,@Authenticatio
 }
 
 
-@PostMapping("/api/ClassRegister")
-@ResponseBody
-public Long ClassRegister(@RequestBody Map<String, Long> requestBody) {
-    Long classId = requestBody.get("classId");
-    Long userId = requestBody.get("userId");
-	studentsubservice.RegisterClassMobile(classId, userId);
-	return classId;
-}
+
 
 
 @Transactional
@@ -342,207 +330,19 @@ public List<QuizAnswer> FindAnswerByQuestionId(@RequestBody Map<String, Long> re
 }
 
 
-@PostMapping("/api/Ongoing")
-@ResponseBody
-public List<StudentClass> ListClassByStudent(@RequestBody Map<String, Long> requestBody) {
-	 Long userId = requestBody.get("StudentId");
-	List<StudentClass> studentClasses = studentsubservice.findSubjectByStudentId(userId);
-	return studentClasses;
-}
-
-
-
-@PostMapping("/api/cancelClass")
-public String CancelClassRegister(@RequestBody Map<String, Long> requestBody) {
-	 Long classId = requestBody.get("ClassId");
-	StudentClass studentclass = studentClassRepository.getById(classId);
-	ClassForSubject classs = studentclass.getClassforSubject();
-
-	List<StudentClass> waitingList = studentsubservice.findEarliestByStatus(ClassStatus.WAITINGLIST);
-	// if have waitinglist , transfer earliest Student in WaitingList to List , and
-	// no need to change quantity
-	if (!waitingList.isEmpty()) {
-		StudentClass tranStudentClass = waitingList.get(0);
-		tranStudentClass.setStatus(ClassStatus.LIST);
-		studentClassRepository.save(tranStudentClass);
-	}
-
-	// if have no WaitingList Student , - quantity of class by 1
-	else {
-
-		// - quantity of CLass by 1
-		int quantity = classs.getQuantity();
-		quantity -= 1;
-		classs.setQuantity(quantity);
-		classForSubjectRepository.save(classs);
-
-	}
-	studentClassRepository.delete(studentclass);
-	return "redirect:/Ongoing";
-}
 
 
 
 
-@GetMapping("/api/public/AllField")
-public List<Field> GetAllField() {
-    return filedRepository.findAll() ;
-}
-
-@GetMapping("/api/public/AllLevel")
-public List<SubjectLevel> GetAllLevel() {
-    return subjectLevelRepository.findAll() ;
-}
-
-@GetMapping("/api/public/listSubjectByLevelAndField/{levelId}/{fieldId}")
-public List<Subject> GetAllSubjectByLevelAndField(@PathVariable Long levelId, @PathVariable Long fieldId) {
-    return subService.getByFieldAndLevel(levelId, fieldId);
-}
 
 
 
-@PostMapping("/api/ClassRegister/list")
-public List<SubjectDto> listSubject(@RequestBody Map<String, Long> requestBody) {
-	Long studentId = requestBody.get("studentId");
-	User student = userRepository.getById(studentId);
-	List<SubjectDto> listSubjects = new ArrayList<>();
-	
-
-	listSubjects=subService.findByStudentMoNeedRequiredSubjectCondition((long) 0);
-
-
-	List<Subject> subjectsByLevel = new ArrayList<>();
-	List<Subject> subjectThatHaveClass = new ArrayList<>();
-	
-	LocalDateTime now = LocalDateTime.now();
-	Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-	List<ClassForSubject> listClassForSubjects = classForSubjectService.findByRegistrationDate(date);
-	
-	for(ClassForSubject list : listClassForSubjects) 
-	{
-        
-		subjectThatHaveClass.add(list.getSubject());
-	}
-	
-	List<SubjectDto> filteredSubjects = new ArrayList<>();
-	for (SubjectDto subjectDto : listSubjects) {
-		for (Subject subject : subjectThatHaveClass) {
-			if (subject.getId().equals(subjectDto.getId())) {
-				filteredSubjects.add(subjectDto);
-				break;
-			}
-		}
-	}
-
-	return filteredSubjects;
-}
 
 
 
-@PostMapping("/listClass")
-public List<ClassForSubjectDto> listClass(@RequestBody Map<String, Long> requestBody) {
-	Long studentId = requestBody.get("studentId");
-	Long subjectId = requestBody.get("subjectId");
-	User student = userRepository.getById(studentId);
-	// take RegisteringList of student
-	List<StudentClass> studentClasses = studentsubservice.findSubjectByStudentId(studentId);
-	LocalDateTime now = LocalDateTime.now();
-	Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-	// take list Class of each subject
-	List<ClassForSubjectDto> listclass = classservice.findBySubjectIdAndDate(subjectId, date);
-	String[][] scheduleTable = addToSchedule(studentId, studentClasses);
-	List<String> listRequiredSubject = new ArrayList<>();
-	List<String> optionalRequiredSubjectList = new ArrayList<>();
-	List<RequiredSubject> listreRequiredSubjects = requiredSubjectService.findListRequiredSubjectBySubjectId(subjectId);
-	List<Subject> listPassedSupjects = subService.findPassesSubject(student);
-	List<String> passesSubjectStrings = new ArrayList<String>();
-	
-	
-	for(Subject aSubject : listPassedSupjects)
-	{
-		passesSubjectStrings.add(aSubject.getName());
-	}
-	
-	System.out.print(passesSubjectStrings);
-	
-	for(RequiredSubject a: listreRequiredSubjects)
-	{
-		  if(a.getStatus().equals("PASS"))
-		  {
-			  listRequiredSubject.add(a.getRequiredsubject().getName());
-		  }
-		  else if(a.getStatus().equals("OPTIONAL"))
-		  {
-			  optionalRequiredSubjectList.add(a.getRequiredsubject().getName());
-		  }		
-	}
-	System.out.print(listRequiredSubject);
-	System.out.print(optionalRequiredSubjectList);
-	
-	  Boolean isPassedAllRequiredSubject = passesSubjectStrings.containsAll(listRequiredSubject);
-	  Boolean isPassesOptionalRequiredSubject = false;
-	  
-	  if(optionalRequiredSubjectList.isEmpty())
-	  {
-		  isPassesOptionalRequiredSubject = true;
-	  }
-	  
-	  else {
-		  
-		  for(String a: optionalRequiredSubjectList)
-		  {
-			  if(passesSubjectStrings.contains(a))
-			  {
-				  isPassesOptionalRequiredSubject = true;
-			  }
 
-		  }
-        
-	}
-	  
 
-		System.out.print("isPassesOptionalRequiredSubject"+isPassesOptionalRequiredSubject);
-		System.out.print("isPassedAllRequiredSubject"+isPassedAllRequiredSubject);
-	  
-	
-	for (ClassForSubjectDto i : listclass) {
-		int newSlotStart = i.getSlotStart();
-		int newSlotEnd = i.getSlotEnd();
-		int newWeekday = i.getWeekDay();
-		String newSemesterType = i.getType();
-		// check conflict SLot
-		boolean hasConflict = checkForScheduleConflict(scheduleTable, newSlotStart, newSlotEnd, newWeekday,
-				newSemesterType);
-		i.setConflict(hasConflict);
-		i.setOptionalRequiredSuject(optionalRequiredSubjectList);
-		i.setRequiredSubject(listRequiredSubject);
-		i.setPassedSubjects(passesSubjectStrings);
-		
-		// check student match required subject?
-		  if(!isPassedAllRequiredSubject || !isPassesOptionalRequiredSubject)
-		  {
-			  i.setIsHaveRequiredSubject(false);
-		  }
-		  else {
-			  i.setIsHaveRequiredSubject(true);
-		       }
 
-		// check conflict subject name ( already have same subject in RegisteringList
-		for (StudentClass s : studentClasses) {
-			if (s.getClassforSubject().getSubject().getName().equals(i.getSubject().getName())) {
-				i.setIsSameSubject(true);
-				if (s.getClassforSubject().getId().equals((i.getId()))) {
-					i.setIsSameClass(true);
-				}
-			} else {
-				i.setIsSameSubject(false);
-				i.setIsSameClass(false);
-			}
-		}
-	}
-			
-	return listclass;
-}
  
 
 @PostMapping("/listSS")
@@ -554,24 +354,8 @@ public List<StudentClass> listSB(@RequestBody Long userid){
 
 
 
-@GetMapping("/api/listcate")
-public List<SubjectLevel> listCate() {
-
-    return subService.listSubjectLevel();
-}
-
-@GetMapping("/api/jwt")
-public String jwtchecks() {
-    return "JWT Hợp lệ mới có thể thấy được message này";
-}
 
 
-@PostMapping("/test")
-public Subject addRoom(@RequestBody Subject room) {
-    System.out.println("Request Body: " + room.toString());
-
-    return subService.saveSubject(room);
-}
 
 
 
@@ -594,69 +378,9 @@ public Subject addRoom(@RequestBody Subject room) {
  * } }
  */
 
-private String[][] addToSchedule(Long studentId, List<StudentClass> studentClasses) {
-
-	// Fake data representing schedule table
-	String[][] scheduleTable = new String[12][12];
-	for (StudentClass studentClass : studentClasses) {
-		ClassForSubject classForSubject = studentClass.getClassforSubject();
-		int slotStart = classForSubject.getSlotStart();
-		int slotEnd = classForSubject.getSlotEnd();
-		int weekday = classForSubject.getWeekDay();
-		String semesterType = classForSubject.getType();
-		String subjectInfo = classForSubject.getSubject().getName() + " " + classForSubject.getRoom().getName();
-
-		for (int slot = slotStart; slot <= slotEnd; slot++) {
-			if (semesterType.equals("all")) {
-				// Populate both halves of the day
-				scheduleTable[slot - 1][2 * (weekday - 1)] = subjectInfo;
-				scheduleTable[slot - 1][2 * (weekday - 1) + 1] = subjectInfo;
-
-			} else if (semesterType.equals("fhalf")) {
-				// Populate only the first half of the day
-				scheduleTable[slot - 1][2 * (weekday - 1)] = subjectInfo;
-
-			} else if (semesterType.equals("lhalf")) {
-				// Populate only the second half of the day
-				scheduleTable[slot - 1][2 * (weekday - 1) + 1] = subjectInfo;
-
-			}
-		}
-	}
-
-	return scheduleTable;
-}
 
 
-private boolean checkForScheduleConflict(String[][] scheduleTable, int newSlotStart, int newSlotEnd, int newWeekday,
-		String newSemesterType) {
-	for (int slot = newSlotStart; slot <= newSlotEnd; slot++) {
-		String existingClass = scheduleTable[slot - 1][2 * (newWeekday - 1)]; // Check the first half of the day
-		String existingClassSecond = scheduleTable[slot - 1][2 * (newWeekday - 1) + 1];
-		if (newSemesterType.equals("lhalf")) {
-			if (existingClassSecond != null && !existingClassSecond.isEmpty()) {
-				return true;
-			}
-		}
-		if (newSemesterType.equals("fhalf")) {
-			if (existingClass != null && !existingClass.isEmpty()) {
-				return true;
-			}
-		}
 
-		if (newSemesterType.equals("all")) {
 
-			if (existingClassSecond != null && !existingClassSecond.isEmpty()) {
-				return true;
-			}
-
-			existingClass = scheduleTable[slot - 1][2 * (newWeekday - 1)];
-			if (existingClass != null && !existingClass.isEmpty()) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
 
 }

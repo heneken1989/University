@@ -10,7 +10,8 @@
         <div class="card-header" style="width: 100%; color: rebeccapurple; font-family: 'georgia';font-weight: 300;top:0px;">
             <h3 style="text-align: center; font-weight: bold; font-size: 40px; text-transform: uppercase;">Mark Administration</h3>
         </div>
-
+<input th:if="${error=='SUCCESS'}" class="show_success_toast" readonly
+			type="hidden" th:value="#{toast.success.update}"> 
 		<div class="row height d-flex justify-content-center align-items-center">
 		    <div class="col-md-6" style="margin: 40px 0 -30px 0;">
 		        <form action="/admin/mark/searchmark" method="get" class="form">
@@ -68,6 +69,9 @@
                         <td class="text-center" th:text="*{status}"></td>
                         <td class="text-center">
                             <a class="btn btn-insert" th:href="@{'/admin/mark/insert/' + *{id}}" data-toggle="tooltip" data-placement="top" title="Insert mark">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            <a class="btn btn-insert" th:href="@{'/admin/mark/edit/' + *{id}}" data-toggle="tooltip" data-placement="top" title="Edit mark">
                                 <i class="fas fa-edit"></i>
                             </a>
                         </td>

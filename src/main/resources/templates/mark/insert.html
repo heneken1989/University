@@ -46,6 +46,7 @@
 					<label style="width: 100%" class="input-group-text" for="role">Style mark</label>
 				</div>	
 				<select class="form-control mark-style" name="style">
+					<option value="">Chọn loại điểm</option>
 					<option value="MIDTERM">Midterm</option>
 					<option value="FINAL">Final</option>
 					<option value="ENDTERM">Endterm</option>
@@ -74,7 +75,7 @@
 								<td th:text="${studentClass.student.code}"></td>
 								<td th:text="${studentClass.student.name}"></td>
 								<td>
-									<input type="number" name="marks[]" class="form-control">
+									<input type="number" name="marks[]" class="form-control" >
 									<span class="feedback" style="display: none; color: red;">Please enter a score from 0-100</span> 
 									<input type="hidden"name="subjectId" class="form-control" style="display: none" th:value="${subjectId}" required>
 								</td>
@@ -82,7 +83,7 @@
 						</tbody>
 					</table>
 					<div class="float-right">
-						<button type="submit" class="btn btn-primary">Submit</button>
+						<button type="submit" class="btn btn-primary submit" id="btn-insert">Submit</button>
 					</div>
 				</form>
 			</div>
