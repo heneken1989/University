@@ -450,14 +450,40 @@
 					</ul>
 					</li>
 
-				<li class="nav-item" style=" border-bottom:2px solid gray" >
-				<a th:href="@{/admin/adminpayment}"
+				<li class="nav-item has-treeview" style=" border-bottom:2px solid gray ;color:white">
+				<a class="nav-link"> 
+			
+				<i class="fas fa-bell nav-icon"></i>
 				
-					class="nav-link"> 
-					<i class="fas fa-umbrella-beach nav-icon"></i>
-						<p > Manager payment</p>
+			
+			
+						<p >
+							Manager Payment <i  class="fas fa-angle-left right"></i> 
+							
+						</p>
 				</a>
-				</li>
+					<ul class="nav nav-treeview">
+						
+						
+					
+						<li style=" border-bottom:2px solid gray" class="nav-item">
+						<a 
+							th:href="@{/admin/adminpayment}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >List Payment</p>
+						</a>
+						</li>
+						<li  class="nav-item">
+						<a
+							th:href="@{/admin/paymentoffline}"
+							class="nav-link"> 
+							<i  class="far fa-circle nav-icon"></i>
+								<p >Payment Offline</p>
+						</a>
+						</li>
+					</ul>
+					</li>
 
 			</ul>
 		</nav>

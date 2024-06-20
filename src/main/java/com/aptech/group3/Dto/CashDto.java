@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class cashDto {
+public class CashDto {
 
     private Long userId;
     private List<Long> subjectId ;

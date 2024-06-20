@@ -30,6 +30,7 @@ import com.aptech.group3.Repository.SubjectRepository;
 import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.MarkSubject;
+import com.aptech.group3.entity.QuizExam;
 import com.aptech.group3.entity.Subject;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.service.MarkSubjectService;

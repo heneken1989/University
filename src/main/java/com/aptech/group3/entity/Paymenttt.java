@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class Payment {
+public class Paymenttt {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

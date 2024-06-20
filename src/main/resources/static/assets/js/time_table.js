@@ -121,7 +121,7 @@ list.forEach(e=>{
 	let data={studentId,status};
 	
 $.post({
-    url: `${baseUrlTimeTable}/api/pblic/attendance/create/${classId}`,
+    url: `${baseUrlTimeTable}/api/attendance/create/${classId}`,
     data: JSON.stringify(data),
     contentType: "application/json",
     success: () => {

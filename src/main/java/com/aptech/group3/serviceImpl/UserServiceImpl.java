@@ -351,6 +351,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			user.setPhone(dto.getPhone());
 			user.setAvatar(dto.getAvatar());
 			user.setRole(dto.getRole());
+			
+			user.setAddress(dto.getAddress());
+			user.setInfomation(dto.getInfomation());
+			
+		
 			List<Field> selectedFields = fieldService.getFieldsByIds(dto.getFields());
 			user.setFields(selectedFields);
 

@@ -23,11 +23,11 @@
             </div>
             <div class="mb-3">
                 <label for="amount" class="form-label">Amount</label>
-                <input id="amount" type="number" class="form-control"
-                       name="amount" value="10.0">
+                <input id="amount" th:value="${amount}" type="number" class="form-control"
+                       name="amount" >
             </div>
             <div class="mb-3">
-                <label for="currency" class="form-label">Amount</label>
+                <label for="currency" class="form-label">Currency</label>
                 <select class="form-control" id="currency" name="currency">
                     <option value="USD" selected>USD</option>
                     <option value="EUR">EUR</option>
@@ -35,9 +35,9 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <input id="description" type="text" class="form-control"
-                        name="description">
+                <label for="description" hidden class="form-label">Description</label>
+                <input id="description"  type="hidden" class="form-control"
+                        name="description" th:value="${selectedItems}">
             </div>
             <div class="d-flex justify-content-center">
                 <button
@@ -50,5 +50,3 @@
         </form>
     </div>
 </body>
-
-</html>

@@ -37,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
 
+import com.aptech.group3.Dto.ActionStatus;
 import com.aptech.group3.Dto.UpdateProfileDto;
 import com.aptech.group3.Dto.UserCreateDto;
 import com.aptech.group3.Dto.UserDto;
@@ -163,17 +164,17 @@ public class UserController {
  		return "admin_user/update";
  	}
  
- 	@PostMapping("/update/{id}")
+	@PostMapping("/update/{id}")
  	public String saveUpdate( Model model,@ModelAttribute("user") @Valid UserCreateDto dto, BindingResult result,
  			@RequestParam(name = "avatar", required = false) MultipartFile avatarFile,
- 			@RequestParam(name = "id") Long id, RedirectAttributes redirectAttributes,
+ 			@RequestParam(name = "id") Long id, RedirectAttributes rm,
  			HttpServletRequest request) {
  
  		System.out.println("ID: "+ id+ "DTO" + dto);
  		if (result.hasErrors()) {
  			List<String> fieldErrorsList = new ArrayList<>();
- 			for (ObjectError error : result.getAllErrors()) {
- 				String fieldErrors = ((FieldError) error).getField();   
+ 			for (ObjectError e : result.getAllErrors()) {
+ 				String fieldErrors = ((FieldError) e).getField();   
  				fieldErrorsList.add(fieldErrors);
  				if (!fieldErrors.equals("avatar")) {
  					System.out.println("avatar");
@@ -215,7 +216,10 @@ public class UserController {
  		} else {
  			dto.setAvatar(currentUser.getAvatar());
  		}
+ 		
+
  		userService.update(dto);
+ 		rm.addAttribute("error",ActionStatus.UPDATED);
  		return "redirect:/admin/user/list";
  	}
 	
@@ -224,13 +228,18 @@ public class UserController {
 	public String showByRole(@AuthenticationPrincipal CustomUserDetails currentUser, Model model,
 			@RequestParam(name = "page", defaultValue = "1") int page,
 			@RequestParam(name = "type", defaultValue = "ALL") String type,
-			@RequestParam(name = "notification", required = false) String notification) {
-		Pageable paging = PageRequest.of(page - 1, 4);
+			@RequestParam(name = "notification", required = false) String notification,
+ 			@RequestParam(name = "error", required = false) ActionStatus error) {
+		Pageable paging = PageRequest.of(page - 1, 10);
 
 		model.addAttribute("data", userService.findByRole(type, paging));
 		model.addAttribute("type", type);
 		model.addAttribute("selectedType", type);
 		model.addAttribute("notification", notification);
+		if(error!=null) {
+			model.addAttribute("error",error.toString());
+		}
+	
 		return "admin_user/index";
 	}
 
@@ -245,7 +254,7 @@ public class UserController {
 
 	@PostMapping("/create")
 	public String saveUser(Model model, @RequestParam(name = "image", required = false) MultipartFile avatarFile,
-			@ModelAttribute("data") @Valid UserCreateDto data, BindingResult result, HttpServletRequest request)
+			@ModelAttribute("data") @Valid UserCreateDto data, BindingResult result, HttpServletRequest request, RedirectAttributes rm)
 			throws IOException {
 		String[] listField = request.getParameterValues("field[]");
 		if (result.hasErrors()) {
@@ -313,6 +322,7 @@ public class UserController {
 		userService.create(data);
 		emailService.sendPasswordEmail(data.getEmail(), randomPassword);
 		model.addAttribute("notification", "Create success!");
+		rm.addAttribute("error",ActionStatus.CREATED);
 		return "redirect:/admin/user/list?notification=Create%20success!";
 
 	}

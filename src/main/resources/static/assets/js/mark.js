@@ -1,4 +1,100 @@
 $(document).ready(function() {
+ 	$('.edit-input').each(function() {
+        if ($(this).val().trim() == '') {
+            $(this).prop('readonly', true);
+        }
+    });
+   
+	//edit mark for class
+	$(".mark-input").change(function() {
+        var studentId = $(this).closest("tr").find(".student-id").text();
+        var markType = $(this).data("mark-type");
+        var updatedMark = $(this).val();
+
+        console.log("studentId: ", studentId);
+        console.log("markType: ", markType);
+        console.log("updatedMark: ", updatedMark);
+
+        $.ajax({
+            url: '/admin/mark/updateStudentMark',
+            type: 'POST',
+            data: {
+                studentId: studentId,
+                markType: markType,
+                updatedMark: updatedMark
+            },
+            success: function(response) {
+                showToast('Success', 'Mark updated successfully', 'success');
+            },
+            error: function(xhr, status, error) {
+                showToast('Error', 'Failed to update mark', 'error');
+            }
+        });
+    });
+
+    function showToast(title, message, type) {
+        var toast = $("#toastTemplate").clone().removeAttr("id");
+        toast.find(".toast-title").text(title);
+        toast.find(".toast-body").text(message);
+        toast.addClass("show");
+        if (type === 'success') {
+            toast.addClass("bg-success text-white");
+        } else if (type === 'error') {
+            toast.addClass("bg-danger text-white");
+        }
+        $("#toastContainer").append(toast);
+        toast.toast('show');
+    }
+    
+    
+    
+	// ẩn hiện form insert điểm
+	$('#markForm').hide();
+	$('.mark-style').change(function() {
+		if ($(this).val() !== "") {
+			$('#markForm').show();
+		} else {
+			$('#markForm').hide();
+		}
+	});
+	$('.mark-style').change(function() {
+		const selectedMarkType = $(this).val();
+		const classId = $('input[name="classId"]').val();
+		const submitButton = $('#btn-insert');
+		$.ajax({
+			url: '/admin/mark/checkStudentMarks',
+			method: 'GET',
+			data: {
+				classId: classId,
+				markType: selectedMarkType
+			},
+			success: function(response) {
+				$('#markForm tbody tr').each(function() {
+					const studentId = $(this).find('td:nth-child(2)').text().trim(); // Assuming second column is student ID
+					const markInput = $(this).find('input[name="marks[]"]');
+					const existingMark = response.marks[studentId];
+
+					if (existingMark !== undefined) {
+						markInput.val(existingMark);
+						markInput.prop('readonly', true);
+						submitButton.hide();
+					} else {
+						markInput.val('');
+						markInput.prop('readonly', false);
+						submitButton.show();
+					}
+				});
+			},
+			error: function() {
+				alert('Error checking student marks.');
+			}
+		});
+	});
+
+
+
+
+
 	var classSelect = $('#classId');
 	var markTable = $('#markTable tbody');
 	var exportButton = $('#exportButton');
@@ -44,6 +140,13 @@ $(document).ready(function() {
 		window.location.href = "/web/mark/export?classId=" + selectedClassId;
 	});
 
+    
+    
+    
+    
+    
+  
+    
 	function showToast(message, title, type) {
 		var toastTemplate = $('#toastTemplate').clone();
 		toastTemplate.attr('id', ''); // Clear the ID to avoid duplicates
@@ -134,7 +237,7 @@ $(document).ready(function() {
 		});
 	});
 	//mark admin
-	$('#select_semeser').change(function() {
+	$('#select_semeser_mark_admin').change(function() {
 		var selectedSemester = $(this).val();
 		window.location.href = '/admin/mark/list?semesterId=' + selectedSemester;
 	});

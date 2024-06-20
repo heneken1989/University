@@ -28,7 +28,7 @@
 			style="padding:0 100px;">
             <div>
                 <span th:text="#{label.semester} + ' : '">Semester :</span>
-                <select name="semester" id="select_semeser"style="height: 30px;">
+                <select name="semester" id="select_semeser_mark_admin"style="height: 30px;">
                     <option th:each="se : ${semesters}"
                             th:selected="${currentSemester == se.id}"
                             th:value="${se.id}"

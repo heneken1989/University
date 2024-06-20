@@ -10,12 +10,17 @@ import com.aptech.group3.Dto.MarkDetailDto;
 import com.aptech.group3.Dto.MarkSubjectCreateDto;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.MarkSubject;
+import com.aptech.group3.entity.QuizExam;
 
 import jakarta.servlet.ServletOutputStream;
 
 
 @Service
 public interface MarkSubjectService {
+	
+
+	
+	
 	public List<MarkApiDto> getListMarkDto(Long studentId);
 	public MarkDetailDto getMarkDetailDto( Long studentId,Long ClassId);
 	public List<MarkSubject> getMarksByStudentId(Long studentId);

@@ -33,13 +33,13 @@ VALUES
 INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role,status,code) 
 VALUES 
     (2, 'admin', 'nobita.jpg', 'admin@gmail.com', 'ad', 'admin', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'ADMIN',0,1),
-    (3, 'st', 'nobita.jpg', 'st', 'ad', 'student', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0,2),
-    (4, 'st1', 'nobita.jpg', 'st1', 'ad', 'student1', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0,3),
-    (5, 'tc', 'nobita.jpg', 'teacher', 'ad', 'teacher', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'TEACHER',0,4),
-    (6, 'emp', 'nobita.jpg', 'employee', 'im employee', 'employee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'EMPLOYEE',0,5),
-    (7, 'st2', 'nobita.jpg', 'st2', 'ad', 'teacher1', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '2', 'STUDENT',0,6),
-    (8, 'tc2', 'nobita.jpg', 'teacher2', 'ad', 'teacher2', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '3', 'TEACHER',0,7),
-    (9, 'st3', 'nobita.jpg', 'st3', 'ad', 'teacher3', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '4', 'STUDENT',0,8);
+    (3, 'st', 'nobita.jpg', 'st', 'st@gmail.com', 'Student LEE', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0,2),
+    (4, 'st1', 'nobita.jpg', 'st1', 'st1@gmail.com', 'Student Nguyen', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0,3),
+    (5, 'tc', 'nobita.jpg', 'teacher', 'teacher@gmail.com', 'professor David', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'TEACHER',0,4),
+    (6, 'emp', 'nobita.jpg', 'employee', 'employee@gmail.com', 'employee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'EMPLOYEE',0,5),
+    (7, 'st2', 'nobita.jpg', 'st2', 'student1@gmail.com', 'student Hien', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '2', 'STUDENT',0,6),
+    (8, 'tc2', 'nobita.jpg', 'teacher2', 'teacher2@gmail.com', 'professor LY', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '3', 'TEACHER',0,7),
+    (9, 'st3', 'nobita.jpg', 'st3', 'teacher3@gmail.com', 'Professor Lee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '4', 'STUDENT',0,8);
     
 
 
@@ -92,7 +92,14 @@ VALUES
     
         INSERT IGNORE INTO  user_field (field_id,users_id) 
 VALUES 
-    (1,6);
+    (1,2),
+    (1,3),
+     (1,4),
+     (1,5),
+     (1,6),
+     (1,7);
+              
+    
     
 
         INSERT IGNORE INTO  teacher_subject (id, subject_id,teacher_id) 
@@ -102,9 +109,12 @@ VALUES
     (3,11,5),
     (4,12,5),
     (5,31,5),
-    (6,36,5),
+    (6,34,5),
     (7,39,5),
-    (8,40,5);
+    (8,38,5),
+    (9,37,5),
+    (10,35,5),
+    (11,40,5);
     
 
     

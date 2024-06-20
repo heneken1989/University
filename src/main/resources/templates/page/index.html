@@ -174,43 +174,14 @@
             </div>
         </div>
     </div>
+     
+    <div th:each="news, iterStat : ${newsList}"  class="small-news-container news-item" id="small-news-container-1">
+    <img id="small-news-image-1" class="small-news-image" th:src="@{'/getimage/' +${news.image}}" alt="Small News Image 1">
+    <div class="small-news-title">
+        <a th:text="${news.title}" id="small-news-link-1" th:href="@{/web/news/details/{id} (id=${news.id})}"></a>
+    </div>
+</div>
 
-    <div class="small-news-container" id="small-news-container-1">
-    <img id="small-news-image-1" class="small-news-image" src="" alt="Small News Image 1">
-    <div class="small-news-title">
-        <a id="small-news-link-1" href=""></a>
-    </div>
-</div>
-<div class="small-news-container" id="small-news-container-2">
-    <img id="small-news-image-2" class="small-news-image" src="" alt="Small News Image 2">
-    <div class="small-news-title">
-        <a id="small-news-link-2" href=""></a>
-    </div>
-</div>
-<div class="small-news-container" id="small-news-container-3">
-    <img id="small-news-image-3" class="small-news-image" src="" alt="Small News Image 3">
-    <div class="small-news-title">
-        <a id="small-news-link-3" href=""></a>
-    </div>
-</div>
-<div class="small-news-container" id="small-news-container-4">
-    <img id="small-news-image-4" class="small-news-image" src="" alt="Small News Image 4">
-    <div class="small-news-title">
-        <a id="small-news-link-4" href=""></a>
-    </div>
-</div>
-<div class="small-news-container" id="small-news-container-5">
-    <img id="small-news-image-5" class="small-news-image" src="" alt="Small News Image 5">
-    <div class="small-news-title">
-        <a id="small-news-link-5" href=""></a>
-    </div>
-</div>
-<div class="small-news-container" id="small-news-container-6">
-    <img id="small-news-image-6" class="small-news-image" src="" alt="Small News Image 6">
-    <div class="small-news-title">
-        <a id="small-news-link-6" href=""></a>
-    </div>
-</div>
 
     <script>
     

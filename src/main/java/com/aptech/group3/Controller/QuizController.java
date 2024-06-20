@@ -63,6 +63,7 @@ import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.service.ClassForSubjectService;
 import com.aptech.group3.service.ExamQuestionAnswerService;
+import com.aptech.group3.service.MarkSubjectService;
 import com.aptech.group3.service.QuizAnswerService;
 import com.aptech.group3.service.QuizExamService;
 import com.aptech.group3.service.QuizQuestionService;
@@ -129,6 +130,9 @@ public class QuizController {
 	 
 	 @Autowired
 	 private MarkSubjectRepository markSubjectRepository;
+	 
+	 @Autowired
+	 private MarkSubjectService markSubjectService;
 	 
 
           
@@ -305,22 +309,71 @@ public class QuizController {
 	        	quizExamRepository.save(exam);	
 	        	
 	        	// save to mark subject
-	        	MarkSubject saveMarkClass = new MarkSubject();
+	
+	    	  	MarkSubject saveMarkClass = new MarkSubject();
 	        	saveMarkClass.setMark(mark);
 	        	saveMarkClass.setUser(currentUser.getUser());
 	        	saveMarkClass.setSubject(exam.getQuiz().getSubject());
 	        	saveMarkClass.setClassSubject(exam.getClassForSubject());
 	        	if(exam.getQuiz().getType().equals("1"))
 	        	{
-	        		saveMarkClass.setStyle("normalMark");
+	        		saveMarkClass.setStyle("finalMark");
 	        	}
 	        	else if (exam.getQuiz().getType().equals("2")) {
 	        		saveMarkClass.setStyle("middleMark");
-				}
+	    		}
 	           	else if (exam.getQuiz().getType().equals("3")) {
-	        		saveMarkClass.setStyle("finalMark");
-				}
+	        		saveMarkClass.setStyle("normalMark");
+	    		}
+	        	
 	        	markSubjectRepository.save(saveMarkClass);
+	        	
+	        	List<MarkSubject> listMarkSubjects = markSubjectService.getListMarkSubjectByStudentIdAndClassId(currentUser.getUserId(), exam.getClassForSubject().getId());
+	    		float firstMark=0;
+	    		float middleMark =0;
+	    		float finalMark =0;
+	    		Long finalMarkSUbjectLong = (long) 0;
+
+	        	if(!listMarkSubjects.isEmpty())
+	        	{	        
+	        		for(MarkSubject aMarkSubject : listMarkSubjects)
+	        		{
+	        			if(aMarkSubject.getStyle().equals("normalMark"))
+	        			{
+	        				firstMark += aMarkSubject.getMark();
+	        			}
+	        			else if(aMarkSubject.getStyle().equals("middleMark"))
+	        			{
+	        				middleMark += aMarkSubject.getMark();
+	        			}
+	        			else if(aMarkSubject.getStyle().equals("finalMark"))
+	        			{
+	        				finalMark += aMarkSubject.getMark();
+	        			}
+	        			
+	        			if(aMarkSubject.getStyle().equals("final"))
+	        			{
+	        				finalMarkSUbjectLong = aMarkSubject.getId();
+	    			    }
+	        			
+	        		}
+	        		if(finalMarkSUbjectLong!=0)
+	        		{
+	        			MarkSubject updateMarkSubject = markSubjectRepository.getById(finalMarkSUbjectLong);
+	        			updateMarkSubject.setMark((float) (0.2*firstMark + 0.2*middleMark + 0.6*finalMark));
+	        			markSubjectRepository.save(updateMarkSubject);
+	        		}
+	        		else {
+	        			MarkSubject  updateMarkSubject = new MarkSubject();
+	        			updateMarkSubject.setMark((float) (0.2*firstMark + 0.2*middleMark + 0.6*finalMark));	    	
+	        			updateMarkSubject.setUser(currentUser.getUser());
+	        			updateMarkSubject.setSubject(exam.getQuiz().getSubject());
+	        			updateMarkSubject.setClassSubject(exam.getClassForSubject());
+	        			updateMarkSubject.setStyle("final");
+	        			markSubjectRepository.save(updateMarkSubject);
+	    			     }
+	        	}
+
 	        	
 	         session.removeAttribute("currentPage");
 	         session.removeAttribute("totalPages");	         

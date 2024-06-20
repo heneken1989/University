@@ -77,15 +77,21 @@
         <input type="text" class="form-control" id="orderInfo" name="orderInfo" required th:value="Payment">
     </div>
     <!-- Hidden input fields for selected item IDs -->
-    <input type="hidden" id="selectedItems" name="selectedItems">
+    <input id="selectedItems" hidden name="selectedItems">
     <button type="submit" class="btn btn-primary">Payment VnPay</button>
     
 </form>
-<a href="../paypal/indexx" >Paypal</a>
+<br>
+<form id="paypalForm" method="post" action="/paypal/indexx">
+    <input type="hidden" name="amount" id="paypalAmount">
+    <input type="hidden" name="selectedItems" id="paypalSelectedItems">
+    <button type="submit" id="paypalButton" class="btn btn-primary">Payment Paypal</button>
+</form>
 
 <!-- Add the payment button here -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script th:inline="javascript">
 document.addEventListener("DOMContentLoaded", function() {
     var checkboxes = document.querySelectorAll('.form-check-input');
@@ -123,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Update total based on stored credit states
         checkboxes.forEach(function(checkbox) {
             var row = checkbox.closest('tr');
-            var creditText = row.querySelector('td:nth-child(2)').textContent.trim();
+            var creditText = row.querySelector('td:nth-child(3)').textContent.trim();
             var credit = parseInt(creditText);
             if (creditStates[credit]) {
                 checkbox.checked = true;
@@ -137,19 +143,35 @@ document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener('beforeunload', function() {
         sessionStorage.setItem('creditStates', JSON.stringify(creditStates));
     });
-});
 
-//JavaScript code for handling user selections and sending data to backend
-document.addEventListener("DOMContentLoaded", function() {
-    const paymentButton = document.getElementById('paymentButton');
-    if (paymentButton) {
-        paymentButton.addEventListener('click', function() {
-            // Redirect to the payment URL
-            window.location.href = 'http://localhost:8081/create_payment';
+    // Handle Paypal button click
+    var paypalButton = document.getElementById('paypalButton');
+    if (paypalButton) {
+        paypalButton.addEventListener('click', function(event) {
+            var amount = totalInput.value;
+            var paypalAmountInput = document.getElementById('paypalAmount');
+            var paypalSelectedItemsInput = document.getElementById('paypalSelectedItems');
+            var selectedItems = [];
+
+            // Get selected items
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    selectedItems.push(checkbox.value);
+                }
+            });
+
+            paypalAmountInput.value = amount;
+            paypalSelectedItemsInput.value = selectedItems.join(',');
+
+            if (selectedItems.length === 0) {
+                event.preventDefault();
+                alert("Please select at least one item.");
+            }
         });
     }
 });
 
+// JavaScript code for handling user selections and sending data to backend
 $(document).ready(function() {
     $('#orderForm').submit(function() {
         var selectedItems = [];
@@ -160,14 +182,88 @@ $(document).ready(function() {
         $('#selectedItems').val(selectedItems.join(','));
     });
 });
-
-
-
-   
-
-    // Example: Button click event to initiate payment
-    
 </script>
+
+
+<!-- <script th:inline="javascript">
+document.addEventListener("DOMContentLoaded", function() {
+    var checkboxes = document.querySelectorAll('.form-check-input');
+    var totalInput = document.querySelector('input[name="amount"]');
+    var totalCredits = 0;
+    var creditStates = {}; // Object to store the state of each credit
+
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            var row = this.closest('tr');
+            var creditText = row.querySelector('td:nth-child(3)').textContent.trim();
+            var credit = parseInt(creditText);
+
+            if (!isNaN(credit)) {
+                // Update the state of the credit
+                creditStates[credit] = this.checked;
+
+                // Update the total based on credit state
+                if (this.checked) {
+                    totalCredits += credit;
+                } else {
+                    totalCredits -= credit;
+                }
+                totalInput.value = totalCredits * 3000000 ;
+            } else {
+                console.error("Invalid credit value:", creditText);
+            }
+        });
+    });
+
+    // Restore credit states from sessionStorage if available
+    var storedStates = sessionStorage.getItem('creditStates');
+    if (storedStates) {
+        creditStates = JSON.parse(storedStates);
+        // Update total based on stored credit states
+        checkboxes.forEach(function(checkbox) {
+            var row = checkbox.closest('tr');
+            var creditText = row.querySelector('td:nth-child(3)').textContent.trim();
+            var credit = parseInt(creditText);
+            if (creditStates[credit]) {
+                checkbox.checked = true;
+                totalCredits += credit;
+            }
+        });
+        totalInput.value = totalCredits * 3000000 ;
+    }
+
+    // Save credit states to sessionStorage when leaving the page
+    window.addEventListener('beforeunload', function() {
+        sessionStorage.setItem('creditStates', JSON.stringify(creditStates));
+    });
+
+    // Handle Paypal button click
+    var paypalButton = document.getElementById('paypalButton');
+    if (paypalButton) {
+        paypalButton.addEventListener('click', function() {
+            var amount = totalInput.value;
+            var paypalAmountInput = document.getElementById('paypalAmount');
+            paypalAmountInput.value = amount;
+            document.getElementById('paypalForm').submit();
+        });
+    }
+});
+
+
+// JavaScript code for handling user selections and sending data to backend
+$(document).ready(function() {
+    $('#orderForm').submit(function() {
+        var selectedItems = [];
+        $('.form-check-input:checked').each(function() {
+            selectedItems.push($(this).val());
+        });
+        console.log("Selected Items: ", selectedItems); // Add this line for debugging
+        $('#selectedItems').val(selectedItems.join(','));
+    });
+}); -->
+
+
+
 
 	</article>
 	

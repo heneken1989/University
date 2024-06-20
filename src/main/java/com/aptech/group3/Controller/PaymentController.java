@@ -26,11 +26,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
-
+import com.aptech.group3.Dto.CashDto;
 import com.aptech.group3.Dto.ClassStatus;
-import com.aptech.group3.Dto.cashDto;
+
 import com.aptech.group3.entity.ClassForSubject;
-import com.aptech.group3.entity.Payment;
+import com.aptech.group3.entity.Paymenttt;
 import com.aptech.group3.entity.StudentClass;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
@@ -75,10 +75,13 @@ public class PaymentController {
         return "page/paypal/paymentoffline"; // Ensure this matches your template name
     }
 	
+	
+	
+	
 	@GetMapping("/web/payment/details")
 	public String details(Model model ,@AuthenticationPrincipal CustomUserDetails currentUser)
 	{
-		List<Payment> classss = paymentservice.findByStudentId(currentUser.getUserId());
+		List<Paymenttt> classss = paymentservice.findByStudentId(currentUser.getUserId());
 		model.addAttribute("class",classss);
 		return "page/paypal/details";
 		
@@ -94,7 +97,7 @@ public class PaymentController {
 	    int pageSize = 10; // Number of records per page
 	    Pageable pageable = PageRequest.of(page, pageSize);
 
-	    Page<Payment> paymentPage = paymentservice.findAll(pageable);
+	    Page<Paymenttt> paymentPage = paymentservice.findAll(pageable);
 	    model.addAttribute("paymentPage", paymentPage);
 	    model.addAttribute("currentPage", page);
 
@@ -155,7 +158,7 @@ public class PaymentController {
 	    	for (Long classId : idList) 
 	    	{
 	            ClassForSubject classForSubject = classforsubjectservice.findById(classId);
-	            Payment payment = new Payment();
+	            Paymenttt payment = new Paymenttt();
 	            int classCredit = classForSubject.getSubject().getCredit();
 	            payment.setStudent(student);
 	            payment.setClassforSubject(classForSubject);
@@ -174,7 +177,7 @@ public class PaymentController {
 	@GetMapping("/admin/paymentoffline")
 	public String paymentoffline (Model model,@RequestParam(name = "codee", required = false) String se) {
 		List<StudentClass> classss= new ArrayList<StudentClass>();
-		cashDto dto=new cashDto();
+		CashDto dto=new CashDto();
 		if (se != null) {
 			classss = service.findStudentClassesByUserName(se);
 			if(classss.size()!=0)
@@ -194,7 +197,7 @@ public class PaymentController {
 		return "page/paypal/paymentoffline";
 	}
 	 @PostMapping("/admin/payment/updateStatus")
-	    public String updateStatus(@ModelAttribute cashDto dto) 
+	    public String updateStatus(@ModelAttribute CashDto dto) 
 	 {
 	        System.out.println("selectedItems"  +dto);
 
@@ -203,7 +206,7 @@ public class PaymentController {
 	    	for (Long classId : dto.getSubjectId()) 
 	    	{
 	            ClassForSubject classForSubject = classforsubjectservice.findById(classId);
-	            Payment payment = new Payment();
+	            Paymenttt payment = new Paymenttt();
 	            int classCredit = classForSubject.getSubject().getCredit();
 	            payment.setStudent(student);
 	            payment.setClassforSubject(classForSubject);

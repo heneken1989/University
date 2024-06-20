@@ -61,6 +61,7 @@ import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.model.LoginRequest;
 import com.aptech.group3.service.ClassForSubjectService;
 import com.aptech.group3.service.ExamQuestionAnswerService;
+import com.aptech.group3.service.MarkSubjectService;
 import com.aptech.group3.service.QuizAnswerService;
 import com.aptech.group3.service.QuizExamService;
 import com.aptech.group3.service.QuizService;
@@ -125,6 +126,20 @@ private QuizExamService quizExamService;
 
 @Autowired
 private QuizService quizService;
+
+
+@Autowired
+private FiledRepository filedRepository;
+@Autowired
+private SubjectLevelRepository subjectLevelRepository;
+
+@Autowired
+private SubjectService subService;
+
+@Autowired
+private MarkSubjectService markSubjectService;
+
+
 
 
 
@@ -215,6 +230,55 @@ public void QuizSubmit(@RequestBody Map<String, Object> requestBody) {
 		
 	}
 	quizExamRepository.save(exam);
+	
+	List<MarkSubject> listMarkSubjects = markSubjectService.getListMarkSubjectByStudentIdAndClassId(exam.getStudent().getId(), exam.getClassForSubject().getId());
+	float firstMark=0;
+	float middleMark =0;
+	float finalMark =0;
+	Long finalMarkSUbjectLong = (long) 0;
+
+	if(!listMarkSubjects.isEmpty())
+	{	        
+		for(MarkSubject aMarkSubject : listMarkSubjects)
+		{
+			if(aMarkSubject.getStyle().equals("normalMark"))
+			{
+				firstMark += aMarkSubject.getMark();
+			}
+			else if(aMarkSubject.getStyle().equals("middleMark"))
+			{
+				middleMark += aMarkSubject.getMark();
+			}
+			else if(aMarkSubject.getStyle().equals("finalMark"))
+			{
+				finalMark += aMarkSubject.getMark();
+			}
+			
+			if(aMarkSubject.getStyle().equals("final"))
+			{
+				finalMarkSUbjectLong = aMarkSubject.getId();
+		    }
+			
+		}
+		if(finalMarkSUbjectLong!=0)
+		{
+			MarkSubject updateMarkSubject = markSubjectRepository.getById(finalMarkSUbjectLong);
+			updateMarkSubject.setMark((float) (0.2*firstMark + 0.2*middleMark + 0.6*finalMark));
+			markSubjectRepository.save(updateMarkSubject);
+		}
+		else {
+			MarkSubject  updateMarkSubject = new MarkSubject();
+			updateMarkSubject.setMark((float) (0.2*firstMark + 0.2*middleMark + 0.6*finalMark));	    	
+			updateMarkSubject.setUser(exam.getStudent());
+			updateMarkSubject.setSubject(exam.getQuiz().getSubject());
+			updateMarkSubject.setClassSubject(exam.getClassForSubject());
+			updateMarkSubject.setStyle("final");
+			markSubjectRepository.save(updateMarkSubject);
+		     }
+	}
+	
+	
+	
 }
 
 
@@ -331,34 +395,20 @@ public List<QuizAnswer> FindAnswerByQuestionId(@RequestBody Map<String, Long> re
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
 @PostMapping("/listSS")
 public List<StudentClass> listSB(@RequestBody Long userid){
     return studentsubservice.findSubjectByStudentId(userid);
 }
 
+@GetMapping("/api/public/AllField")
+public List<Field> GetAllField() {
+    return filedRepository.findAll() ;
+}
 
-
-
-
-
-
-
-
-
+@GetMapping("/api/public/AllLevel")
+public List<SubjectLevel> GetAllLevel() {
+    return subjectLevelRepository.findAll() ;
+}
 
 
 /*

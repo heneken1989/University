@@ -19,7 +19,7 @@ import com.aptech.group3.entity.User;
 public interface SubjectRepository extends JpaRepository<Subject,Long> {
 	
 	@Query("SELECT DISTINCT ms.subject FROM MarkSubject ms " +
-		       "WHERE ms.user = :student AND ms.mark >= 5")
+		       "WHERE ms.user = :student AND ms.mark >= 5 AND ms.style = 'final'")
 		List<Subject> findPassedSubject(@Param("student") User student);
 	
 	
