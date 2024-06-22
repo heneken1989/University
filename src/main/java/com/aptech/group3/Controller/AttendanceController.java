@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.aptech.group3.Dto.ActionStatus;
 import com.aptech.group3.Dto.AttendanceDto;
 import com.aptech.group3.Dto.DetailAttendClassDto;
 import com.aptech.group3.Dto.LessonApiDto;
@@ -159,9 +160,8 @@ public class AttendanceController {
 		
 		List<LessonSubject> currentLesson = lessonService.getCurrentLesson(classId, new Date());
 		if (currentLesson.isEmpty()) {
-
-			redirectAttribute.addAttribute("error", "No  lesson for this class today ");
-			return "redirect:/web/attendance/list";
+			redirectAttribute.addFlashAttribute("notification", "No lesson");
+	        return "redirect:/web/attendance/list?notification=No%20lesson";	
 		}
 		List<AttendanceDto> data;
 

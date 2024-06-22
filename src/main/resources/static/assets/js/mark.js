@@ -4,7 +4,28 @@ $(document).ready(function() {
             $(this).prop('readonly', true);
         }
     });
-   
+    function getParameterByName(name, url) {
+                if (!url) url = window.location.href;
+                name = name.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+
+            // Get the notification parameter from the URL
+            var notification = getParameterByName('notification');
+            console.log(notification)
+            if(notification == "Class has no students yet!"){
+                showToast("Class has no students yet!", "Export", "warning");
+            }
+            if(notification == "Class has no student mark yet!"){
+                showToast("Class has no student mark yet!", "Export", "warning");
+            }
+            if(notification == "No lesson"){
+                showToast("No current lesson available.", "Attendance", "warning");
+            }
 	//edit mark for class
 	$(".mark-input").change(function() {
         var studentId = $(this).closest("tr").find(".student-id").text();
@@ -94,7 +115,6 @@ $(document).ready(function() {
 
 
 
-
 	var classSelect = $('#classId');
 	var markTable = $('#markTable tbody');
 	var exportButton = $('#exportButton');
@@ -121,7 +141,7 @@ $(document).ready(function() {
 	classSelect.change(function() {
 		var classId = $(this).val();
 		localStorage.setItem('selectedClassId', classId);
-		$(classForm).submit();
+		//$(classForm).submit();
 		//$('#classId').val(classId);
 		//fetchMarks(firstClassId);
 	});
