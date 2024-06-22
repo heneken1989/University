@@ -19,6 +19,10 @@ import jakarta.transaction.Transactional;
 
 public interface StudentClassRepository extends JpaRepository<StudentClass ,Long> {
 	
+	
+	List<StudentClass> findByStudentIdAndStatusIn(Long studentId, List<ClassStatus> statuses);
+	
+	
 	List<StudentClass> findAllById(Iterable<Long> ids);
 	@Query("SELECT sc FROM StudentClass sc WHERE sc.student.code = :code AND sc.status = 2 ")
     List<StudentClass> findByStudentName(@Param("code") String code);

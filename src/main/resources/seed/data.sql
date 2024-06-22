@@ -1,3 +1,28 @@
+-- Disable foreign key checks
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Delete old data from all tables
+DELETE FROM QuizQuestion;
+DELETE FROM News;
+DELETE FROM field;
+DELETE FROM semeter;
+DELETE FROM room;
+DELETE FROM subjectlevel;
+DELETE FROM user;
+DELETE FROM subject;
+DELETE FROM user_field;
+DELETE FROM teacher_subject;
+DELETE FROM class_subject;
+DELETE FROM studentclass;
+DELETE FROM quiz;
+DELETE FROM quizquestion;
+DELETE FROM quizanswer;
+DELETE FROM lessonsubject;
+DELETE FROM requiredsubject;
+DELETE FROM marksubject;
+
+-- Enable foreign key checks
+SET FOREIGN_KEY_CHECKS = 1;
 
 ALTER TABLE QuizQuestion MODIFY content LONGTEXT;
 ALTER TABLE News MODIFY content LONGTEXT;
@@ -33,13 +58,13 @@ VALUES
 INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role,status,code) 
 VALUES 
     (2, 'admin', 'nobita.jpg', 'admin@gmail.com', 'ad', 'admin', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'ADMIN',0,1),
-    (3, 'st', 'nobita.jpg', 'st', 'st@gmail.com', 'Student LEE', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0,2),
-    (4, 'st1', 'nobita.jpg', 'st1', 'st1@gmail.com', 'Student Nguyen', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0,3),
-    (5, 'tc', 'nobita.jpg', 'teacher', 'teacher@gmail.com', 'professor David', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'TEACHER',0,4),
-    (6, 'emp', 'nobita.jpg', 'employee', 'employee@gmail.com', 'employee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'EMPLOYEE',0,5),
-    (7, 'st2', 'nobita.jpg', 'st2', 'student1@gmail.com', 'student Hien', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '2', 'STUDENT',0,6),
-    (8, 'tc2', 'nobita.jpg', 'teacher2', 'teacher2@gmail.com', 'professor LY', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '3', 'TEACHER',0,7),
-    (9, 'st3', 'nobita.jpg', 'st3', 'teacher3@gmail.com', 'Professor Lee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '4', 'STUDENT',0,8);
+    (3, 'st', 'nobita.jpg', 'st@gmail.com', 'st@gmail.com', 'Student LEE', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0,2),
+    (4, 'st1', 'nobita.jpg', 'st1@gmail.com', 'st1@gmail.com', 'Student Nguyen', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0,3),
+    (5, 'tc', 'nobita.jpg', 'teacher@gmail.com', 'teacher@gmail.com', 'professor David', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'TEACHER',0,4),
+    (6, 'emp', 'nobita.jpg', 'employee@gmail.com', 'employee@gmail.com', 'employee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'EMPLOYEE',0,5),
+    (7, 'st2', 'nobita.jpg', 'st2@gmail.com', 'student1@gmail.com', 'student Hien', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '2', 'STUDENT',0,6),
+    (8, 'tc2', 'nobita.jpg', 'teacher2@gmail.com', 'teacher2@gmail.com', 'professor LY', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '3', 'TEACHER',0,7),
+    (9, 'st3', 'nobita.jpg', 'st3@gmail.com', 'good student', 'Lee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '4', 'STUDENT',0,8);
     
 
 
@@ -92,8 +117,8 @@ VALUES
     
         INSERT IGNORE INTO  user_field (field_id,users_id) 
 VALUES 
-    (1,2),
-    (1,3),
+     (1,2),
+     (1,3),
      (1,4),
      (1,5),
      (1,6),
@@ -121,11 +146,11 @@ VALUES
     
             INSERT IGNORE INTO  class_subject (currentQuantity, minQuantity, quantity, slotEnd, slotStart, status, weekDay, dateEnd, dateStart, id, room_id, semeter_id, subject_id, teacher_id, description, name, type) 
 VALUES 
-    (0,5,50,3,1,NULL,1,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',1,1,1,36,5,'Class for ...','CPKH24',2),
-    (0,5,50,12,10,NULL,2,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',2,2,1,1,5,'Class for ...','CPKH4',2),
-    (0,5,50,6,4,NULL,3,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',3,3,1,2,5,'Class for ...','CPKH3',2),
-    (0,5,50,12,7,NULL,5,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',4,4,1,11,5,'Class for ...','CPKH2',2),
-    (0,5,50,6,1,NULL,6,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',5,1,1,12,5,'Class for ...','CPHK1',2);
+    (0,5,50,3,1,2,2,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',1,1,1,36,5,'Class for ...','CPKH24',2),
+    (0,5,50,12,10,2,1,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',2,2,1,1,5,'Class for ...','CPKH4',2),
+    (0,5,50,6,4,2,3,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',3,3,1,2,5,'Class for ...','CPKH3',2),
+    (0,5,50,12,7,2,5,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',4,4,1,11,5,'Class for ...','CPKH2',2),
+    (0,5,50,6,1,2,6,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',5,1,1,12,5,'Class for ...','CPHK1',2);
          
     
     
@@ -208,6 +233,61 @@ VALUES
       (3,33,39,'PASS'),
       (4,34,39,'OPTIONAL'),
       (5,35,39,'OPTIONAL');
+      
+      
+      
+      
+            INSERT IGNORE INTO  marksubject (id,mark, class_id, student_id,subject_id,style) 
+VALUES 
+ 
+      (1,100,1,4,36,'normalMark'),
+      (2,100,1,4,36,'middleMark'),
+      (3,100,1,4,36,'finalMark'),
+      (4,100,1,4,36,'final'),
+      
+      (5,60,1,7,36,'normalMark'),
+      (6,60,1,7,36,'middleMark'),
+      (7,60,1,7,36,'finalMark'),
+      (8,60,1,7,36,'final'),
+      
+      
+      
+      (9,60,1,9,36,'normalMark'),
+      (10,60,1,9,36,'middleMark'),
+      (11,50,1,9,36,'finalMark'),
+      (12,55,1,9,36,'final');
+      
+      
+      
+                  INSERT IGNORE INTO  lessonsubject (id,lesson,class_id, day) 
+VALUES 
+ 
+
+      (1,1,1,'2024-01-02'),
+      (2,2,1,'2024-01-09'),
+      (3,3,1,'2024-01-16'),
+      (4,4,1,'2024-01-23'),
+      (5,5,1,'2024-01-30'),
+      (6,6,1,'2024-02-06'),
+      (7,7,1,'2024-02-13'),
+      (8,8,1,'2024-02-20'),
+      (9,9,1,'2024-02-27'),
+      (10,10,1,'2024-03-05'),
+      (11,11,1,'2024-03-12'),
+      (12,12,1,'2024-03-19'),
+      (13,13,1,'2024-03-26'),
+      (14,14,1,'2024-04-02'),
+      (15,15,1,'2024-04-09'),
+      (16,16,1,'2024-04-16'),
+      (17,17,1,'2024-04-23'),
+      (18,18,1,'2024-05-07'),
+      (19,19,1,'2024-05-14'),
+      (20,20,1,'2024-05-21'),
+      (21,21,1,'2024-05-28'),
+      (22,22,1,'2024-06-04'),
+      (23,23,1,'2024-06-11'),
+      (24,24,1,'2024-06-18'),
+      (25,25,1,'2024-06-25');
 
     
    

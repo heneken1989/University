@@ -6,13 +6,41 @@
 <title>Content</title>
 </head>
 <body>
-       <div layout:fragment="content" class="ttttable table-bordered mt-3" style="transform: translateX(50px)">
-        <div class="card-header" style="width: 100%; color: rebeccapurple; font-family: 'georgia'; padding: 40px 0px 10px 0px; font-weight: 300;">
-            <h3 style="text-align: center; font-weight: bold; font-size: 40px; text-transform: uppercase;">Mark Subject</h3>
-        </div>
-  <!-- Thêm thông báo thành công -->
+	<div layout:fragment="content" class="ttttable table-bordered mt-3"
+		style="transform: translateX(50px)">
+		<div class="card-header"
+			style="width: 100%; color: rebeccapurple; font-family: 'georgia'; padding: 40px 0px 10px 0px; font-weight: 300;">
+			<h3
+				style="text-align: center; font-weight: bold; font-size: 40px; text-transform: uppercase;">Mark
+				Subject</h3>
+		</div>
+		<!-- Thêm thông báo thành công -->
 
-        <table id="markTable" th:unless="${hideTable}" style="margin-top: 20px;">
+  <table id="markTable" th:if="${role == 'STUDENT'}" style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Class</th>
+                    <th>Subject</th>
+                    <th>Mark</th>
+                </tr>
+            </thead>
+            <tbody>
+                <th:block th:if="${markSubjects.isEmpty()}" style="text-align: center; margin-top: 20px;">
+                    <tr>
+                        <td colspan="4" class="text-center" style="color: red;">Student does not have a score yet.</td>
+                    </tr>
+                </th:block>
+                <tr th:each="markSubject : ${markSubjects}">
+                    <td th:text="${markSubject.id}" style="text-align: center;"></td>
+                    <td th:text="${markSubject.classSubject.name}" style="text-align: center;"></td>
+                    <td th:text="${markSubject.subject.name}" style="text-align: center;"></td>
+                    <td th:text="${markSubject.mark}" style="text-align: center;"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table id="markTableTeacher" th:if="${role == 'TEACHER'}" style="margin-top: 20px;">
             <thead>
                 <tr>
                     <th>#</th>
@@ -22,19 +50,27 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="markSubject : ${markSubjects}" >
-                    <td th:text="${markSubject.id}"style="text-align:center;"></td>
-                    <td th:text="${markSubject.user.name}"style="text-align:center;"></td>
-                    <td th:text="${markSubject.subject.name}"style="text-align:center;"></td>
-                    <td th:text="${markSubject.mark}"></td>
+                <th:block th:if="${markSubjects.isEmpty()}" style="text-align: center; margin-top: 20px;">
+                    <tr>
+                        <td colspan="4" class="text-center" style="color: red;">No students have scores yet.</td>
+                    </tr>
+                </th:block>
+                <tr th:each="markSubject : ${markSubjects}">
+                    <td th:text="${markSubject.id}" style="text-align: center;"></td>
+                    <td th:text="${markSubject.user.name}" style="text-align: center;"></td>
+                    <td th:text="${markSubject.subject.name}" style="text-align: center;"></td>
+                    <td th:text="${markSubject.mark}" style="text-align: center;"></td>
                 </tr>
             </tbody>
         </table>
 
-        <div th:if="${hideTable}" style="text-align: center; margin-top: 20px;">
-            <p style="color:red">Warning: <span th:text="${message}" style="color:red"></span></p>
-        </div>
-    </div>
+		<div th:if="${hideTable}"
+			style="text-align: center; margin-top: 20px;">
+			<p style="color: red">
+				Warning: <span th:text="${message}" style="color: red"></span>
+			</p>
+		</div>
+	</div>
 
 </body>
 </html>

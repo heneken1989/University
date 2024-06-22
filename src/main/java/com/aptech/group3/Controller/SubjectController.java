@@ -112,6 +112,14 @@ public class SubjectController {
 			//System.out.println("dataaaa;"+optionalRequiredSubjectList.toString());
 			a.setOptionalRequiredSuject(optionalRequiredSubjectList);
 			a.setPassedSubjects(listRequiredSubject);
+			
+			if (listRequiredSubject.isEmpty()) {
+				listRequiredSubject.add("not have");
+			}
+
+			if (optionalRequiredSubjectList.isEmpty()) {
+				optionalRequiredSubjectList.add("not have");
+			}
 		}
 		
 		
@@ -154,6 +162,11 @@ public class SubjectController {
 			BindingResult bindingResult, HttpServletRequest request, RedirectAttributes rm
 			,@AuthenticationPrincipal CustomUserDetails currentUser) {
 	     System.out.print("aaaaaaaa"+ data.getCreditAction());
+	     
+	  // Check for duplicate name
+	        if (subService.existsByName(data.getName())) {
+	            bindingResult.rejectValue("name", "duplicate", "A subject with this name already exists.");
+	        }
 		  if(bindingResult.hasErrors()) {
 		  
 		       System.out.print("bbbbbb"+ bindingResult.toString());

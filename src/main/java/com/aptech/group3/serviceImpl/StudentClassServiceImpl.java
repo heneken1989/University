@@ -3,6 +3,7 @@ package com.aptech.group3.serviceImpl;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,12 @@ public class StudentClassServiceImpl implements StudentClassService {
 	@Autowired
 	private AttendanceRepository attendanceRepo;
 	
+	
+    public List<StudentClass> getStudentClasses(Long studentId) {
+        List<ClassStatus> statuses = Arrays.asList(ClassStatus.WAITINGLIST, ClassStatus.LIST, ClassStatus.UNPAID, ClassStatus.PAID);
+        return repo.findByStudentIdAndStatusIn(studentId, statuses);
+    }
+	
 	public List<StudentClass> findStudentClassesByUserName(String code) {
         return repo.findByStudentName(code);
     }
@@ -65,7 +72,7 @@ public class StudentClassServiceImpl implements StudentClassService {
 	
 	
 	public void  updateStatusToPaid() {
-		repo.updateSatustoStatus(ClassStatus.PAID ,ClassStatus.LIST);
+		repo.updateSatustoStatus(ClassStatus.UNPAID ,ClassStatus.LIST);
 	}
 
 	

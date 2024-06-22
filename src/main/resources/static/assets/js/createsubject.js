@@ -116,28 +116,27 @@ $("#select_type_create_subject").on("change",()=>{
 
 
 
-$("#credit_create_subject").on("change",()=>{
-let value=	$("#credit_create_subject").val();
-	$("#credit_action_proper").show();
-let str=""
+$("#credit_create_subject").on("change", () => {
+    let value = $("#credit_create_subject").val();
+    //$("#credit_action_proper").show();
+    
+    let str = "";
 
+    if ($("#select_type_create_subject").val() == "BOTH" && value ==1) {
+		alert("ko dc chon 1");
+		$("#credit_action_proper").show();
+        str += `<option value="10">Select create for action</option>`;
+    } else {
+		$("#credit_action_proper").hide();
+        str = `<option value="0">0</option>`;
+    }
 
-if($("#select_type_create_subject").val()=="BOTH"){
-	str+= `<option th:value="10"> Select create for action</option>`
-}else{
-	str=`<option th:value="0">0</option>`
-}
+    for (let i = 0; i < value - 1; i++) {
+        str += `<option value="${i + 1}">${i + 1}</option>`;
+    }
 
-for(i=0; i<value-1;i++){
-str+=`<option th:value="${i+1}">${i+1}</option>	`
-}
-
-$("#creditAction_create_subject_new").html(str);
-if($("#select_type_create_subject").val()=="BOTH"){
-	$("#credit_action_proper").show();
-}
-
-})
+    $("#creditAction_create_subject_new").html(str);
+});
 
 $("#select_level_subject").on("change",()=>{
 	$("#form_sort_level").submit()

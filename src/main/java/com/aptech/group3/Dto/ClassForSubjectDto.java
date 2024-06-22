@@ -24,6 +24,8 @@ public class ClassForSubjectDto {
 	private int slotStart;
 	private int slotEnd;
 	private int quantity;
+	private int currentQuantity;
+	private int minQuantity;
 	private String description;
 	private String status;
 	private int weekDay;

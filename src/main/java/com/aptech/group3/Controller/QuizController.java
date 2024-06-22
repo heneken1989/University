@@ -335,7 +335,8 @@ public class QuizController {
 	    		Long finalMarkSUbjectLong = (long) 0;
 
 	        	if(!listMarkSubjects.isEmpty())
-	        	{	        
+	        	{	   
+	   
 	        		for(MarkSubject aMarkSubject : listMarkSubjects)
 	        		{
 	        			if(aMarkSubject.getStyle().equals("normalMark"))
@@ -359,13 +360,14 @@ public class QuizController {
 	        		}
 	        		if(finalMarkSUbjectLong!=0)
 	        		{
+	        	
 	        			MarkSubject updateMarkSubject = markSubjectRepository.getById(finalMarkSUbjectLong);
-	        			updateMarkSubject.setMark((float) (0.2*firstMark + 0.2*middleMark + 0.6*finalMark));
+	        			updateMarkSubject.setMark((float) (0.2*firstMark + 0.3*middleMark + 0.5*finalMark));
 	        			markSubjectRepository.save(updateMarkSubject);
 	        		}
 	        		else {
 	        			MarkSubject  updateMarkSubject = new MarkSubject();
-	        			updateMarkSubject.setMark((float) (0.2*firstMark + 0.2*middleMark + 0.6*finalMark));	    	
+	        			updateMarkSubject.setMark((float) (0.2*firstMark + 0.3*middleMark + 0.5*finalMark));	    	
 	        			updateMarkSubject.setUser(currentUser.getUser());
 	        			updateMarkSubject.setSubject(exam.getQuiz().getSubject());
 	        			updateMarkSubject.setClassSubject(exam.getClassForSubject());
@@ -373,6 +375,10 @@ public class QuizController {
 	        			markSubjectRepository.save(updateMarkSubject);
 	    			     }
 	        	}
+	
+	        	
+	        	
+	       
 
 	        	
 	         session.removeAttribute("currentPage");

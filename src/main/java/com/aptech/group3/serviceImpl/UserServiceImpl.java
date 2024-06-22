@@ -75,9 +75,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Autowired 
 	private TokenRepository tokenRepository;
 	
-    public List<User> findByCode(String code) {
-        return userRepository.findByCode(code);
-    }
+	public Page<User> searchUsersByCode(String code, Pageable pageable) {
+		return userRepository.findByCode(code, pageable);
+	}
+	
+	
+	 public List<User> getAllUsersExceptAdmin() {
+	        return userRepository.findAllExceptAdmin();
+	    }
+ public List<User> findByCode(String code) {
+     return userRepository.findByCode(code);
+ }
+ 
+	
+
   public List<User> findByFieldIdAndSubjectIdAndStatusAndCode(UserStatus status, Long fieldId) {
         return userRepository.findByFieldIdAndSubjectIdAndStatusAndCode(status, fieldId);
     }

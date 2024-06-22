@@ -116,7 +116,7 @@ public class UserController {
 	                                    Model model) {
 	        Pageable pageable = PageRequest.of(page - 1, 10);
 	       
-	        model.addAttribute("data", userService.searchUsersByName(name, pageable));
+	        model.addAttribute("data", userService.searchUsersByCode(name, pageable));
 	        model.addAttribute("currentPage", page);
 	        model.addAttribute("searchTerm", name);
 	        return "admin_user/index";
@@ -164,7 +164,7 @@ public class UserController {
  		return "admin_user/update";
  	}
  
-	@PostMapping("/update/{id}")
+ 	@PostMapping("/update/{id}")
  	public String saveUpdate( Model model,@ModelAttribute("user") @Valid UserCreateDto dto, BindingResult result,
  			@RequestParam(name = "avatar", required = false) MultipartFile avatarFile,
  			@RequestParam(name = "id") Long id, RedirectAttributes rm,
@@ -242,6 +242,7 @@ public class UserController {
 	
 		return "admin_user/index";
 	}
+
 
 	@GetMapping("/create")
 	public String createUser(Model model) {
@@ -328,13 +329,14 @@ public class UserController {
 	}
 	
 	@GetMapping("/export")
-	public void exportToExcel(HttpServletResponse response, HttpSession session) throws IOException {
+	public void exportToExcel(HttpServletResponse response, HttpSession session, RedirectAttributes redirectAttributes) throws IOException {
 	    Long classId = (Long) session.getAttribute("classId");
 	    Long subjectId = (Long) session.getAttribute("subjectId");
 	    List<User> students = studentService.getStudentsByClassAndSubject(classId);
 	    if (students.isEmpty()) {
-	       response.sendRedirect("http://localhost:8081/admin/user/list?notification=Class%20has%20no%20students%20yet!");
-	       return;
+	    	  redirectAttributes.addFlashAttribute("notification", "Class has no students yet!");
+	          response.sendRedirect("/admin/user/list?notification=Class%20has%20no%20students%20yet!");
+	          return;
 	    }
 	    
 	    
@@ -347,12 +349,37 @@ public class UserController {
 	@PostMapping("/upload")
 	public String uploadExcelFile(@RequestParam("file") MultipartFile file, Model model) {
 		try {
-			List<User> users = userService.readUsersFromExcel(file);
-			for (User user : users) {
-				emailService.sendPasswordEmail(user.getEmail(), user.getPassword());
-			}
-			userService.saveAndEncoderPassword(users);
-			return "redirect:/admin/user/list";
+//			List<User> users = userService.readUsersFromExcel(file);
+//			for (User user : users) {
+//				emailService.sendPasswordEmail(user.getEmail(), user.getPassword());
+//			}
+//			userService.saveAndEncoderPassword(users);
+//			return "redirect:/admin/user/list";
+			
+			
+	        List<User> users = userService.readUsersFromExcel(file);
+	        int studentCount = userService.countStudents();
+	        int teacherCount = userService.countTeachers();
+	        int employeeCount = userService.countEmployees();
+	        for (User user : users) {
+	        	
+	            if (user.getRole().equals("STUDENT")) {
+	            	studentCount ++;
+	                String code = "ST24" + String.format("%04d", studentCount);
+	                user.setCode(code);
+	            } else if (user.getRole().equals("TEACHER")) {
+	            	teacherCount ++;
+	                String code = "TC24" + String.format("%04d", teacherCount);
+	                user.setCode(code);
+	            } else if (user.getRole().equals("EMPLOYEE")) {
+	                employeeCount ++;
+	                String code = "EM24" + String.format("%04d", employeeCount );
+	                user.setCode(code);
+	            }
+	            emailService.sendPasswordEmail(user.getEmail(), user.getPassword());
+	        }
+	        userService.saveAndEncoderPassword(users);
+	        return "redirect:/admin/user/list";
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "Failed to upload file. Please try again.";
@@ -394,12 +421,16 @@ public class UserController {
 	@GetMapping("/updateStatus")
 	  public String updateStatus(@RequestParam(name = "status", required = false) UserStatus status,
 	                             @RequestParam(name = "fieldId", required = false) Long fieldId,
-	                             Model model) {
-		System.out.println("id:"+ status + fieldId );
+	                             Model model, @RequestParam(name = "error", required = false) ActionStatus error) {
+		if(error!=null) {
+			model.addAttribute("error",error.toString());
+		}
 	      List<User> users = new ArrayList<User>();
 	      if(status!=null || fieldId!=null) {
 	    	  users = userService.findByFieldIdAndSubjectIdAndStatusAndCode(status, fieldId);
 	    	  
+	      }else {
+	          users = userService.getAllUsersExceptAdmin();
 	      }
 	      List<Field> fieldsList = filedService.getAllFields();
 			model.addAttribute("fields", fieldsList);
@@ -411,7 +442,7 @@ public class UserController {
 	  
 	  @PostMapping("/updateStatus")
 	  public String updateStatusForUsers(@RequestParam("select_type_student_update") String status,
-	          @RequestParam("student[]") List<String> students) {
+	          @RequestParam("student[]") List<String> students,  RedirectAttributes rm) {
 		  List<Long> list = new ArrayList<Long>();
 		     System.out.println("STUDENTS: "+ students);
 		     System.out.println("STATUS: "+ status);
@@ -420,6 +451,7 @@ public class UserController {
 		    	 list.add(Long.parseLong(e));
 		     });
 		     userService.updateStatusForUsers(userStatus, list);
+		     rm.addAttribute("error",ActionStatus.UPDATED);
 	      return "redirect:/admin/user/updateStatus";
 	  }
 }

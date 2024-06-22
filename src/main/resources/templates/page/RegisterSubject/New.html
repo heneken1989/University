@@ -422,7 +422,7 @@ function expandListItem(listItem, classItem) {
 
     var detail1 = document.createElement("p");
     detail1.innerHTML = "Teacher: " + classItem.teacher.name + "<br><br>Week Day: " 
-    + getWeekdayString(classItem.weekDay) + "<br><br>Slot Start: " + classItem.slotStart + "<br><br>Slot End: " +  classItem.slotEnd ;
+    + getWeekdayString(classItem.weekDay) + "<br><br>Current Quantity: " + classItem.currentQuantity + "<br><br>Max Quantity: " +  classItem.quantity ;
     detail1.style.fontSize = "25px";
     infoContainer1.appendChild(detail1);
 

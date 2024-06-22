@@ -196,25 +196,28 @@ public class MarkController {
 		}
 
 		if (markSubjects.isEmpty()) {
-			response.sendRedirect("/admin/mark/list");
+			response.sendRedirect("/admin/mark/list?notification=Class%20has%20no%20student%20mark%20yet!");
 			return ;
 		}
 
 		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		response.setHeader("Content-Disposition", "attachment; filename=mark.xlsx");
-
 		markSubjectService.exportToExcel(markSubjects, response.getOutputStream());
+	
 	}
 
 	@GetMapping("/web/mark/getMarkSubject")
 	public String getMarkSubject(@RequestParam(name = "classId", required = false) Long classId,
 			@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+		
 		Long id = userDetails.getUserId();
-		System.out.println("ClassId" + classId);
+		String tkLogin = userDetails.getRole();
 		if (userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("STUDENT"))) {
 			List<MarkSubject> markSubjects = markSubjectService.getMarksByStudentId(id);
 			model.addAttribute("markSubjects", markSubjects);
+			model.addAttribute("role", tkLogin);
 		} else if (userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("TEACHER"))) {
+			model.addAttribute("role", tkLogin);
 			if (classId == null) {
 				Long defaultClassId = classService.getClassSubjectIdByTeacherId(id);
 				if (defaultClassId == null) {

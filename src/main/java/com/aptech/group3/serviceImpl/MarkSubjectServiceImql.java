@@ -70,7 +70,7 @@ public class MarkSubjectServiceImql implements MarkSubjectService {
 	@Autowired
 	private MarkSubjectRepository markRepo;
 	@Autowired private StudentClassRepository studentRepo;
-
+	
 	@Transactional
 	public void updateStudentMark(Long studentId, String markType, Float updatedMark) {
 		MarkSubject markSubject = markRepo.findByUserIdAndStyle(studentId, markType);
@@ -83,6 +83,8 @@ public class MarkSubjectServiceImql implements MarkSubjectService {
 		markSubject.setMark(updatedMark);
 		markRepo.save(markSubject);
 	}
+	
+
 
 	public Map<Long, Integer> getStudentMarksByClassAndMarkType(Long classId, String markType) {
 		List<MarkSubject> markSubjects = markRepo.findByClassSubject_IdAndStyle(classId, markType);

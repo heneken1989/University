@@ -7,7 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.conscrypt.OkHostnameVerifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,11 +86,27 @@ private RequiredSubjectService requiredSubjectService;
 
 @PostMapping("/api/ClassRegister")
 @ResponseBody
-public Long ClassRegister(@RequestBody Map<String, Long> requestBody) {
+public ResponseEntity<String> classRegister(@RequestBody Map<String, Long> requestBody) {
     Long classId = requestBody.get("classId");
     Long userId = requestBody.get("userId");
-	studentsubservice.RegisterClassMobile(classId, userId);
-	return classId;
+
+    // Check for conflict slot
+    ClassForSubject classs = classForSubjectRepository.getById(classId);
+    int newSlotStart = classs.getSlotStart();
+    int newSlotEnd = classs.getSlotEnd();
+    int newWeekday = classs.getWeekDay();
+    String newSemesterType = classs.getType();
+
+    List<StudentClass> studentClasses = studentsubservice.getStudentClasses(userId);
+    String[][] scheduleTable = addToSchedule(userId, studentClasses);
+    boolean hasConflict = checkForScheduleConflict(scheduleTable, newSlotStart, newSlotEnd, newWeekday, newSemesterType);
+    
+    if (hasConflict) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Schedule conflict detected. Unable to register for the class.");
+    }
+
+    studentsubservice.RegisterClassMobile(classId, userId);
+    return ResponseEntity.status(HttpStatus.CREATED).body("Class registered successfully.");
 }
 
 
@@ -95,7 +114,7 @@ public Long ClassRegister(@RequestBody Map<String, Long> requestBody) {
 @ResponseBody
 public List<StudentClass> ListClassByStudent(@RequestBody Map<String, Long> requestBody) {
 	 Long userId = requestBody.get("StudentId");
-	List<StudentClass> studentClasses = studentsubservice.findSubjectByStudentId(userId);
+	List<StudentClass> studentClasses = studentsubservice.getStudentClasses(userId);
 	return studentClasses;
 }
 
@@ -139,6 +158,7 @@ public List<Subject> GetAllSubjectByLevelAndField(@PathVariable Long levelId, @P
 @PostMapping("/api/ClassRegister/list")
 public List<SubjectDto> listSubject(@RequestBody Map<String, Long> requestBody) {
 	Long studentId = requestBody.get("studentId");
+		
 	User student = userRepository.getById(studentId);
 	List<SubjectDto> listSubjects = new ArrayList<>();
 	
@@ -181,7 +201,7 @@ public List<ClassForSubjectDto> listClass(@RequestBody Map<String, Long> request
 	Long subjectId = requestBody.get("subjectId");
 	User student = userRepository.getById(studentId);
 	// take RegisteringList of student
-	List<StudentClass> studentClasses = studentsubservice.findSubjectByStudentId(studentId);
+	List<StudentClass> studentClasses = studentsubservice.getStudentClasses(studentId);
 	LocalDateTime now = LocalDateTime.now();
 	Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
 	// take list Class of each subject

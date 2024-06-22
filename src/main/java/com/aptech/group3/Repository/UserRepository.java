@@ -19,6 +19,12 @@ import jakarta.transaction.Transactional;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
+	
+	Page<User> findByCode(String code, Pageable pageable);
+
+	@Query("SELECT u FROM User u WHERE u.role <> 'ADMIN'")
+	List<User> findAllExceptAdmin();
+	
 	//field, mã số, status
 
 	

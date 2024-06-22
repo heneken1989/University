@@ -19,7 +19,7 @@ import com.aptech.group3.entity.User;
 public interface SubjectRepository extends JpaRepository<Subject,Long> {
 	
 	@Query("SELECT DISTINCT ms.subject FROM MarkSubject ms " +
-		       "WHERE ms.user = :student AND ms.mark >= 5 AND ms.style = 'final'")
+		       "WHERE ms.user = :student AND ms.mark >= 50 AND ms.style = 'final'")
 		List<Subject> findPassedSubject(@Param("student") User student);
 	
 	
@@ -74,5 +74,7 @@ public interface SubjectRepository extends JpaRepository<Subject,Long> {
 				+ "((:level = 4 AND s.subjectlevel.id IN (1, 2, 3)) OR "
 				+ "(:level = 3 AND s.subjectlevel.id IN (1, 2)) OR (:level = 2 AND s.subjectlevel.id = 1))")
 		List<Subject> getListSubjectByFieldAndLevel(Long fieldId, Long level);
+		
+		boolean existsByName(String name);
 
 }

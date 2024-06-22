@@ -34,7 +34,7 @@ th {
 
 					<th>Semester</th>
 
-					<th>Year</th>
+					<!-- <th>Year</th> -->
 					<th>Date Start</th>
 					<th>Date End</th>
 					<th>StartRegisDate</th>
@@ -47,13 +47,16 @@ th {
 
 					<td class="text-center" th:text="${semester.name}"></td>
 
-					<td class="text-center" th:text="${semester.year}"></td>
+					<!-- <td class="text-center" th:text="${semester.year}"></td> -->
 					<!-- <td th:text="${semester.day_start}"></td> -->
 					<td class="text-center" th:text="${#dates.format(semester.day_start, 'dd/MM/yyyy')}"></td>
 					<td class="text-center" th:text="${#dates.format(semester.day_end, 'dd/MM/yyyy')}"></td>
 					<td class="text-center" th:text="${#dates.format(semester.startRegisDate, 'dd/MM/yyyy')}"></td>
 					<td class="text-center" th:text="${#dates.format(semester.closeRegisDate, 'dd/MM/yyyy')}"></td>
-
+					<td class="text-center"><a
+						th:href="@{'/admin/semester/updatesemester/' +*{id}}"
+						class="btn btn-primary" data-toggle="tooltip" data-placement="top"
+						title="Update"><i class="fas fa-edit"></i></a></td>
 			</tr>
 			</tbody>	
 			</table>

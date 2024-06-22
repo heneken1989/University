@@ -135,7 +135,9 @@ public class SubjectServiceImpl implements SubjectService {
 			subject.setName(data.getName());
 			subject.setCredit(data.getCredit());
 			subject.setType(data.getType());
-			/* subject.setCreditAction(data.getCreditAction()); */
+			subject.setCreditAction(data.getCreditAction()); 
+			
+			fieldRepo.findById(data.getField_id()).ifPresent(subject::setField);
 			
 		
 			LevelRepo.findById(data.getSubjectlevel_id()).ifPresent(subject::setSubjectlevel);
@@ -212,6 +214,9 @@ public class SubjectServiceImpl implements SubjectService {
 			   return subject != null;
 		   }
 		   
-
+		   public boolean existsByName(String name) {
+		        return subjectRepo.existsByName(name);
+		    }
+		   
 		    
 }

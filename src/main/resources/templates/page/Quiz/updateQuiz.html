@@ -145,6 +145,7 @@
   });
 
   function loadSubjectLevels(field, listItem) {
+	  
 	  if (!listItem.hasClass('loaded')) {
 	    listItem.addClass('loading'); // Optional: you can show a loader icon here
 	    $.ajax({
@@ -163,8 +164,9 @@
 	          
 	          // Set hover event for each level item here
 	          levelItem.hover(function() {
+		          
 	            // This will load subjects specific to a field and level
-	            loadSubjects(field.id, level.id, levelItem);
+	            loadSubjectsHIENUpdate(field.id, level.id, levelItem);
 	          });
 	        });
 	      },
@@ -176,15 +178,16 @@
 	  }
 	}
 
-  function loadSubjects(fieldId, levelId, levelItem) {
+  function loadSubjectsHIENUpdate(fieldId, levelId, levelItem) {
 	  // Remove any previously loaded subjects when a new level is selected
 	  levelItem.siblings().removeClass('loaded');
 	  levelItem.parent().find('.dropdown-submenu .dropdown-menu').remove();
 	  
 	  if (!levelItem.hasClass('loaded')) {
+		
 	    levelItem.addClass('loading');
 	    $.ajax({
-	      url: '/api/public/listSubjectByLevelAndField/' + levelId + '/' + fieldId,
+	        url: '/api/public/listSubjectByLevelAndField/' + levelId + '/' + fieldId,
 	      method: 'GET',
 	      success: function(subjects) {
 	        var subjectsMenu = $('<ul>').addClass('dropdown-menu');

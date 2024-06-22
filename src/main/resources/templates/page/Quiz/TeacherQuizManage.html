@@ -195,11 +195,26 @@ function fetchAppliedQuizzes(classId, quizzes) {
     .then(response => response.json())
     .then(appliedQuizzes => {
         var quizListHtml = quizzes.map(function(quiz) {
+            let quizType;
+            switch (quiz.type) {
+                case "1":
+                    quizType = 'Final Exam';
+                    break;
+                case "2":
+                    quizType = 'Middle Exam';
+                    break;
+                case "3":
+                    quizType = 'First Exam';
+                    break;
+                default:
+                    quizType = 'Unknown Type';
+            }
+            
             var isApplied = appliedQuizzes.some(aq => aq.quiz.id === quiz.id);
             return `
                 <div class="quiz-item">
                     <p>Name: ${quiz.name} </p>
-                    <p>Type Exam: ${quiz.type} TEST </p>
+                    <p>Type Exam: ${quizType}  </p>
                     <p>Quiz Duration: ${quiz.duration} Minute </p>
                     <button ${isApplied ? 'disabled' : ''} onclick="startQuiz('${quiz.id}', '${classId}', this)">${isApplied ? 'Already Applied' : 'Apply'}</button>
                 </div>

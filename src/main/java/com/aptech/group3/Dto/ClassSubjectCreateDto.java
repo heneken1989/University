@@ -26,7 +26,7 @@ public class ClassSubjectCreateDto {
 	private int slotStart;
 	private int slotEnd;
 	@NotNull(message="vui lòng nhập sĩ số")
-	@Min(value=3,message="min quantity is 3")
+	@Min(value=2,message="min quantity is 2")
 	private int quantity;
 	
 	@NotEmpty(message="please select type of class")

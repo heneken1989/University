@@ -56,7 +56,7 @@ public interface SubjectService {
 		public List<Subject> getByFieldIDAndLevel(Long FieldId, Long level);
 		
 		public boolean CheckNameExists(String name);
-	 
+		public boolean existsByName(String name);
     
 
 

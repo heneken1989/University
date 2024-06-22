@@ -182,6 +182,7 @@
 	  
 	  if (!levelItem.hasClass('loaded')) {
 	    levelItem.addClass('loading');
+	
 	    $.ajax({
 	      url: '/api/public/listSubjectByLevelAndField/' + levelId + '/' + fieldId,
 	      method: 'GET',

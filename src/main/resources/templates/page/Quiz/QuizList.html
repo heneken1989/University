@@ -237,6 +237,22 @@ function showQuizList(classId) {
                     var buttonText = 'Start Quiz';
                     var buttonClass = '';
 
+                    let quizType;
+                    switch (quiz.quiz.type) {
+                        case "1":
+                            quizType = 'Final Exam';
+                            break;
+                        case "2":
+                            quizType = 'Middle Exam';
+                            break;
+                        case "3":
+                            quizType = 'First Exam';
+                            break;
+                        default:
+                            quizType = 'Unknown Type';
+                    }
+                    
+
                     // Check if the quiz has ended based on endTime
                     if (quiz.endDate) {
                         var endTime = new Date(quiz.endDate);
@@ -271,7 +287,8 @@ function showQuizList(classId) {
                     return `
                         <div class="quiz-item">
                             <h3>${quiz.classForSubject.name} - ${quiz.classForSubject.subject.name}</h3>
-                            <p>Type Exam: ${quiz.quiz.type} TEST </p>
+                            <p>Type Exam: ${quizType}  </p>
+                            <p>Name: ${quiz.quiz.name}  </p>
                             <p>Quiz Duration: ${quiz.quiz.duration} Minute </p>
                             <button onclick="startQuiz('${quiz.quiz.id}')" ${disabled ? 'disabled' : ''} class="${buttonClass}">${buttonText}</button>
                         </div>

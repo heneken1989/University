@@ -22,6 +22,8 @@ import com.aptech.group3.entity.User;
 import jakarta.servlet.ServletOutputStream;
 @Service
 public interface UserService {
+	public Page<User> searchUsersByCode(String code, Pageable pageable);
+	public List<User> getAllUsersExceptAdmin();
 	public void updateStatusForUsers(UserStatus status, List<Long> id);
 	 public List<User> findByCode(String code);
 	public List<User> findByFieldIdAndSubjectIdAndStatusAndCode(UserStatus status, Long fieldId);

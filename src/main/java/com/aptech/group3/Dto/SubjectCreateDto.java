@@ -22,7 +22,7 @@ public class SubjectCreateDto {
 	    private ClassType type;
           
 
-	    private String  creditAction;
+	    private Integer creditAction;
 	    
 	    private Long field_id;
 	    
