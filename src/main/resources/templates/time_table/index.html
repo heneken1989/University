@@ -78,14 +78,25 @@
 				</thead>
 						<tbody>
 			    <tr th:each="slotNumber : ${#numbers.sequence(1, 12)}">
-			        <th scope="row" style="padding: 0" th:text="'Tiết ' + ${slotNumber}">Tiết ${slotNumber}</th>
+			        <th scope="row" style="padding: 0" th:text="'Lesson ' + ${slotNumber}">Tiết ${slotNumber}</th>
 			        <td style="padding:0; padding-left:5px"  th:each="weekday : ${#numbers.sequence(1, 6)}" >
 			          <div class="d-flex flex-column align-items-start"  th:each="subject : ${listsubject}" th:if="${slotNumber >= subject.startSlot && slotNumber <= subject.endSlot && weekday == subject.weekDay}">
-			                <div th:text="${subject.name}"></div>
+			                <div th:unless="${subject.isHoliday}" >
+			                   <div th:text="${subject.name}"></div>
 			                <div><span th:text="#{label.room} + ' : '" ></span>
 			                <span th:text=${subject.room}></span>
 			                </div>
+			                </div>
+			                
+			                  <div th:if="${subject.isHoliday}" class="d-flex align-items-center justify-content-center"  >
+			                  <span style=" text-align: center;">Holiday</span>
+			                </div>
+			               
+			                
+			             
 			            </div>
+			            
+			          
 			        </td>
 			    </tr>
 			</tbody>

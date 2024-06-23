@@ -29,7 +29,7 @@ public class HolidayCreateDto {
 	private String name;
 
 	private int year;
-	private Long classId;
+	private Long classIdHoliday ;
 	
 	@NotNull(message="{holiday.type.error}")
 	private String type;

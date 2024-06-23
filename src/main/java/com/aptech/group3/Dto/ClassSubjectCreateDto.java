@@ -37,6 +37,7 @@ public class ClassSubjectCreateDto {
 	private int weekDay;
 	
 	@NotNull(message="{label.error}")
+	@Min(value=1,message="please select teacher")
 	private Long teacher_id;
 	
 	private Long subject_id;

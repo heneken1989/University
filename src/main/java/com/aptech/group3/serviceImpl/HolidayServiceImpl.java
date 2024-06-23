@@ -99,8 +99,8 @@ public class HolidayServiceImpl implements HolidayService {
 	Holiday h = mapper.map(dto, Holiday.class);
 	h.setDateStart(dto.getDateStart());
 	h.setDateEnd(dto.getDateEnd());
-	if(dto.getClassId()!=null) {
-	classRepo.findById(dto.getClassId()).ifPresent(h::setClassSubject);
+	if(dto.getClassIdHoliday()!=null) {
+	classRepo.findById(dto.getClassIdHoliday()).ifPresent(h::setClassSubject);
 }
 	Holiday result= repo.save(h); 
 	HolidayEditDto data= mapper.map(dto, HolidayEditDto.class);

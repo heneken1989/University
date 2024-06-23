@@ -1,28 +1,4 @@
--- Disable foreign key checks
-SET FOREIGN_KEY_CHECKS = 0;
 
--- Delete old data from all tables
-DELETE FROM QuizQuestion;
-DELETE FROM News;
-DELETE FROM field;
-DELETE FROM semeter;
-DELETE FROM room;
-DELETE FROM subjectlevel;
-DELETE FROM user;
-DELETE FROM subject;
-DELETE FROM user_field;
-DELETE FROM teacher_subject;
-DELETE FROM class_subject;
-DELETE FROM studentclass;
-DELETE FROM quiz;
-DELETE FROM quizquestion;
-DELETE FROM quizanswer;
-DELETE FROM lessonsubject;
-DELETE FROM requiredsubject;
-DELETE FROM marksubject;
-
--- Enable foreign key checks
-SET FOREIGN_KEY_CHECKS = 1;
 
 ALTER TABLE QuizQuestion MODIFY content LONGTEXT;
 ALTER TABLE News MODIFY content LONGTEXT;
@@ -54,18 +30,20 @@ VALUES
     (3, 'Level 200'),
     (4, 'Level 300');
 
-    
+   
 INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role,status,code) 
 VALUES 
-    (2, 'admin', 'nobita.jpg', 'admin@gmail.com', 'ad', 'admin', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'ADMIN',0,1),
-    (3, 'st', 'nobita.jpg', 'st@gmail.com', 'st@gmail.com', 'Student LEE', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0,2),
-    (4, 'st1', 'nobita.jpg', 'st1@gmail.com', 'st1@gmail.com', 'Student Nguyen', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'STUDENT',0,3),
-    (5, 'tc', 'nobita.jpg', 'teacher@gmail.com', 'teacher@gmail.com', 'professor David', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'TEACHER',0,4),
-    (6, 'emp', 'nobita.jpg', 'employee@gmail.com', 'employee@gmail.com', 'employee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '1', 'EMPLOYEE',0,5),
-    (7, 'st2', 'nobita.jpg', 'st2@gmail.com', 'student1@gmail.com', 'student Hien', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '2', 'STUDENT',0,6),
-    (8, 'tc2', 'nobita.jpg', 'teacher2@gmail.com', 'teacher2@gmail.com', 'professor LY', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '3', 'TEACHER',0,7),
-    (9, 'st3', 'nobita.jpg', 'st3@gmail.com', 'good student', 'Lee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '4', 'STUDENT',0,8);
-    
+    (2, '279 Kinh Duong Vuong Street, An Lac Ward', 'nobita.jpg', 'admin@gmail.com', 'admin information', 'admin', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 119 5229', 'ADMIN',0,'AD240001'),
+    (3, '256 Hung Vuong, Phuc Yen', 'nobita.jpg', 'student@gmail.com', 'st@gmail.com', 'Nguyễn Văn A', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '098 518 5230', 'STUDENT',0,'ST240001'),
+    (4, '20B Phan Chu Trinh St., Tan Thanh Ward', 'nobita.jpg', 'student1@gmail.com', 'Nguyễn Văn B', 'Student Nguyen', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '090 035 1405', 'STUDENT',0,'ST240002'),
+    (5, '187B Giang Vo Street', 'nobita.jpg', 'teacher@gmail.com', 'teacher information', 'professor David', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '092 198 8791', 'TEACHER',0,'TC240001'),
+    (6, '32 Nguyen An Ninh Street', 'nobita.jpg', 'employee@gmail.com', 'Nguyễn Thái Công', 'employee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '098 518 5230', 'EMPLOYEE',0,'EM240001'),
+    (7, '97B Giang Vo Street', 'nobita.jpg', 'st2@gmail.com', 'student1 information', 'student Hien', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '090 035 1405', 'STUDENT',0,'ST240003'),
+    (8, '12A Phan Chu Trinh St., Tan Thanh Ward', 'nobita.jpg', 'teacher2@gmail.com', 'teacher2 information', 'professor LY', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '092 198 8791', 'TEACHER',0,'TC240001'),
+    (9, '128 Nguyen An Ninh Street', 'nobita.jpg', 'nguyenthaithanh101104@gmail.com', 'good student', 'Lee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 119 5229', 'STUDENT',0,'ST240004'),
+    (10, '128 Nguyen An Ninh Street', 'nobita.jpg', 'student3@gmail.com', 'good student', 'Hoang', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 119 5229', 'STUDENT',0,'ST240005'),
+	(11, '128 Phan Chu Trinh Street', 'nobita.jpg', 'hoang1231@gmail.com', 'good student', 'Hoang', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 119 5229', 'STUDENT',0,'ST240006');
+  
 
 
 INSERT IGNORE INTO  subject (id, name, credit, field_id, subjectlevel_id,type,creditAction) 
@@ -157,15 +135,17 @@ VALUES
         INSERT IGNORE INTO  studentclass (status,class_id,id,student_id) 
 VALUES 
       (4,1,1,3),
-      (4,2,2,3),
-      (4,3,3,3),
-      (4,4,4,3),
-      (4,4,5,4),
-      (4,4,6,7),
-      
-      (4,5,7,3),
-      (4,5,8,4),
-      (4,5,9,7);
+      (4,1,2,4),
+      (4,1,3,7),
+      (4,1,4,9),
+      (4,1,5,10),
+      (4,4,6,11),
+      (4,2,7,3),
+      (4,2,8,4),
+      (4,2,9,7),
+      (4,3,7,3),
+      (4,3,8,4),
+      (4,3,9,7);
 
       
        INSERT IGNORE INTO  quiz (duration, totalMark,createDate,id,subject_id,teacher_id,name,status, type) 
@@ -217,11 +197,11 @@ VALUES
              INSERT IGNORE INTO  lessonsubject (lesson,class_id,day,id,type) 
 VALUES 
  
-      ('',1,'2024-01-1 00:00:00',NULL,1),
-      ('',2,'2024-01-2 00:00:00',NULL,1),
-      ('',3,'2024-01-3 00:00:00',NULL,1),
-      ('',4,'2024-06-14 00:00:00',NULL,1),
-      ('',5,'2024-06-15 00:00:00',NULL,1);
+      ('',1,'2024-06-23 00:00:00',NULL,1),
+      ('',2,'2024-06-24 00:00:00',NULL,1),
+      ('',3,'2024-06-24 00:00:00',NULL,1),
+      ('',4,'2024-06-22 00:00:00',NULL,1),
+      ('',5,'2024-06-25 00:00:00',NULL,1);
       
       
       
@@ -240,56 +220,62 @@ VALUES
             INSERT IGNORE INTO  marksubject (id,mark, class_id, student_id,subject_id,style) 
 VALUES 
  
-      (1,100,1,4,36,'normalMark'),
-      (2,100,1,4,36,'middleMark'),
-      (3,100,1,4,36,'finalMark'),
-      (4,100,1,4,36,'final'),
+      (1,95,1,3,36,'normalMark'),
+      (2,85,1,3,36,'middleMark'),
+      (3,85,1,3,36,'finalMark'),
+      (4,90,1,3,36,'final'),
       
-      (5,60,1,7,36,'normalMark'),
-      (6,60,1,7,36,'middleMark'),
-      (7,60,1,7,36,'finalMark'),
-      (8,60,1,7,36,'final'),
+      (5,60,1,4,36,'normalMark'),
+      (6,70,1,4,36,'middleMark'),
+      (7,85,1,4,36,'finalMark'),
+      (8,70,1,4,36,'final'),
+     
+      
+      (9,60,2,9,1,'normalMark'),
+      (10,60,2,9,1,'middleMark'),
+      (11,50,2,9,1,'finalMark'),
+      (12,55,2,9,1,'final'),
+      
+      (13,60,2,4,1,'normalMark'),
+      (14,70,2,4,1,'middleMark'),
+      (15,80,2,4,1,'finalMark'),
+      (16,70,2,4,1,'final'),
+      (17,70,5,11,12,'middleMark'),
+      (18,80,5,10,12,'middleMark');
       
       
       
-      (9,60,1,9,36,'normalMark'),
-      (10,60,1,9,36,'middleMark'),
-      (11,50,1,9,36,'finalMark'),
-      (12,55,1,9,36,'final');
-      
-      
-      
-                  INSERT IGNORE INTO  lessonsubject (id,lesson,class_id, day) 
-VALUES 
- 
-
-      (1,1,1,'2024-01-02'),
-      (2,2,1,'2024-01-09'),
-      (3,3,1,'2024-01-16'),
-      (4,4,1,'2024-01-23'),
-      (5,5,1,'2024-01-30'),
-      (6,6,1,'2024-02-06'),
-      (7,7,1,'2024-02-13'),
-      (8,8,1,'2024-02-20'),
-      (9,9,1,'2024-02-27'),
-      (10,10,1,'2024-03-05'),
-      (11,11,1,'2024-03-12'),
-      (12,12,1,'2024-03-19'),
-      (13,13,1,'2024-03-26'),
-      (14,14,1,'2024-04-02'),
-      (15,15,1,'2024-04-09'),
-      (16,16,1,'2024-04-16'),
-      (17,17,1,'2024-04-23'),
-      (18,18,1,'2024-05-07'),
-      (19,19,1,'2024-05-14'),
-      (20,20,1,'2024-05-21'),
-      (21,21,1,'2024-05-28'),
-      (22,22,1,'2024-06-04'),
-      (23,23,1,'2024-06-11'),
-      (24,24,1,'2024-06-18'),
-      (25,25,1,'2024-06-25');
-
-    
+--                  INSERT IGNORE INTO  lessonsubject (id,lesson,class_id, day) 
+--VALUES 
+-- 
+--
+--      (1,1,1,'2024-01-02'),
+--      (2,2,1,'2024-01-09'),
+--      (3,3,1,'2024-01-16'),
+--      (4,4,1,'2024-01-23'),
+--      (5,5,1,'2024-01-30'),
+--      (6,6,1,'2024-02-06'),
+--      (7,7,1,'2024-02-13'),
+--      (8,8,1,'2024-02-20'),
+--      (9,9,1,'2024-02-27'),
+--      (10,10,1,'2024-03-05'),
+--      (11,11,1,'2024-03-12'),
+--      (12,12,1,'2024-03-19'),
+--      (13,13,1,'2024-03-26'),
+--      (14,14,1,'2024-04-02'),
+--      (15,15,1,'2024-04-09'),
+--      (16,16,1,'2024-04-16'),
+--      (17,17,1,'2024-04-23'),
+--      (18,18,1,'2024-05-07'),
+--      (19,19,1,'2024-05-14'),
+--      (20,20,1,'2024-05-21'),
+--      (21,21,1,'2024-05-28'),
+--      (22,22,1,'2024-06-04'),
+--      (23,23,1,'2024-06-11'),
+--      (24,24,1,'2024-06-18'),
+--      (25,25,1,'2024-06-25');
+--
+--    
    
     
 

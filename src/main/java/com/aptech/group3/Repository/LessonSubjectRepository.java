@@ -26,6 +26,10 @@ public interface LessonSubjectRepository extends JpaRepository<LessonSubject,Lon
 	
 	List<LessonSubject> findByClassSubjectId(Long classSubjectId);
 	
+	@Query("SELECT l FROM LessonSubject l WHERE DATE(:checkDay) = Date(l.day) AND l.classSubject.id= :classId AND l.type LIKE 'holiday'" )
+	List<LessonSubject> checkIsHoliday(Date checkDay,Long classId);
+	
+	
 	 
 
 }

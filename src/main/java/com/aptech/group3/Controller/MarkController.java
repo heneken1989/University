@@ -203,38 +203,42 @@ public class MarkController {
 		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		response.setHeader("Content-Disposition", "attachment; filename=mark.xlsx");
 		markSubjectService.exportToExcel(markSubjects, response.getOutputStream());
-	
 	}
 
 	@GetMapping("/web/mark/getMarkSubject")
 	public String getMarkSubject(@RequestParam(name = "classId", required = false) Long classId,
-			@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
-		
-		Long id = userDetails.getUserId();
-		String tkLogin = userDetails.getRole();
-		if (userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("STUDENT"))) {
-			List<MarkSubject> markSubjects = markSubjectService.getMarksByStudentId(id);
-			model.addAttribute("markSubjects", markSubjects);
-			model.addAttribute("role", tkLogin);
-		} else if (userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("TEACHER"))) {
-			model.addAttribute("role", tkLogin);
-			if (classId == null) {
-				Long defaultClassId = classService.getClassSubjectIdByTeacherId(id);
-				if (defaultClassId == null) {
-					model.addAttribute("message", "You haven't taught any classes yet");
-					model.addAttribute("hideTable", true);
-				} else {
-					List<MarkSubject> markSubjects = markSubjectService.getListMarkSubjectByClassId(defaultClassId);
-					model.addAttribute("markSubjects", markSubjects);
-				}
-			} else {
-				List<MarkSubject> markSubjects = markSubjectService.getListMarkSubjectByClassId(classId);
-				model.addAttribute("markSubjects", markSubjects);
-			}
-		} else {
-			throw new IllegalStateException("User role not recognized");
-		}
-		return "mark/list";
+	                             @AuthenticationPrincipal CustomUserDetails userDetails, 
+	                             Model model) {
+	    System.out.println("Class get mark is: " + classId);
+	    Long id = userDetails.getUserId();
+	    String tkLogin = userDetails.getRole();
+
+	    if (userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("STUDENT"))) {
+	        List<MarkSubject> markSubjects = markSubjectService.getMarksByStudentId(id);
+	        model.addAttribute("markSubjects", markSubjects);
+	        model.addAttribute("role", tkLogin);
+	    } else if (userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("TEACHER"))) {
+	        model.addAttribute("role", tkLogin);
+
+	        List<ClassForSubject> classSubjects = classService.getClassSubjectsByTeacherId(id);
+	        model.addAttribute("classes", classSubjects);
+
+	        if (classId == null && !classSubjects.isEmpty()) {
+	            classId = classSubjects.get(0).getId();
+	        }
+
+	        if (classId != null) {
+	            List<MarkSubject> markSubjects = markSubjectService.getListMarkSubjectByClassId(classId);
+	            model.addAttribute("markSubjects", markSubjects);
+	        } else {
+	            model.addAttribute("message", "You haven't taught any classes yet");
+	            model.addAttribute("hideTable", true);
+	        }
+	    } else {
+	        throw new IllegalStateException("User role not recognized");
+	    }
+
+	    return "mark/list";
 	}
 
 	@PreAuthorize("hasAuthority('TEACHER')")

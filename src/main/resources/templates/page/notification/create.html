@@ -88,6 +88,8 @@
 				<select th:field="*{class_id}" class="custom-select select_subject_create"
 					id="select_class_creaet_notify">
 					<option th:value="${null}" th:text="#{discuss.class}">select class </option>
+					<option th:each="s : ${classes}" th:text="${s.name}"
+					th:value="${s.id}"></option>
 				</select>
 			</div>
 			<p th:if="${classError}" th:text="#{notify.error.type.null}" th:data_error="${classError}" id="error_notify_create" class="text-danger mt-1">Class not null</p>

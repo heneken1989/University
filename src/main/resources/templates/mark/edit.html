@@ -45,38 +45,37 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Student ID</th>
                             <th>Student Code</th>
                             <th>Student Name</th>
-                            <th>Midterm Mark</th>
-                            <th>Final Mark</th>
-                            <th>Endterm Mark</th>
+                            <th>Middle Mark</th>
+                            <th>Normal Mark</th>
+                            <th>final Mark</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="center-content" th:each="studentClass, index : ${studentClasses}">
                             <td th:text="${index.index + 1}"></td>
-                            <td th:text="${studentClass.student.id}"class="student-id"></td>
+                            <td style="display:none" th:text="${studentClass.student.id}"class="student-id"></td>
                             <td th:text="${studentClass.student.code}"></td>
                             <td th:text="${studentClass.student.name}"></td>
                             <td>
                                 <input type="number" class="form-control mark-input edit-input"
-                                       data-mark-type="MIDTERM"
-                                       th:value="${studentMarks[studentClass.student.id] != null ? studentMarks[studentClass.student.id]['MIDTERM'] : ''}"
+                                       data-mark-type="middleMark"
+                                       th:value="${studentMarks[studentClass.student.id] != null ? studentMarks[studentClass.student.id]['middleMark'] : ''}"
                                        step="0.1">
                                 <span class="feedback" style="display: none; color: red;">Please enter a score from 0-100</span>
                             </td>
                             <td>
                                 <input type="number" class="form-control mark-input edit-input"
-                                       data-mark-type="FINAL"
-                                       th:value="${studentMarks[studentClass.student.id] != null ? studentMarks[studentClass.student.id]['FINAL'] : ''}"
+                                       data-mark-type="normalMark"
+                                       th:value="${studentMarks[studentClass.student.id] != null ? studentMarks[studentClass.student.id]['normalMark'] : ''}"
                                        step="0.1">
                                 <span class="feedback" style="display: none; color: red;">Please enter a score from 0-100</span>
                             </td>
                             <td>
                                 <input type="number" class="form-control mark-input edit-input"
-                                       data-mark-type="ENDTERM"
-                                       th:value="${studentMarks[studentClass.student.id] != null ? studentMarks[studentClass.student.id]['ENDTERM'] : ''}"
+                                       data-mark-type="finalMark"
+                                       th:value="${studentMarks[studentClass.student.id] != null ? studentMarks[studentClass.student.id]['finalMark'] : ''}"
                                        step="0.1">
                                 <span class="feedback" style="display: none; color: red;">Please enter a score from 0-100</span>
                             </td>

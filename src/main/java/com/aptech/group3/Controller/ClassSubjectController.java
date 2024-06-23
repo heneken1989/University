@@ -295,9 +295,15 @@ public class ClassSubjectController {
 	public String create(Model model, @ModelAttribute("data") @Valid ClassSubjectCreateDto data,
 			BindingResult bindingResult,RedirectAttributes rm) {
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("semester", SemesterService.getCurrentSemester());
+			Semeter nextSemeter;
+			Semeter current = SemesterService.getCurrentSemester();
+			if (current.getName() == 1) {
+				nextSemeter = SemesterService.getByYearAndName(current.getYear(), current.getName() + 1);
+			} else {
+				nextSemeter = SemesterService.getByYearAndName(current.getYear() + 1, current.getName() - 1);
+			}
+			model.addAttribute("semester", nextSemeter);
 			model.addAttribute("data", data);
-			model.addAttribute("error", 1);
 			Subject classCheck = subjectService.findbyId(data.getSubject_id()).orElse(null);
 			model.addAttribute("selected_credit", classCheck.getCredit());
 

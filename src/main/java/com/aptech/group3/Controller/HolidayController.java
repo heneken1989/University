@@ -1,6 +1,8 @@
 package com.aptech.group3.Controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,13 +25,18 @@ import com.aptech.group3.Dto.ActionStatus;
 import com.aptech.group3.Dto.ClassSubjectCreateDto;
 import com.aptech.group3.Dto.HolidayCreateDto;
 import com.aptech.group3.Dto.HolidayEditDto;
+import com.aptech.group3.Dto.NotifyCreateDto;
 import com.aptech.group3.entity.Holiday;
+import com.aptech.group3.entity.LessonSubject;
 import com.aptech.group3.entity.Semeter;
+import com.aptech.group3.entity.StudentClass;
 import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.service.ClassForSubjectService;
+import com.aptech.group3.service.EmailService;
 import com.aptech.group3.service.HolidayService;
 import com.aptech.group3.service.LessonSubjectService;
 import com.aptech.group3.service.SemesterService;
+import com.aptech.group3.service.StudentClassService;
 
 import jakarta.validation.Valid;
 import shared.BaseMethod;
@@ -43,6 +50,8 @@ public class HolidayController {
 	@Autowired private ClassForSubjectService classService;
 	@Autowired private  HolidayService holidayService;
 	@Autowired private LessonSubjectService lessonService;
+	@Autowired private EmailService emailService;
+	@Autowired private StudentClassService studentClassService;
 	
 	
 	@GetMapping("/delete/{id}")
@@ -117,9 +126,10 @@ if(result.hasErrors()) {
 		
 		HolidayCreateDto dto = new HolidayCreateDto();
 		model.addAttribute("data",dto); 
+
 		Semeter semester=semesterService.getCurrentSemester();
 		model.addAttribute("semester",semester);
-		model.addAttribute("class",classService.getAllByfieldAndSemester(semester.getId(), currentUser.getUser().getFields().get(0).getId()));
+		model.addAttribute("classes",classService.getAllByfieldAndSemester(semester.getId(), currentUser.getUser().getFields().get(0).getId()));
 		
 		
 		return "holiday/create";
@@ -129,7 +139,6 @@ if(result.hasErrors()) {
 	public String create(Model model, @AuthenticationPrincipal CustomUserDetails currentUser,
 			@ModelAttribute("data") @Valid  HolidayCreateDto data ,BindingResult result,RedirectAttributes redirect ) {
 		if(result.hasErrors()) {
-		
 			model.addAttribute("data",data); 
 			Semeter semester=semesterService.getCurrentSemester();
 			model.addAttribute("semester",semester);
@@ -141,7 +150,19 @@ if(result.hasErrors()) {
 		data.setYear(semester.getYear());
 		
 		HolidayEditDto recieve=	holidayService.create(data);
-		lessonService.updateLesson(recieve);
+		List<LessonSubject> listRecieve=lessonService.updateLesson(recieve);
+		List<String> lsitemailRecieve= new ArrayList<String>();
+		listRecieve.forEach(e->{
+			List<StudentClass> studentList= studentClassService.findByClassForSubjectId(e.getClassSubject().getId());
+			studentList.forEach(eStudent->{
+				lsitemailRecieve.add(eStudent.getStudent().getEmail());
+			});
+			NotifyCreateDto emailData= new NotifyCreateDto();
+			emailData.setTitle("Notify change time table");
+			emailData.setContent("<p> because have a holiday apply. your time table is change . plese check your time table </p>");
+			emailService.sentManyEmail(emailData, lsitemailRecieve);
+		});
+	
 		 
 		redirect.addAttribute("error",ActionStatus.CREATED);
 		 return "redirect:/admin/holiday/index";

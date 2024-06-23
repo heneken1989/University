@@ -58,8 +58,6 @@ public class ClassRegisterApiController {
 private SubjectService subService;
 
 
-
-
 @Autowired
 private StudentClassRepository studentClassRepository;
 
@@ -120,11 +118,10 @@ public List<StudentClass> ListClassByStudent(@RequestBody Map<String, Long> requ
 
 
 @PostMapping("/api/cancelClass")
-public String CancelClassRegister(@RequestBody Map<String, Long> requestBody) {
+public ResponseEntity<String> CancelClassRegister(@RequestBody Map<String, Long> requestBody) {
 	 Long classId = requestBody.get("ClassId");
 	StudentClass studentclass = studentClassRepository.getById(classId);
 	ClassForSubject classs = studentclass.getClassforSubject();
-
 	List<StudentClass> waitingList = studentsubservice.findEarliestByStatus(ClassStatus.WAITINGLIST);
 	// if have waitinglist , transfer earliest Student in WaitingList to List , and
 	// no need to change quantity
@@ -136,16 +133,16 @@ public String CancelClassRegister(@RequestBody Map<String, Long> requestBody) {
 
 	// if have no WaitingList Student , - quantity of class by 1
 	else {
-
+		System.out.println("quantity fix");
 		// - quantity of CLass by 1
-		int quantity = classs.getQuantity();
+		int quantity = classs.getCurrentQuantity();
 		quantity -= 1;
-		classs.setQuantity(quantity);
+		classs.setCurrentQuantity(quantity);
 		classForSubjectRepository.save(classs);
 
 	}
 	studentClassRepository.delete(studentclass);
-	return "redirect:/Ongoing";
+	return ResponseEntity.status(HttpStatus.ACCEPTED).body("Cancel Class Sucessfull");
 }
 
 @GetMapping("/api/public/listSubjectByLevelAndField/{levelId}/{fieldId}")

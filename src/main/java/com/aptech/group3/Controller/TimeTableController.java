@@ -122,9 +122,9 @@ public class TimeTableController {
 
 		}
 
-		System.out.print("current week" + currentWeek);		
+		
 		model.addAttribute("listsubject", data);
-
+System.out.print(data);
 		return "time_table/index";
 	}
 

@@ -34,6 +34,7 @@ import com.aptech.group3.entity.StudentClass;
 import com.aptech.group3.entity.User;
 import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.model.NotificationMessage;
+import com.aptech.group3.service.ClassForSubjectService;
 import com.aptech.group3.service.EmailService;
 import com.aptech.group3.service.FirebaseMessageService;
 import com.aptech.group3.service.NotificationService;
@@ -65,6 +66,8 @@ public class NotificationController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired private ClassForSubjectService classService;
 
 	@GetMapping("/list")
 	public String index(Model model,
@@ -93,8 +96,9 @@ public class NotificationController {
 		NotifyCreateDto data = new NotifyCreateDto();
 		data.setField_id(currentUser.getUser().getFields().size() == 0 ? null
 				: currentUser.getUser().getFields().get(0).getId());
-
+		Semeter semester=semesterService.getCurrentSemester();
 		model.addAttribute("data", data);
+		model.addAttribute("classes",classService.getAllByfieldAndSemester(semester.getId(), currentUser.getUser().getFields().get(0).getId()));
 
 		model.addAttribute("notifyTypes", NoftifyType.values());
 		model.addAttribute("field", currentUser.getUser().getFields().size() == 0 ? null
@@ -108,7 +112,6 @@ public class NotificationController {
 			@ModelAttribute("data") @Valid NotifyCreateDto data,BindingResult bindingResult,RedirectAttributes redirect) {
 		data.setCreated_at(new Date());
 		
-		System.out.print(data);
 		if (data.getType() == NoftifyType.ALL) {
 			data.setField_id(null);
 		}
@@ -128,7 +131,9 @@ public class NotificationController {
 			return "page/notification/create";
 		}
 		
-		if(data.getType()==NoftifyType.CLASS&&  data.getClass_id()== null) {
+		
+		
+		if(data.getType()==NoftifyType.CLASS &&  data.getClass_id()== null) {
 			data.setField_id(currentUser.getUser().getFields().size() == 0 ? null
 					: currentUser.getUser().getFields().get(0).getId());
 
@@ -141,6 +146,10 @@ public class NotificationController {
 
 			return "page/notification/create";
 		}
+		
+		
+		
+		// handle to create notify in datatbase
 		
 		Semeter current = semesterService.getCurrentSemester();
 
@@ -169,7 +178,10 @@ public class NotificationController {
 						  listMess.add(mess);
 					}
 				});
-				fireBasseService.sentManyNotification(listMess);
+				if(listMess.size()!=0) {
+					fireBasseService.sentManyNotification(listMess);
+				}
+				
 			}
 			
 			if(data.getTypeSent().contains("email")) {
@@ -185,6 +197,7 @@ public class NotificationController {
 
 		}
 		}
+		
 		
 		if(data.getType()==NoftifyType.FIELD) {
 			
@@ -241,7 +254,10 @@ public class NotificationController {
 						  listMess.add(mess);
 					}
 				});
-				fireBasseService.sentManyNotification(listMess);
+				if(listMess.size()!=0) {
+					fireBasseService.sentManyNotification(listMess);
+				}
+			
 			}
 				
 				if(data.getTypeSent().contains("email")) {

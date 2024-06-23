@@ -20,7 +20,8 @@ import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.StudentClass;
 
 public interface ClassForSubjectService {
-	
+	public List<ClassForSubject> getClassSubjectsByTeacherId(Long teacherId) ;
+	//thanh thêm 23/06
 	//thanh thêm 
 	 public List<StudentClass> findStudentClassesByClassId(Long classId);
 	 public List<ClassForSubject> findClassesByName(String className) ;

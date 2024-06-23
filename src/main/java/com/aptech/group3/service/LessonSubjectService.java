@@ -13,8 +13,8 @@ public interface LessonSubjectService {
 	public List<LessonSubject> getLessonsByClassSubjectId(Long classSubjectId);
 	
 	public void deleteLessonByClassId(Long classId);
-	// new 
-	public void updateLesson(HolidayEditDto dto);
+
+	List<LessonSubject>  updateLesson(HolidayEditDto dto);
 	
 	public void CheckOrRemove(HolidayEditDto dto);
 	

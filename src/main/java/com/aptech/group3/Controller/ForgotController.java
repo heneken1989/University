@@ -82,38 +82,38 @@ public class ForgotController {
  
  
  @PostMapping("/verify-otp")
- public String verifyOtp(@RequestParam("otp") int otp, HttpSession session,  RedirectAttributes redirectAttributes) {
+ public String verifyOtp(@RequestParam("otp") int otp, HttpSession session,  Model model) {
 	 System.out.println("REquestOtp: ======: " + otp);
 	    int myOtp = (int) session.getAttribute("myotp");
 	    String email = (String) session.getAttribute("email");
 	    
 	    // Chuyển đổi chuỗi OTP thành số nguyên
-	     if (myOtp != otp) {
+	 if (myOtp != otp) {
+		 model.addAttribute("errorMessage", "Invalid OTP. Please try again.");
 	    	 	return "verify_otp";
-	 }else {
-	        UUID uuid = UUID.randomUUID();
-	    	String newPass = uuid.toString().substring(0, Math.min(uuid.toString().length(), 6));
-	    	System.out.println("Passs:" + newPass);
-	        emailService.sendPasswordEmail(email,newPass);
-	        User user = uRepo.getUserByUsername(email);
-	        user.setPassword(bcrypt.encode(newPass));
-	        uRepo.save(user);
-			return "redirect:/login";
+	 }else { /*
+			 * UUID uuid = UUID.randomUUID(); String newPass = uuid.toString().substring(0,
+			 * Math.min(uuid.toString().length(), 6)); System.out.println("Passs:" +
+			 * newPass); emailService.sendPasswordEmail(email,newPass); User user =
+			 * uRepo.getUserByUsername(email); user.setPassword(bcrypt.encode(newPass));
+			 * uRepo.save(user); return "redirect:/login";
+			 */
+		 return "change_form";
 	 }
  }
  
  @PostMapping("/change-form")
  public String changePassword(@RequestParam("newpassword") String newPass, HttpSession session,  RedirectAttributes redirectAttributes) {
-	 
-	 
 	 String email = (String)session.getAttribute("email");
 	 User user = this.uRepo.getUserByUsername(email);
 	 user.setPassword(this.bcrypt.encode(newPass));
 	 this.uRepo.save(user);
 	 redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully!");
-	 return "redirect:/login";
+	    return "redirect:/login";
 	 
  }
+ 
+
  
 	@PostMapping("/flutter/forgot")
 	public ResponseEntity<?> sendOTP(@RequestBody Map<String, String> request, HttpSession session) {
@@ -166,5 +166,24 @@ public class ForgotController {
 	        return ResponseEntity.ok(Map.of("message", "OTP verified successfully."));
 	    }
 	}
+	 @PostMapping("/flutter/change-password")
+	    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request) {
+	        String email = request.get("email");
+	        String newPassword = request.get("newPassword");
+
+	        if (email == null || newPassword == null) {
+	            return ResponseEntity.badRequest().body(Map.of("message", "Email and new password must be provided."));
+	        }
+
+	        User user = uRepo.getUserByUsername(email);
+	        if (user == null) {
+	            return ResponseEntity.badRequest().body(Map.of("message", "User not found."));
+	        }
+
+	        user.setPassword(bcrypt.encode(newPassword));
+	        uRepo.save(user);
+
+	        return ResponseEntity.ok(Map.of("message", "Password changed successfully."));
+	    }
 
 }

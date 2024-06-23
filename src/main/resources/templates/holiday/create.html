@@ -70,18 +70,20 @@
 			<p th:if="${#fields.hasErrors('dateEnd')}" th:errors="*{dateEnd}" class="text-danger ">Name Error</p>	
 			</div>
 			
-			
-			
+		<div class="mt-5">
+				<input id="toggle_select_class_create_holiday"  type="checkbox">	<span> Holiday for specific class</span>
+		</div>	
 
-		<div class="input-group mt-5">
+
+		<div class="input-group mt-5" id="wraper_class_selece_create_hiliday" style="display:none">
 			<div class="input-group-prepend" style="width: 150px">
 				<label style="width: 100%" class="input-group-text"
 					for="inputGroupSelect01 " th:text="#{holiday.class.select}">Select class</label>
 			</div>
 			
-		<select th:field="*{classId}" class="form-control">
+		<select  th:field="*{classIdHoliday}" class="form-control">
 				<option value=" " th:text="#{holiday.class.select}">Select class</option>
-				<option th:each="s : ${class}" th:text="${s.name}"
+				<option th:each="s : ${classes}" th:text="${s.name}"
 					th:value="${s.id}"></option>
 
 			</select>

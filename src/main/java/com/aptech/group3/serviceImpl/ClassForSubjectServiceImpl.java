@@ -67,7 +67,10 @@ public class ClassForSubjectServiceImpl implements ClassForSubjectService {
 	@Autowired 
 	private RoomRegistedService roomRegistedService;
 	
-	
+	public List<ClassForSubject> getClassSubjectsByTeacherId(Long teacherId) {
+        return classRepository.findByTeacherId(teacherId);
+    }
+	//thanh thêm 23/06
 	//thanh thêm   
 	 public List<StudentClass> findStudentClassesByClassId(Long classId) {
 	        return studentClassRepo.findByClassforSubjectId(classId);

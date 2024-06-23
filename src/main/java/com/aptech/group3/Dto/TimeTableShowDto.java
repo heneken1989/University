@@ -17,6 +17,7 @@ private Long class_id;
 private int endSlot;
 private String name;
 private int weekDay;
+private boolean isHoliday;
 
 
 }

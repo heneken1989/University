@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -20,10 +21,12 @@ import com.aptech.group3.Dto.TimeTableApiDto;
 import com.aptech.group3.Dto.TimeTableShowDto;
 import com.aptech.group3.Repository.AttendanceRepository;
 import com.aptech.group3.Repository.ClassForSubjectRepository;
+import com.aptech.group3.Repository.LessonSubjectRepository;
 import com.aptech.group3.Repository.StudentClassRepository;
 import com.aptech.group3.Repository.UserRepository;
 import com.aptech.group3.entity.Attendance;
 import com.aptech.group3.entity.ClassForSubject;
+import com.aptech.group3.entity.LessonSubject;
 import com.aptech.group3.entity.StudentClass;
 import com.aptech.group3.entity.StudentClassApiDto;
 import com.aptech.group3.entity.User;
@@ -45,7 +48,8 @@ public class StudentClassServiceImpl implements StudentClassService {
 
 	@Autowired
 	private AttendanceRepository attendanceRepo;
-	
+	@Autowired
+	private LessonSubjectRepository lessonSubjectRepository;
 	
     public List<StudentClass> getStudentClasses(Long studentId) {
         List<ClassStatus> statuses = Arrays.asList(ClassStatus.WAITINGLIST, ClassStatus.LIST, ClassStatus.UNPAID, ClassStatus.PAID);
@@ -201,9 +205,17 @@ public class StudentClassServiceImpl implements StudentClassService {
 
 	}
 
+
+	
+	
 	public List<TimeTableShowDto> getCurrentTimeTable(Long studentId, Date dateStart, Date dateEnd, Long semesterId) {
 
-		List<TimeTableShowDto> data = repo.getcalendar(studentId,  dateEnd, semesterId).stream().map(e -> {
+		List<TimeTableShowDto> data = repo.getcalendar(studentId, dateEnd, semesterId).stream().map(e -> {
+			Calendar startday = BaseMethod.toCalendar(dateStart);
+
+			startday.add(Calendar.DATE, e.getClassforSubject().getWeekDay() - 1);
+			List<LessonSubject> checkIsHoliday = lessonSubjectRepository.checkIsHoliday(startday.getTime(),
+					e.getClassforSubject().getId());
 			TimeTableShowDto dto = new TimeTableShowDto();
 			dto.setEndSlot(e.getClassforSubject().getSlotEnd());
 			dto.setStartSlot(e.getClassforSubject().getSlotStart());
@@ -211,11 +223,11 @@ public class StudentClassServiceImpl implements StudentClassService {
 			dto.setRoom(e.getClassforSubject().getRoom().getName());
 			dto.setWeekDay(e.getClassforSubject().getWeekDay());
 			dto.setClass_id(e.getClassforSubject().getId());
+			dto.setHoliday(checkIsHoliday.size() == 0 ? false : true);
+
 			return dto;
 		}).toList();
-		
-		
-		System.out.print(data);		
+
 		return data;
 	}
 
