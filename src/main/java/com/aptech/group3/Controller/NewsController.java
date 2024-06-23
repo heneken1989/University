@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +44,6 @@ public class NewsController {
     public String saveNews(@ModelAttribute("news") News news, @RequestParam("imageFile") MultipartFile imageFile) {
         if (!imageFile.isEmpty()) {
             String imagePath = saveImageFile(imageFile);
-            news.setCreateDate(new Date());
             news.setImage(imagePath);
         }
         

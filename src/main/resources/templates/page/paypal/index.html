@@ -49,9 +49,7 @@
 				<td class="text-center" th:text="${rowStat.index + 1}"></td>
 					<td class="text-center" th:text="${classes.ClassforSubject.Subject.name}" ></td>
 					<td class="text-center" th:text="${classes.ClassforSubject.Subject.credit}"  ></td>
-					<td class="text-center" th:text="${classes.ClassforSubject.Subject.credit}*3000000 +vnd" ></td>
-					
-					
+					<td class="text-center" th:text="${classes.ClassforSubject.Subject.credit}*150	 + '$'"></td>
 					
 					<td class="text-center">
 					<div class="form-check">
@@ -67,12 +65,12 @@
 			</tbody>
         </table>
 		
-<form id="orderForm" th:action="@{/web/submitOrder}" method="post">
+<form id="orderForm" th:action="@{/web/submitOrder}" method="post" >
     <div class="form-group">
-        <label for="amount" class="total">Total</label>
-        <input type="number" readonly class="form-control" name="amount" required style="width:15%">
+        <label for="amount" class="total" style="margin-left:470px">Total</label>
+        <input type="number" readonly class="form-control" name="amount" required style="width:8% ; text-align:center">$
     </div>
-    <div class="form-group" hidden>
+    <div class="form-group vnpay" hidden>
         <label for="orderInfo">Thông tin đơn hàng:</label>
         <input type="text" class="form-control" id="orderInfo" name="orderInfo" required th:value="Payment">
     </div>
@@ -82,10 +80,10 @@
     
 </form>
 <br>
-<form id="paypalForm" method="post" action="/paypal/indexx">
+<form id="paypalForm" method="post" action="/web/paypal/indexx">
     <input type="hidden" name="amount" id="paypalAmount">
     <input type="hidden" name="selectedItems" id="paypalSelectedItems">
-    <button type="submit" id="paypalButton" class="btn btn-primary">Payment Paypal</button>
+    <button type="submit" id="paypalButton" class="btn btn-primary paypal paypal" >Payment Paypal</button>
 </form>
 
 <!-- Add the payment button here -->
@@ -115,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 } else {
                     totalCredits -= credit;
                 }
-                totalInput.value = totalCredits * 3000000 ;
+                totalInput.value = totalCredits * 150 ;
             } else {
                 console.error("Invalid credit value:", creditText);
             }
@@ -136,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 totalCredits += credit;
             }
         });
-        totalInput.value = totalCredits * 3000000 ;
+        totalInput.value = totalCredits * 150 ;
     }
 
     // Save credit states to sessionStorage when leaving the page
@@ -180,6 +178,10 @@ $(document).ready(function() {
         });
         console.log("Selected Items: ", selectedItems); // Add this line for debugging
         $('#selectedItems').val(selectedItems.join(','));
+        if (selectedItems.length === 0) {
+            event.preventDefault();
+            alert("Please select at least one item.");
+        }
     });
 });
 </script>

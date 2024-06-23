@@ -30,11 +30,16 @@ public class PaymentServiceImpl implements PaymentService {
     public Page<Paymenttt> findAll(Pageable pageable) {
         return repo.findAll(pageable);
     }
+    @Override
+    public Page<Paymenttt> findByUserCode(String code, Pageable pageable) {
+        return repo.findByStudent_CodeContaining(code, pageable);
+    }
    
     @Override 
     public void save(Paymenttt payment)
     {
     	 repo.save(payment);
     }
+    
     
 }

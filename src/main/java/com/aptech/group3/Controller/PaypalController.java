@@ -78,7 +78,7 @@ public class PaypalController {
 	    return "/page/paypal/indexx";
 	}
 
-	@PostMapping("/paypal/indexx")
+	@PostMapping("web/paypal/indexx")
 	public String handlePaypalPayment(@RequestParam("amount") String amount,
 	                                  @RequestParam("selectedItems") String selectedItems,
 	                                  Model model) {
@@ -150,7 +150,7 @@ public class PaypalController {
     	            int classCredit = classForSubject.getSubject().getCredit();
     	            paymentt.setStudent(student);
     	            paymentt.setClassforSubject(classForSubject);
-    	            int classPayment = classCredit * 3000000;
+    	            int classPayment = classCredit * 150;
     	            paymentt.setCash(classPayment);
     	            paymentt.setPayments("Paypal");
     	            paymentt.setDate(new Date());

@@ -140,6 +140,20 @@ $("#back_page_btn_subject").attr("href",`/admin/subject/list?page=${Number(curre
             errorDiv.innerHTML = '';
         }
     }, 5000);
+    
+    
+    //js for create holiday add to table show
+let showSelectStatus= false;
+$("#toggle_select_class_create_holiday").on("change",()=>{
+	showSelectStatus=!showSelectStatus
+	
+	if(showSelectStatus){
+		$("#wraper_class_selece_create_hiliday").show();
+	}else{
+		$("#wraper_class_selece_create_hiliday").hide();
+	}
+})
+
 
 
 //js for page update status

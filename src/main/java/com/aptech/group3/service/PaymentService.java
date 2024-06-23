@@ -12,8 +12,8 @@ import com.aptech.group3.entity.Paymenttt;
 public interface PaymentService {
     Optional<Paymenttt> findById(Long id);
     List<Paymenttt> findByStudentId(Long studentId);
-    Page<Paymenttt> findAll(Pageable pageable);
+    
     void save(Paymenttt payment);
-    
-    
+    Page<Paymenttt> findAll(Pageable pageable);
+    Page<Paymenttt> findByUserCode(String code, Pageable pageable);
 }

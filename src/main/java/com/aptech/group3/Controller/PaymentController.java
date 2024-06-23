@@ -75,61 +75,66 @@ public class PaymentController {
         return "page/paypal/paymentoffline"; // Ensure this matches your template name
     }
 	
-	
-	
-	
 	@GetMapping("/web/payment/details")
 	public String details(Model model ,@AuthenticationPrincipal CustomUserDetails currentUser)
 	{
 		List<Paymenttt> classss = paymentservice.findByStudentId(currentUser.getUserId());
 		model.addAttribute("class",classss);
 		return "page/paypal/details";
-		
 	}
 
 	/*
-	 * @GetMapping("/admin/paymentoff") public String paymentoff(Model model) {
+	 * @GetMapping("/admin/adminpayment") public String adminpayment(Model
+	 * model, @RequestParam(defaultValue = "0") int page) { int pageSize = 10; //
+	 * Number of records per page Pageable pageable = PageRequest.of(page,
+	 * pageSize);
 	 * 
-	 * return "page/paypal/paymentoffline"; }
+	 * Page<Paymenttt> paymentPage = paymentservice.findAll(pageable);
+	 * model.addAttribute("paymentPage", paymentPage);
+	 * model.addAttribute("currentPage", page);
+	 * 
+	 * return "page/paypal/adminpayment"; }
 	 */
+	
 	@GetMapping("/admin/adminpayment")
-	public String adminpayment(Model model, @RequestParam(defaultValue = "0") int page) {
+	public String adminpayment(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String code) {
 	    int pageSize = 10; // Number of records per page
 	    Pageable pageable = PageRequest.of(page, pageSize);
+	    Page<Paymenttt> paymentPage;
+	    boolean noResults = false;
 
-	    Page<Paymenttt> paymentPage = paymentservice.findAll(pageable);
+	    if (code != null && !code.isEmpty()) {
+	        paymentPage = paymentservice.findByUserCode(code, pageable);
+	        if (paymentPage.isEmpty()) {
+	            noResults = true;
+	        }
+	    } else {
+	        paymentPage = paymentservice.findAll(pageable);
+	    }
+
 	    model.addAttribute("paymentPage", paymentPage);
 	    model.addAttribute("currentPage", page);
+	    model.addAttribute("code", code); // để giữ lại giá trị code trong input search
+	    model.addAttribute("noResults", noResults);
 
 	    return "page/paypal/adminpayment";
 	}
-	
-	/*
-	 * @GetMapping("/admin/view/{studentId}") public String view(Model
-	 * model, @PathVariable Long studentId) { List<StudentClass> classss =
-	 * service.findByStudentIdAndStatus(studentId, ClassStatus.UNPAID);
-	 * model.addAttribute("classsss",classss);
-	 * 
-	 * 
-	 * return "page/paypal/view"; }
-	 */
-	
-	
+	@GetMapping("/admin/payment/searchh")
+    public String searchh(@RequestParam("name") String name, Model model) {
+        List<StudentClass> studentClasses = service.findStudentClassesByUserName(name);
+        model.addAttribute("offline", studentClasses);
+        return "page/paypal/adminpayment"; // Ensure this matches your template name
+    }
+
 	@PostMapping("/web/submitOrder")
 	public String submitOrder(@RequestParam("amount") int orderTotal,
 	                          @RequestParam("orderInfo") String orderInfo, @RequestParam("selectedItems") String selectedItems,
 	                          HttpServletRequest request) {
-	    
-		
-	        
-	        // Tiếp tục xử lý và chuyển hướng
+
 	        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()+"/web";
 	        orderInfo=selectedItems;
-	        String vnpayUrl = vnPayService.createOrder(orderTotal, orderInfo, baseUrl);
-	        
-	        return "redirect:" + vnpayUrl;
-	    
-		
+	        String vnpayUrl = vnPayService.createOrder(orderTotal, orderInfo, baseUrl);        
+	        return "redirect:" + vnpayUrl;	
 	}
 
 	@GetMapping("/web/vnpay-payment")
@@ -162,7 +167,7 @@ public class PaymentController {
 	            int classCredit = classForSubject.getSubject().getCredit();
 	            payment.setStudent(student);
 	            payment.setClassforSubject(classForSubject);
-	            int classPayment = classCredit * 3000000;
+	            int classPayment = classCredit * 150 *25000;
 	            payment.setCash(classPayment);
 	            payment.setPayments("VNPay");
 	            payment.setDate(new Date());
