@@ -1,10 +1,14 @@
 package com.aptech.group3.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.aptech.group3.entity.News;
 import com.aptech.group3.Repository.NewsRepository;
 import com.aptech.group3.service.NewsService;
+
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,10 +18,7 @@ public class NewsServiceImpl implements NewsService {
     @Autowired
     private NewsRepository newsRepository;
 
-    @Override
-    public List<News> findAll() {
-        return newsRepository.findAll();
-    }
+    
 
     @Override
     public Optional<News> findById(Long id) {
@@ -38,5 +39,10 @@ public class NewsServiceImpl implements NewsService {
     	return newsRepository.selectTopNew();
     }
     
- 
+    public Page<News> findAll(Pageable pageable) {
+        return newsRepository.findAll(pageable);
+    }
+    public List<News>findAll(){
+    	return newsRepository.findAll();
+    }
 }

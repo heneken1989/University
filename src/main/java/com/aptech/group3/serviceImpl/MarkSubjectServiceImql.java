@@ -17,6 +17,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.aptech.group3.Dto.MarkApiDto;
@@ -95,6 +97,14 @@ public class MarkSubjectServiceImql implements MarkSubjectService {
 		}
 
 		return studentMarks;
+	}
+	
+	
+	public Page<MarkSubject> getMarksByStudentId(Long studentId, Pageable pageable) {
+		return repo.findByUserId(studentId, pageable);
+	}
+	public Page<MarkSubject> getListMarkSubjectByClassId(Long classId, Pageable pageable) {
+		return repo.findByClassId(classId, pageable);
 	}
 	// thêm mới ở trên
 

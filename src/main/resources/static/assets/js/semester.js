@@ -64,4 +64,3 @@ $("#day_end_semnew").on("change",()=>{
             }
 })
 
-

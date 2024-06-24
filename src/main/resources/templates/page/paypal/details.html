@@ -1,43 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-	layout:decorate="~{/layout}">
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{/layout}">
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+    <meta charset="ISO-8859-1">
+    <title>Insert title here</title>
 </head>
 <body>
 <article layout:fragment="content">
-<h1>Your Payments</h1>  
-        <table class="table  border card-body" id="class_for_subject_table">
-            <thead class="bg bg-primary">
-                <tr>
-                    <th class="title-margin text-center ">#</th>
-                    <th class="title-margin text-center" >Class </th>
-				     <th class="title-margin text-center" >Cash </th>
-				     <th class="title-margin text-center" >Payment Method </th>
-				     <th class="title-margin text-center">Date </th>
-				     
-				     
+    <h1>Your Payments</h1>
+    <table class="table border card-body" id="class_for_subject_table">
+        <thead class="bg bg-primary">
+            <tr>
+                <th class="title-margin text-center">#</th>
+                <th class="title-margin text-center">Class</th>
+                <th class="title-margin text-center">Cash</th>
+                <th class="title-margin text-center">Payment Method</th>
+                <th class="title-margin text-center">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="payment, rowStat : ${paymentPage.content}">
+                <td class="text-center" th:text="${rowStat.index + 1}"></td>
+                <td class="text-center" th:text="${payment.classforSubject.name}"></td>
+                <td class="text-center" th:text="${payment.cash} + ' ' + (${payment.cash} < 1000 ? '$' : 'vnd')"></td>
+                <td class="text-center" th:text="${payment.payments}"></td>
+                <td class="text-center" th:text="${#dates.format(payment.date, 'yyyy-MM-dd')}"></td>
+            </tr>
+        </tbody>
+    </table>
 
-                </tr>
-            </thead>
-            <tbody>
-				<tr th:each="classs,rowStat : ${class}">
-				<td class="text-center" th:text="${rowStat.index + 1}"></td>
-					<td class="text-center" th:text="${classs.classforSubject.name}" ></td>
-					<td class="text-center" th:text="${classs.cash} + ' ' + (${classs.cash} < 1000 ? '$' : 'vnd')"></td>
-					<td class="text-center" th:text="${classs.payments}"></td>
-					<td class="text-center" th:text="${#dates.format(classs.date, 'yyyy-MM-dd')}"  ></td>
-					
-					
-                
-					
-					
-				</tr>
-
-			</tbody>
-        </table>
+   
+    
+    
+<div class="card-footer" >
+        <a th:data-s="${paymentPage.number+1}" id="back_page_btn_web_details"  th:classappend="${paymentPage.first} ? 'disabled' : ''"  class="btn " 
+        style="border:solid 1px black; padding: 3px 10px ; margin-right:10px" th:text="#{label.back}"
+        > Previous</a>
+        
+     <a th:each="pageNo : ${#numbers.sequence(0, paymentPage.totalPages-1)}"
+   th:classappend="${pageNo == paymentPage.number ? 'text-primary' : ''}"
+   class="btn change_page_href_web_details"  style="border:solid 1px black; padding: 3px 10px ; margin:0px 5px"
+   th:text="${pageNo + 1}"
+>
+</a>
+        
+        <a th:data-s="${paymentPage.number+1}" id="next_page_btn_web_details"  th:classappend="${paymentPage.last} ? 'disabled' : ''"  class="btn "  
+        style="border:solid 1px black; padding: 3px 10px ;margin-left:10px"  th:text="#{label.next}" > Next</a>
+        </div>
 </article>
+
 </body>
 </html>

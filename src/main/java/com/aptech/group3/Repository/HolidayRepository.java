@@ -14,7 +14,8 @@ public interface HolidayRepository extends JpaRepository<Holiday, Long> {
 	public List<Holiday> findByYear(int year);
 
 
-	public Page<Holiday> findByYear(int year, Pageable pageable);
+	@Query("SELECT h FROM Holiday h WHERE h.year = :year ORDER BY h.id DESC")
+    Page<Holiday> findByYear( int year, Pageable pageable);
 
 	@Query("SELECT h FROM Holiday h WHERE h.classSubject IS NULL OR h.classSubject.id = :classId "
 			+ " AND h.year= :year")

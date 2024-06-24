@@ -14,11 +14,11 @@ public class SubjectEditDto {
 	private Long id;
 	 
 	 @NotEmpty(message="{admin.subject.name.error}")
-	 @Pattern(regexp = "^[a-zA-Z0-9]{4,12}$",
+	 @Pattern(regexp = "^(?!^[a-zA-Z]+$)(?!^[0-9]+$)[a-zA-Z0-9 ]{4,12}$",
      message = "name must be of 4 to 12 length with no special characters")
    private String name;
 	 
-	 @NotNull(message="{admin.subject.credit.error}")  
+	 @NotNull(message="cannot null")  
 	    private int credit;
 	    
 	 @NotNull(message="{admin.subject.type.error}")

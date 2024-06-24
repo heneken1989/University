@@ -7,6 +7,7 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -14,6 +15,7 @@ import lombok.Data;
 @Data
 public class SemeterDto {
 	private Long id;
+	@NotEmpty(message="cannot null")
     private int name;
 	@Min(2024)
 	private int year;

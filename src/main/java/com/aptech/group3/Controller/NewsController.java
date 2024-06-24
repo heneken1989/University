@@ -2,16 +2,24 @@ package com.aptech.group3.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.aptech.group3.entity.News;
 import com.aptech.group3.service.NewsService;
+
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Date;
+
 import java.util.Optional;
 
 @Controller
@@ -27,9 +35,15 @@ public class NewsController {
     }
 
     @GetMapping("/admin/news/index")
-    public String getAllNews(Model model) {
-        List<News> newsList = newsService.findAll();
-        model.addAttribute("newsList", newsList);
+    public String getAllNews(Model model,
+                             @RequestParam(name = "page", defaultValue = "1") int page,
+                             @RequestParam(name = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<News> newsPage = newsService.findAll(pageable);
+
+        model.addAttribute("newsPage", newsPage);
+        model.addAttribute("currentPage", page);
+
         return "news/index";
     }
 
@@ -39,14 +53,19 @@ public class NewsController {
         System.out.print("aaaaaaaaaaaaa"+model);
         return "news/create";
     }
-
     @PostMapping("/admin/news/save")
-    public String saveNews(@ModelAttribute("news") News news, @RequestParam("imageFile") MultipartFile imageFile) {
+    public String saveNews(@ModelAttribute("news") @Valid News news, BindingResult result, @RequestParam("imageFile") MultipartFile imageFile, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("news", news);
+            return "admin/news/create"; // Ensure this matches your view name
+        }
+
         if (!imageFile.isEmpty()) {
             String imagePath = saveImageFile(imageFile);
+            news.setCreateDate(new Date());
             news.setImage(imagePath);
         }
-        
+
         newsService.save(news);
         return "redirect:/admin/news/index";
     }
@@ -74,7 +93,7 @@ public class NewsController {
         updatedNews.setId(id);
         
         newsService.save(updatedNews);
-        return "redirect:/news/index";
+        return "redirect:/admin/news/index";
     }
 
     private String saveImageFile(MultipartFile imageFile) {
@@ -104,7 +123,7 @@ public class NewsController {
     @GetMapping("/admin/news/delete/{id}")
     public String deleteNews(@PathVariable Long id) {
         newsService.deleteById(id);
-        return "redirect:/news/index";
+        return "redirect:/admin/news/index";
     }
     @GetMapping("/web/news/details/{id}")
     public String getNewsDetails(@PathVariable("id") Long id, Model model) {

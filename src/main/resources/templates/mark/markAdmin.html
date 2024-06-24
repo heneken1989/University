@@ -7,10 +7,11 @@
 </head>
 <body>
     <div layout:fragment="content" class="ttttable table-bordered mt-3" style="transform:translateY(1%);">
-        <div class="card-header" style="width: 100%; color: rebeccapurple; font-family: 'georgia';font-weight: 300;top:0px;">
+        <div class="card-header" style="width: 100%; color: rebeccapurple; font-family: 'georgia';font-weight: 300;top:0px; margin-bottom:-100px;">
             <h3 style="text-align: center; font-weight: bold; font-size: 40px; text-transform: uppercase;">Mark Administration</h3>
         </div>
-<input th:if="${error=='SUCCESS'}" class="show_success_toast" readonly
+        <div th:if="${error}" class="alert alert-success" th:text="${error}"></div>
+		<input th:if="${error=='SUCCESS'}" class="show_success_toast" readonly
 			type="hidden" th:value="#{toast.success.update}"> 
 			  <!-- Toast container -->
             <div id="toastContainer" style="position: absolute; top: 0; right: 0; z-index: 1050;"></div>
@@ -84,12 +85,11 @@
                         <td class="text-center" th:text="*{room.name}"></td>
                         <td class="text-center" th:text="*{status}"></td>
                         <td class="text-center">
-                            <a class="btn btn-insert" th:href="@{'/admin/mark/insert/' + *{id}}" data-toggle="tooltip" data-placement="top" title="Insert mark">
-                                <i class="fas fa-download"></i>
-                            </a>
-                            <a class="btn btn-insert" th:href="@{'/admin/mark/edit/' + *{id}}" data-toggle="tooltip" data-placement="top" title="Edit mark">
-                                <i class="fas fa-edit"></i>
-                            </a>
+
+                           <a class="btn btn-info" th:href="@{'/admin/mark/insert/' + *{id}}" data-toggle="tooltip" data-placement="top" title="Insert mark"
+        ><i class="fas fa-pencil-alt"></i></a>
+                           <a class="btn btn-warning" th:href="@{'/admin/mark/edit/' + *{id}}" data-toggle="tooltip" data-placement="top" title="Edit mark"
+        > <i class="fas fa-edit"></i></a>
                         </td>
                     </tr>
                 </tbody>

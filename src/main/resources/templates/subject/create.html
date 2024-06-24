@@ -48,7 +48,7 @@
 		<form th:action="@{/admin/subject/create}" method="post"
 			style="width: 70%" id="subject_form_create" th:object="${data}">
 
-			
+
 			<!-- Hidden input for ID -->
 			<!--  <span>Name: </span><input type="text" name="name" id="name" required/> -->
 
@@ -59,88 +59,100 @@
 					</div>
 					<input type="text" th:field="*{name}" class="form-control"
 						id="name" placeholder="Name">
-						
+
 				</div>
-					<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"class="text-danger mt-1">Name Error</p>
+				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+					class="text-danger mt-1">Name Error</p>
 			</div>
 
 			<!--  <span>Credit</span><input type="number" name="credit" required/><br> -->
 			<div>
-			<div class="input-group mb-5">
-				<div class="input-group-prepend" style="width: 150px">
-					<label style="width: 100%" class="input-group-text">Type</label>
+				<div class="input-group mb-5">
+					<div class="input-group-prepend" style="width: 150px">
+						<label style="width: 100%" class="input-group-text">Type</label>
+					</div>
+					<select id="select_type_create_subject" name="type"
+						class="form-control">
+						<option value="">select type</option>
+						<option th:each="subject : ${type}" th:value="${subject}"
+							th:text="${subject}" th:field="*{type}"></option>
+					</select>
+
 				</div>
-				<select id="select_type_create_subject" name="type"
-					class="form-control" >
-					<option value="">select type</option>
-					<option th:each="subject : ${type}" th:value="${subject}"
-						th:text="${subject}" th:field="*{type}"></option>
-				</select><br>
+				<p th:if="${#fields.hasErrors('type')}" th:errors="*{type}"
+					class="text-danger mt-1">Name Error</p>
 
 			</div>
-	<p th:if="${#fields.hasErrors('type')}" th:errors="*{type}"class="text-danger mt-1">Name Error</p>
-			
-			</div>
-			
 
-			<div class="input-group mb-5" id="select_credit_proper"
-				style="display: none">
-				<div class="input-group-prepend" style="width: 150px">
-					<label style="width: 100%" class="input-group-text">Credit</label>
+			<div>
+				<div class="input-group mb-5" id="select_credit_proper"
+					style="display: none">
+					<div class="input-group-prepend" style="width: 150px">
+						<label style="width: 100%" class="input-group-text">Credit</label>
+					</div>
+					<select id="credit_create_subject" name="credit"
+						class="form-control" required>
+						<option th:value="0" selected>Select Credit</option>
+						<option th:value="1">1</option>
+						<option th:value="2">2</option>
+						<option th:value="3">3</option>
+						<option th:value="4">4</option>
+						<option th:value="5">5</option>
+
+					</select>
+
 				</div>
-				<select id="credit_create_subject" name="credit"
-					class="form-control">
-					<option th:value="-1" selected>Select Credit</option>
-					<option th:value="1">1</option>
-					<option th:value="2">2</option>
-					<option th:value="3">3</option>
-					<option th:value="4">4</option>
-					<option th:value="5">5</option>
-
-				</select> <br>
-				<p th:if="${#fields.hasErrors('credit')}" th:errors="*{credit}"class="text-danger mt-1">Name Error</p>
+				<p th:if="${#fields.hasErrors('credit')}" th:errors="*{credit}"
+					class="text-danger mt-1">Name Error</p>
 			</div>
 
-			<div class="input-group mb-5" id="credit_action_proper"
-				style="display: none">
-				<div class="input-group-prepend" style="width: 150px">
-					<label style="width: 100%" class="input-group-text">Credit
-						for Action</label>
+			<div>
+				<div class="input-group mb-5" id="credit_action_proper"
+					style="display: none">
+					<div class="input-group-prepend" style="width: 150px">
+						<label style="width: 100%" class="input-group-text">Credit
+							for Action</label>
+					</div>
+					<select id="creditAction_create_subject_new"
+						th:field="*{creditAction}" class="form-control">
+
+					</select>
+
 				</div>
-				<select id="creditAction_create_subject_new" th:field="*{creditAction}"
-					class="form-control" >
-					
-				</select><br>
-				<p th:if="${#fields.hasErrors('creditAction')}" th:errors="*{creditAction}"class="text-danger mt-1">Name Error</p>
+				<p th:if="${#fields.hasErrors('creditAction')}"
+					th:errors="*{creditAction}" class="text-danger mt-1">Name Error</p>
 			</div>
-			
-			
-			
+
+
+
+
 			<input name="field_id" id="field_create_subject" th:value="${field}"
 				type="hidden" />
-	
-	<div>
-	<div class="input-group mb-5">
-				<div class="input-group-prepend" style="width: 150px">
-					<label style="width: 100%" class="input-group-text"
-						for="subjectlevel">Subject Level:</label>
+
+			<div>
+				<div class="input-group mb-5">
+					<div class="input-group-prepend" style="width: 150px">
+						<label style="width: 100%" class="input-group-text"
+							for="subjectlevel">Subject Level:</label>
+					</div>
+
+					<select id="subjectlevel" name="subjectlevel_id"
+						class="form-control">
+						<option value="" disabled selected>Select a Subject Level</option>
+
+						<option th:each="subjectlevel : ${subjectlevels}"
+							th:value="${subjectlevel.id}" th:text="${subjectlevel.name}"></option>
+					</select>
+
 				</div>
-
-				<select id="subjectlevel" name="subjectlevel_id"
-					class="form-control">
-					<option value="" disabled selected>Select a Subject Level</option>
-
-					<option th:each="subjectlevel : ${subjectlevels}"
-						th:value="${subjectlevel.id}" th:text="${subjectlevel.name}"></option>
-				</select>
-	
+				<p th:if="${#fields.hasErrors('subjectlevel_id')}"
+					th:errors="*{subjectlevel_id}" class="text-danger mt-1">Name
+					Error</p>
 			</div>
-	<!--  <p th:if="${#fields.hasErrors('subjectlevel_id')}" th:errors="*{subjectlevel_id}"class="text-danger mt-1">Name Error</p>  -->
-	</div>
-			
-				<!-- calc(100% - 150px) -->
-				
-			<div class="input-group mb-5"  id="passsubject">
+
+			<!-- calc(100% - 150px) -->
+
+			<div class="input-group mb-5" id="passsubject">
 				<div class="input-group-prepend" style="width: 150px">
 					<label style="width: 100%" class="input-group-text">Pass</label>
 				</div>
@@ -155,7 +167,7 @@
 			<input name="field_id1" id="field_create_subject1"
 				th:value="${field}" type="hidden" />
 
-			 <!-- <div class="input-group mb-5">
+			<!-- <div class="input-group mb-5">
 				<div class="input-group-prepend" style="width: 150px"  >
 				<div class="input-group-prepend" style="display: none">
 
@@ -179,7 +191,7 @@
 
 				<select class="select2 form-control" name="field1[]" multiple
 					id="select_create_subject1"
-					style="display: none; width: calc(100% - 150px)" >
+					style="display: none; width: calc(100% - 150px)">
 				</select>
 			</div>
 
@@ -189,21 +201,23 @@
 
 
 			<button class="btn btn-primary" type="submit">Create</button>
-			<!-- <select name="requiredSubjects" id="select_subject_status" style="display: none">
-        </select>  -->
-
-
-
-			<!-- sau khi chon subject level dung ajax de goij apoi lay ve danh sach subject theo field va level -->
-
-
 
 		</form>
 
 
 		<!-- Update your existing JavaScript code -->
 
+<!-- <script>
+document.addEventListener('DOMContentLoaded', function (){
+	const creAction = document.getElementById('creditAction_create_subject_new');
+	const credit = document.getElementById('credit_create_subject');
+	
+	
+})
+	
 
+
+</script> -->
 	</article>
 </body>
 </html>

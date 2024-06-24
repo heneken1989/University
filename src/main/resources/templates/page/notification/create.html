@@ -33,7 +33,8 @@
 					<span  style="width: 150px" th:text="#{notify.content}" class="input-group-text" id="inputGroup-sizing-default">Content</span>
 				</div>
 				<input th:field="*{content}" class="form-control"
-					aria-label="Default" aria-describedby="inputGroup-sizing-default">			
+					aria-label="Default" aria-describedby="inputGroup-sizing-default">
+					<textarea ></textarea>			
 			</div>
 				<p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"class="text-danger mt-1">Name Error</p>	
 </div>

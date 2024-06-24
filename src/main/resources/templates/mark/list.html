@@ -45,6 +45,7 @@
 					<th>Class</th>
 					<th>Subject</th>
 					<th>Mark</th>
+					<th>Style</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -62,6 +63,7 @@
 					<td th:text="${markSubject.subject.name}"
 						style="text-align: center;"></td>
 					<td th:text="${markSubject.mark}" style="text-align: center;"></td>
+					<td th:text="${markSubject.style}" style="text-align: center;"></td>
 				</tr>
 			</tbody>
 		</table>
@@ -74,6 +76,7 @@
 					<th>Student</th>
 					<th>Subject</th>
 					<th>Mark</th>
+					<th>Style</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -90,6 +93,7 @@
 					<td th:text="${markSubject.subject.name}"
 						style="text-align: center;"></td>
 					<td th:text="${markSubject.mark}" style="text-align: center;"></td>
+					<td th:text="${markSubject.style}" style="text-align: center;"></td>
 				</tr>
 			</tbody>
 		</table>
@@ -100,6 +104,26 @@
 				Warning: <span th:text="${message}" style="color: red"></span>
 			</p>
 		</div>
+		
+		<div class="card-footer"  style="display: flex; justify-content: center; align-items: center;">
+			<a th:data-s="${markSubjects.number+1}" id="back_page_btn"
+				th:classappend="${markSubjects.first} ? 'disabled' : ''" class="btn "
+				style="border: solid 1px black; padding: 3px 10px; margin-right: 10px">
+				Previous</a> 
+				<a
+				th:each="pageNo : ${#numbers.sequence(0, markSubjects.totalPages-1)}"
+				th:classappend="${pageNo == markSubjects.number ? 'text-primary' : ''}"
+				class="btn change_page_href_mark_student"
+				style="border: solid 1px black; padding: 3px 10px; margin: 0px 5px"
+				th:text="${pageNo + 1}"> </a> 
+				
+				<a th:data-s="${markSubjects.number+1}"
+				id="next_page_btn" th:classappend="${markSubjects.last} ? 'disabled' : ''"
+				class="btn "
+				style="border: solid 1px black; padding: 3px 10px; margin-left: 10px">
+				Next</a>
+		</div>
+		
 	</div>
 
 </body>

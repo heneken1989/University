@@ -150,8 +150,6 @@ public class SubjectController {
 		return "subject/create";
 	}
 	
-	
-
 	@PostMapping("/create")
 	public String createsubject(Model model, @ModelAttribute("data") @Valid SubjectCreateDto data,
 			BindingResult bindingResult, HttpServletRequest request, RedirectAttributes rm,
@@ -165,7 +163,13 @@ public class SubjectController {
             bindingResult.rejectValue("name", "duplicate", "A subject with this name already exists.");
         }
 		
+		if(data.getCredit()==0) {
+			bindingResult.rejectValue("credit", "error.data", "Credit cannot null");
+		}
 		
+		if(data.getType() == ClassType.BOTH && data.getCreditAction() == 0) {
+			bindingResult.rejectValue("creditAction", "error.data", "Credit Action cannot equal 0");
+		}
 		if (bindingResult.hasErrors()) {
 
 			System.out.print("bbbbbb" + bindingResult.toString());
@@ -250,6 +254,14 @@ public class SubjectController {
 
 		System.out.print("aaaaaaaa" + subject.getCreditAction());
 		System.out.print("dwadashdkjas  " + currentUser.getUser().getFields().get(0).getId());
+		
+		if(subject.getCredit()==0) {
+			result.rejectValue("credit", "error.data", "Credit cannot null");
+		}
+		
+		if(subject.getType() == ClassType.BOTH && subject.getCreditAction() == 0) {
+			result.rejectValue("creditAction", "error.data", "Credit Action cannot equal 0");
+		}
 		
 		if (result.hasErrors()) {
 

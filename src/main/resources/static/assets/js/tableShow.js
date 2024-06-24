@@ -169,3 +169,130 @@ $("#btn_show_form_update").on("click",()=>{
 	$("#div_holver_list_class").empty();
 	$("#div_holver_list_class").html(str);
 })
+
+//vuong
+
+const aTagPayment = document.querySelectorAll(".change_page_href_admin_payment");
+aTagPayment.forEach(a => {
+    let text = a.innerHTML;
+    let href = "/admin/adminpayment"; 
+   a.setAttribute("href", href);
+    if (!myParamAdmin) {
+        href += `?page=${text}`;
+    } else {
+        href += `?type=${user_list_type}&page=${text}`;
+    }
+
+    a.setAttribute("href", href);
+});
+
+
+let currentPagepayment= $("#next_page_btn_admin_payment").attr("data-s")
+if(!level){
+$("#next_page_btn_admin_payment").attr("href",`/admin/adminpayment?page=${Number(currentPagepayment)+1}`)
+$("#back_page_btn_admin_payment").attr("href",`/admin/adminpayment?page=${Number(currentPagepayment)-1}`)
+}else{
+	$("#next_page_btn_admin_payment").attr("href",`/admin/adminpayment?level=${level}&page=${Number(currentPagepayment)+1}`)
+	$("#back_page_btn_admin_payment").attr("href",`/admin/adminpayment?level=${level}&page=${Number(currentPagepayment)+-1}`)
+}
+
+const aTagDetails = document.querySelectorAll(".change_page_href_web_details");
+aTagDetails.forEach(a => {
+    let text = a.innerHTML;
+    let href = "/web/payment/details"; 
+   a.setAttribute("href", href);
+    if (!myParamAdmin) {
+        href += `?page=${text}`;
+    } else {
+        href += `?type=${user_list_type}&page=${text}`;
+    }
+
+    a.setAttribute("href", href);
+});
+
+let currentPagePaymentDetails= $("#next_page_btn_web_details").attr("data-s")
+if(!level){
+$("#next_page_btn_web_details").attr("href",`/web/payment/details?page=${Number(currentPagePaymentDetails)+1}`)
+$("#back_page_btn_web_details").attr("href",`/web/payment/details?page=${Number(currentPagePaymentDetails)-1}`)
+}else{
+	$("#next_page_btn_web_details").attr("href",`/web/payment/details?level=${level}&page=${Number(currentPagePaymentDetails)+1}`)
+	$("#back_page_btn_admin_payment").attr("href",`/web/payment/details?level=${level}&page=${Number(currentPagePaymentDetails)+-1}`)
+}
+
+const aTagNews = document.querySelectorAll(".change_page_href_admin_news");
+aTagNews.forEach(a => {
+    let text = a.innerHTML;
+    let href = "/admin/news/index"; 
+   a.setAttribute("href", href);
+    if (!myParamAdmin) {
+        href += `?page=${text}`;
+    } else {
+        href += `?type=${user_list_type}&page=${text}`;
+    }
+
+    a.setAttribute("href", href);
+});
+
+let currentPageNews= $("#next_page_btn_admin_news").attr("data-s")
+if(!level){
+$("#next_page_btn_admin_news").attr("href",`/admin/news/index?page=${Number(currentPageNews)+1}`)
+$("#back_page_btn_admin_news").attr("href",`/admin/news/index?page=${Number(currentPageNews)-1}`)
+}else{
+	$("#next_page_btn_admin_news").attr("href",`/admin/news/index?level=${level}&page=${Number(currentPageNews)+1}`)
+	$("#back_page_btn_admin_news").attr("href",`/admin/news/index?level=${level}&page=${Number(currentPageNews)+-1}`)
+}
+
+
+
+
+//chuyeenr trang student teacher mark
+const aTagMark =  document.querySelectorAll(".change_page_href_mark_student");
+const myParamMark = urlParams.get('type');
+console.log("UUUUUU"+user_list_type);
+/*change page admin user*/
+aTagMark.forEach(a => {
+    let text = a.innerHTML;
+    let href = "/web/mark/getMarkSubject"; 
+   a.setAttribute("href", href);
+    if (!myParamMark) {
+        href += `?page=${text}`;
+    } else {
+        href += `?type=${user_list_type}&page=${text}`;
+    }
+
+    a.setAttribute("href", href);
+});
+
+
+if(!myParam){
+$("#next_page_btn").attr("href",`/web/class/list?page=${Number(currentPage)+1}`)
+$("#back_page_btn").attr("href",`/web/class/list?page=${Number(currentPage)-1}`)
+}else{
+	$("#next_page_btn").attr("href",`/web/class/list?semester=${myParam}&subject=${subject_list}&page=${Number(currentPage)+1}`)
+	$("#back_page_btn").attr("href",`/web/class/list?semester=${myParam}&subject=${subject_list}&page=${Number(currentPage)+-1}`)
+}
+
+
+/*next corent page admin_user*/
+let currentPageAdminMark= $("#next_page_btn").attr("data-s")
+if(!myParamMark){
+$("#next_page_btn").attr("href",`/web/mark/getMarkSubject?page=${Number(currentPageAdminUser)+1}`)
+$("#back_page_btn").attr("href",`/web/mark/getMarkSubject?page=${Number(currentPageAdminUser)-1}`)
+}else{
+	$("#next_page_btn").attr("href",`/web/mark/getMarkSubject?semester=${myParamMark}?type=${user_list_type}&page=${Number(currentPageAdminUser)+1}`)
+	$("#back_page_btn").attr("href",`/web/mark/getMarkSubject?semester=${myParamMark}?type=${user_list_type}&page=${Number(currentPageAdminUser)+-1}`)
+}
+
+
+
+/*next corent page admin_user*/
+let currentPageMark= $("#next_page_btn_subject").attr("data-s")
+if(!level){
+$("#next_page_btn_subject").attr("href",`/web/mark/getMarkSubject?page=${Number(currentPageMark)+1}`)
+$("#back_page_btn_subject").attr("href",`/web/mark/getMarkSubject?page=${Number(currentPageMark)-1}`)
+}else{
+	$("#next_page_btn_subject").attr("href",`/web/mark/getMarkSubject?level=${level}&page=${Number(currentPageMark)+1}`)
+	$("#back_page_btn_subject").attr("href",`/web/mark/getMarkSubject?level=${level}&page=${Number(currentPageMark)+-1}`)
+}
+
+

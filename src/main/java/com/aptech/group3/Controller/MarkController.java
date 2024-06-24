@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -207,14 +210,15 @@ public class MarkController {
 
 	@GetMapping("/web/mark/getMarkSubject")
 	public String getMarkSubject(@RequestParam(name = "classId", required = false) Long classId,
+								@RequestParam(name = "page", defaultValue = "1") int page,
 	                             @AuthenticationPrincipal CustomUserDetails userDetails, 
 	                             Model model) {
 	    System.out.println("Class get mark is: " + classId);
 	    Long id = userDetails.getUserId();
 	    String tkLogin = userDetails.getRole();
-
+	    Pageable paging = PageRequest.of(page - 1, 8);
 	    if (userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("STUDENT"))) {
-	        List<MarkSubject> markSubjects = markSubjectService.getMarksByStudentId(id);
+	        Page<MarkSubject> markSubjects = markSubjectService.getMarksByStudentId(id, paging);
 	        model.addAttribute("markSubjects", markSubjects);
 	        model.addAttribute("role", tkLogin);
 	    } else if (userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("TEACHER"))) {
@@ -228,7 +232,7 @@ public class MarkController {
 	        }
 
 	        if (classId != null) {
-	            List<MarkSubject> markSubjects = markSubjectService.getListMarkSubjectByClassId(classId);
+	            Page<MarkSubject> markSubjects = markSubjectService.getListMarkSubjectByClassId(classId, paging);
 	            model.addAttribute("markSubjects", markSubjects);
 	        } else {
 	            model.addAttribute("message", "You haven't taught any classes yet");
@@ -240,7 +244,6 @@ public class MarkController {
 
 	    return "mark/list";
 	}
-
 	@PreAuthorize("hasAuthority('TEACHER')")
 	@GetMapping("/web/mark/getClassMarks")
 	public String getListMarkSubject(@RequestParam("classId") Long classId, Model model) {

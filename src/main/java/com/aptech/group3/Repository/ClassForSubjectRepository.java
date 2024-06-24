@@ -25,7 +25,7 @@ public interface ClassForSubjectRepository extends JpaRepository<ClassForSubject
 	
 	
 	@Query(" SELECT s FROM class_subject s WHERE s.semeter.id = :semesterId AND " + " s.subject.field.id = :fieldId "
-			+ " AND (:subjectId IS NULL OR s.subject.id = :subjectId ) AND (:status IS NULL OR s.status =:status) ")
+			+ " AND (:subjectId IS NULL OR s.subject.id = :subjectId ) AND (:status IS NULL OR s.status =:status)  ORDER BY s.id DESC ")
 	Page<ClassForSubject> findByFieldIdAndSubjectIdAndStatus(Long semesterId, Long fieldId, Long subjectId,ClassSubject status, Pageable pageable);
 	
 	

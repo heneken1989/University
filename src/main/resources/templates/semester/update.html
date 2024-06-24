@@ -10,7 +10,7 @@
 
 	<div layout:fragment="content" class="card text-center ml-3">
 
-
+<h3 class="card-head text-center mt-3"  >Edit Semester</h3>
 		<div class="card-body">
 			<form method="post" th:object="${semester}"
 				th:action="@{/admin/semester/updateSemester/*{id}}"
@@ -23,7 +23,7 @@
 						<div class="input-group-prepend" style="width: 150px">
 							<label style="width: 100%" class="input-group-text" for="name">Semester</label>
 						</div>
-						<select id="select_semester_semnew" name="name" class="form-control"
+						<select id="select_semester_semnew" name="name" class="form-control" th:field="*{name}"
 							required>
 							<option th:value="0">Select Semester</option>
 							<option th:value="1">1</option>
@@ -41,8 +41,8 @@
 							<label style="width: 100%" class="input-group-text"
 								for="day_start">Date Start</label>
 						</div>
-						<input type="date" class="form-control" th:field="*{day_start}"
-							id="day_start_semnew" placeholder="Date_Start" name="day_start" />
+						<input type="date" class="form-control" th:value="${#dates.format(semester.day_start, 'dd/MM/yyyy')}" th:field="*{day_start}"
+							id="day_start_semnew" name="day_start" />
 					</div>
 					<p th:if="${#fields.hasErrors('day_start')}"
 						th:errors="*{day_start}" class="text-danger mt-1">Date Start
@@ -55,8 +55,8 @@
 							<label style="width: 100%" class="input-group-text" for="day_end">Date
 								End</label>
 						</div>
-						<input type="date" class="form-control" th:field="*{day_end}"
-							id="day_end_semnew" placeholder="Date_End" name="day_end" />
+						<input type="date" class="form-control" th:value="${#dates.format(semester.day_end, 'dd/MM/yyyy')}" th:field="*{day_end}"
+							id="day_end_semnew" name="day_end" />
 					</div>
 				</div>
 
@@ -69,16 +69,16 @@
 
 	<script>
 	document.addEventListener('DOMContentLoaded', function () {
-        const dateInput = document.getElementById('day_start_semnew');
-        const dateEndInput = document.getElementById('day_end_semnew');
-        const semesterSelect = document.getElementById('select_semester_semnew');
+        const dateeInput = document.getElementById('day_start_semnew');
+        const dateeEndInput = document.getElementById('day_end_semnew');
+        const semessterSelect = document.getElementById('select_semester_semnew');
              
-        semesterSelect.addEventListener('change', () => {
+        semessterSelect.addEventListener('change', () => {
             // Use the current date instead of a fixed example date
             let date = new Date();
 
             // Show the date input
-            dateInput.parentElement.parentElement.style.display = 'block';
+            dateeInput.parentElement.parentElement.style.display = 'block';
 
             // Find the first Monday on or after the current date
             let firstMonday = new Date(date);
@@ -94,13 +94,13 @@
             const min = firstMonday.toISOString().split('T')[0];
             const max = next6day.toISOString().split('T')[0];
 
-            dateInput.setAttribute('min', min);
-            dateInput.setAttribute('max', max);
+            dateeInput.setAttribute('min', min);
+            dateeInput.setAttribute('max', max);
 
                    
         });
 
-        dateInput.addEventListener('change', function () {
+        dateeInput.addEventListener('change', function () {
             const selectedDate = new Date(this.value);
             const day = selectedDate.getUTCDay();
 
@@ -114,24 +114,24 @@
     
   //day end
     document.addEventListener('DOMContentLoaded', function () {
-        const dayStartInput = document.getElementById('day_start_semnew');
-        const dayEndInput = document.getElementById('day_end_semnew');
+        const dayyStartInput = document.getElementById('day_start_semnew');
+        const dayyEndInput = document.getElementById('day_end_semnew');
 
-        dayStartInput.addEventListener('change', function () {
+        dayyStartInput.addEventListener('change', function () {
             // Update min attribute of day_end input
-            dayEndInput.setAttribute('min', this.value);
+            dayyEndInput.setAttribute('min', this.value);
             // Reset day_end value if it's before the new min value
-            if (dayEndInput.value && dayEndInput.value < this.value) {
-                dayEndInput.value = '';
+            if (dayyEndInput.value && dayyEndInput.value < this.value) {
+                dayyEndInput.value = '';
             }
             // Show the day_end input
-            dayEndInput.parentElement.parentElement.style.display = 'block';
+            dayyEndInput.parentElement.parentElement.style.display = 'block';
             
         });
 
-        dayEndInput.addEventListener('change', function () {
+        dayyEndInput.addEventListener('change', function () {
             // Validate day_end should not be before day_start
-            if (dayStartInput.value && this.value < dayStartInput.value) {
+            if (dayyStartInput.value && this.value < dayyStartInput.value) {
                 alert('Day end cannot be before day start.');
                 this.value = ''; // Reset day_end value
             }
@@ -139,7 +139,7 @@
 
         // Optional: Add validation on form submission
         document.querySelector('form').addEventListener('submit', function (event) {
-            if (dayStartInput.value && dayEndInput.value && dayEndInput.value < dayStartInput.value) {
+            if (dayyStartInput.value && dayyEndInput.value && dayyEndInput.value < dayyStartInput.value) {
                 alert('Please correct the date range: day end cannot be before day start.');
                 event.preventDefault(); // Prevent form submission
             }

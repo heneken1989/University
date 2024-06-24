@@ -1,3 +1,28 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Delete data from all tables (TRUNCATE is faster but be careful if you have large data)
+TRUNCATE TABLE QuizQuestion;
+TRUNCATE TABLE News;
+TRUNCATE TABLE field;
+TRUNCATE TABLE semeter;
+TRUNCATE TABLE room;
+TRUNCATE TABLE subjectlevel;
+TRUNCATE TABLE user;
+TRUNCATE TABLE subject;
+TRUNCATE TABLE user_field;
+TRUNCATE TABLE teacher_subject;
+TRUNCATE TABLE class_subject;
+TRUNCATE TABLE studentclass;
+TRUNCATE TABLE quiz;
+TRUNCATE TABLE quizquestion;
+TRUNCATE TABLE quizanswer;
+TRUNCATE TABLE lessonsubject;
+TRUNCATE TABLE requiredsubject;
+TRUNCATE TABLE marksubject;
+TRUNCATE TABLE quizexam;
+
+-- Re-enable foreign key checks
+SET FOREIGN_KEY_CHECKS = 1;
 
 
 ALTER TABLE QuizQuestion MODIFY content LONGTEXT;
@@ -34,21 +59,22 @@ VALUES
 INSERT IGNORE INTO  user (id, address, avatar, email, infomation, name, password, phone, role,status,code) 
 VALUES 
     (2, '279 Kinh Duong Vuong Street, An Lac Ward', 'nobita.jpg', 'admin@gmail.com', 'admin information', 'admin', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 119 5229', 'ADMIN',0,'AD240001'),
-    (3, '256 Hung Vuong, Phuc Yen', 'nobita.jpg', 'student@gmail.com', 'st@gmail.com', 'Nguyễn Văn A', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '098 518 5230', 'STUDENT',0,'ST240001'),
-    (4, '20B Phan Chu Trinh St., Tan Thanh Ward', 'nobita.jpg', 'student1@gmail.com', 'Nguyễn Văn B', 'Student Nguyen', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '090 035 1405', 'STUDENT',0,'ST240002'),
+    (3, '256 Hung Vuong, Phuc Yen', 'nobita.jpg', 'huyhien1989@gmail.com', 'st@gmail.com', 'Nguyễn Văn A', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '098 518 5230', 'STUDENT',0,'ST240001'),
+    (4, '20B Phan Chu Trinh St., Tan Thanh Ward', 'nobita.jpg', 'st1@gmail.com', 'Nguyễn Văn B', 'Student Nguyen', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '090 035 1405', 'STUDENT',0,'ST240002'),
     (5, '187B Giang Vo Street', 'nobita.jpg', 'teacher@gmail.com', 'teacher information', 'professor David', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '092 198 8791', 'TEACHER',0,'TC240001'),
     (6, '32 Nguyen An Ninh Street', 'nobita.jpg', 'employee@gmail.com', 'Nguyễn Thái Công', 'employee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '098 518 5230', 'EMPLOYEE',0,'EM240001'),
     (7, '97B Giang Vo Street', 'nobita.jpg', 'st2@gmail.com', 'student1 information', 'student Hien', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '090 035 1405', 'STUDENT',0,'ST240003'),
     (8, '12A Phan Chu Trinh St., Tan Thanh Ward', 'nobita.jpg', 'teacher2@gmail.com', 'teacher2 information', 'professor LY', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '092 198 8791', 'TEACHER',0,'TC240001'),
     (9, '128 Nguyen An Ninh Street', 'nobita.jpg', 'nguyenthaithanh101104@gmail.com', 'good student', 'Lee', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 119 5229', 'STUDENT',0,'ST240004'),
-    (10, '128 Nguyen An Ninh Street', 'nobita.jpg', 'student3@gmail.com', 'good student', 'Hoang', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 119 5229', 'STUDENT',0,'ST240005'),
+    (10, '128 Nguyen An Ninh Street', 'nobita.jpg', 'st3@gmail.com', 'good student', 'Hoang', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 119 5229', 'STUDENT',0,'ST240005'),
     (11, '279 Kinh Duong Vuong Street', 'nobita.jpg', 'thaihung210@gmail.com', 'good student', 'Sang', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 119 5229', 'STUDENT',0,'ST240006'),
     (12, '32 Nguyen An Ninh Street', 'nobita.jpg', 'account1@gmail.com', 'good student', 'Lan', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 119 5229', 'STUDENT',0,'ST240007'),
     (13, '279 Kinh Duong Vuong Street', 'nobita.jpg', 'account2@gmail.com', 'good student', 'Hương', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 154 5229', 'STUDENT',0,'ST240008'),
     (14, '128 Nguyen An Ninh Street', 'nobita.jpg', 'thainho43@gmail.com', 'good student', 'Phát04', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '093 156 5246', 'STUDENT',0,'ST240009'),
     (15, '279 Kinh Duong Vuong Street', 'nobita.jpg', 'sangnobi321@gmail.com', 'good student', 'Hoang', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 119 3459', 'STUDENT',0,'ST240010'),
-    (16, '32 Nguyen An Ninh Street', 'nobita.jpg', 'student3@gmail.com', 'good student', 'Trâm04', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 349 5234', 'STUDENT',0,'ST240011'),                  
-	(17, '128 Phan Chu Trinh Street', 'nobita.jpg', 'hoang1231@gmail.com', 'good student', 'Hoang', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 141 5544', 'STUDENT',0,'ST240012');
+    (16, '32 Nguyen An Ninh Street', 'nobita.jpg', 'st4@gmail.com', 'good student', 'Trâm04', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 349 5234', 'STUDENT',0,'ST240011'),                  
+	(17, '128 Phan Chu Trinh Street', 'nobita.jpg', 'hoang1231@gmail.com', 'good student', 'Hoang', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 141 5544', 'STUDENT',0,'ST240012'),
+	(18, '128 Phan Chu Trinh Street', 'nobita.jpg', 'karate@gmail.com', 'good student', 'Hoang', '$2a$12$DRd7H8xiJr9ktFHr4YFDBOWMl7PwdHpmo3GYdHsf8PW4ZetaBM0Iu', '095 141 5544', 'STUDENT',0,'ST240012');
   
 
 
@@ -106,6 +132,7 @@ VALUES
      (1,4),
      (1,5),
      (1,6),
+     (1,8),
      (1,7);
               
     
@@ -114,11 +141,13 @@ VALUES
         INSERT IGNORE INTO  teacher_subject (id, subject_id,teacher_id) 
 VALUES 
     (1,36,5),
+    (12,36,8),
     (2,1,5),
     (3,11,5),
     (4,12,5),
     (5,31,5),
     (6,34,5),
+    (13,34,8),
     (7,39,5),
     (8,38,5),
     (9,37,5),
@@ -130,11 +159,13 @@ VALUES
     
             INSERT IGNORE INTO  class_subject (currentQuantity, minQuantity, quantity, slotEnd, slotStart, status, weekDay, dateEnd, dateStart, id, room_id, semeter_id, subject_id, teacher_id, description, name, type) 
 VALUES 
-    (0,5,50,3,1,2,2,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',1,1,1,36,5,'Class for ...','CPKH24',2),
-    (0,5,50,12,10,2,1,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',2,2,1,1,5,'Class for ...','CPKH4',2),
-    (0,5,50,6,4,2,3,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',3,3,1,2,5,'Class for ...','CPKH3',2),
-    (0,5,50,12,7,2,5,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',4,4,1,11,5,'Class for ...','CPKH2',2),
-    (0,5,50,6,1,2,6,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',5,1,1,12,5,'Class for ...','CPHK1',2);
+    (0,5,50,3,1,2,2,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',1,1,1,36,5,'Class for ...','CPKH24','all'),
+    (0,5,50,12,10,2,1,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',2,2,1,1,5,'Class for ...','CPKH4','all'),
+    (0,5,50,6,4,2,3,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',3,3,1,2,5,'Class for ...','CPKH3','all'),
+    (0,5,50,12,7,2,5,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',4,4,1,11,5,'Class for ...','CPKH2','all'),
+    (0,5,50,6,1,2,6,'2024-06-30 12:31:29.000000','2024-01-1 12:31:29.000000',5,1,1,12,5,'Class for ...','CPHK1','all'),
+    (2,1,2,6,1,2,6,'2024-11-30 12:31:29.000000','2024-07-1 12:31:29.000000',6,4,2,32,5,'Class Microbiology 2024 Semester 2','M1234','all'),
+    (1,1,5,11,10,2,6,'2024-11-30 12:31:29.000000','2024-07-1 12:31:29.000000',7,4,2,36,5,'Class Genetics 2024 Semester 2 For Karate Test','M1111','all');
          
     
     
@@ -146,18 +177,23 @@ VALUES
       (4,1,'',9),
       (4,1,'',10),
       (4,1,'',11),
-      
+
       (4,2,'',12),
       (4,2,'',13),
       (4,2,'',14),
       (4,2,'',15),
       (4,5,'',16),
+      
+      (0,6,'',18),
+      (0,6,'',16),
+      (2,7,'',18),
+      
       (4,5,'',17);
 
       
        INSERT IGNORE INTO  quiz (duration, totalMark,createDate,id,subject_id,teacher_id,name,status, type) 
 VALUES 
-      (60,100,NULL,2,36,5,'Test','Finished',1);
+      (60,100,NULL,2,36,5,'Final Test For Botany Class','Finished',1);
       
       
              INSERT IGNORE INTO  quizquestion (id,mark,quiz_id,type,content) 
@@ -268,9 +304,6 @@ VALUES
       
       ('',95,2,15,1,'normalMark'),
       ('',85,2,15,1,'middleMark'),
-          
-
-      
 
       ('',70,5,16,12,'middleMark'),
       ('',80,5,17,12,'middleMark');

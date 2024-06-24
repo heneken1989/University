@@ -70,7 +70,7 @@
 						<tbody>
 							<tr class="center-content"
 								th:each="studentClass, index : ${studentClasses}">
-								<td th:text="${index.index}"></td>
+								<td th:text="${index.index+1}"></td>
 								<td th:text="${studentClass.student.id}"></td>
 								<td th:text="${studentClass.student.code}"></td>
 								<td th:text="${studentClass.student.name}"></td>

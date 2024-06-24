@@ -1,7 +1,17 @@
 package com.aptech.group3.Controller;
 
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -43,6 +53,7 @@ import com.aptech.group3.service.VNPayService;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class PaymentController {
@@ -76,49 +87,41 @@ public class PaymentController {
     }
 	
 	@GetMapping("/web/payment/details")
-	public String details(Model model ,@AuthenticationPrincipal CustomUserDetails currentUser)
-	{
-		List<Paymenttt> classss = paymentservice.findByStudentId(currentUser.getUserId());
-		model.addAttribute("class",classss);
-		return "page/paypal/details";
-	}
-
-	/*
-	 * @GetMapping("/admin/adminpayment") public String adminpayment(Model
-	 * model, @RequestParam(defaultValue = "0") int page) { int pageSize = 10; //
-	 * Number of records per page Pageable pageable = PageRequest.of(page,
-	 * pageSize);
-	 * 
-	 * Page<Paymenttt> paymentPage = paymentservice.findAll(pageable);
-	 * model.addAttribute("paymentPage", paymentPage);
-	 * model.addAttribute("currentPage", page);
-	 * 
-	 * return "page/paypal/adminpayment"; }
-	 */
-	
-	@GetMapping("/admin/adminpayment")
-	public String adminpayment(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String code) {
+	public String details(Model model, @AuthenticationPrincipal CustomUserDetails currentUser,
+	                      @RequestParam(name = "page", defaultValue = "1") int page) {
 	    int pageSize = 10; // Number of records per page
-	    Pageable pageable = PageRequest.of(page, pageSize);
-	    Page<Paymenttt> paymentPage;
-	    boolean noResults = false;
-
-	    if (code != null && !code.isEmpty()) {
-	        paymentPage = paymentservice.findByUserCode(code, pageable);
-	        if (paymentPage.isEmpty()) {
-	            noResults = true;
-	        }
-	    } else {
-	        paymentPage = paymentservice.findAll(pageable);
-	    }
+Pageable pageable = PageRequest.of(page - 1, pageSize);
+	    Page<Paymenttt> paymentPage = paymentservice.findByStudentId(currentUser.getUserId(), pageable);
 
 	    model.addAttribute("paymentPage", paymentPage);
 	    model.addAttribute("currentPage", page);
-	    model.addAttribute("code", code); // để giữ lại giá trị code trong input search
-	    model.addAttribute("noResults", noResults);
 
-	    return "page/paypal/adminpayment";
+	    return "page/paypal/details";
 	}
+	
+		@GetMapping("/admin/adminpayment")
+		public String adminpayment(Model model, @RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(required = false) String code) {
+		    int pageSize = 10; // Number of records per page
+		    Pageable pageable = PageRequest.of(page - 1, 10);
+		    Page<Paymenttt> paymentPage;
+		    boolean noResults = false;
+	
+		    if (code != null && !code.isEmpty()) {
+		        paymentPage = paymentservice.findByUserCode(code, pageable);
+		        if (paymentPage.isEmpty()) {
+		            noResults = true;
+		        }
+		    } else {
+		        paymentPage = paymentservice.findAll(pageable);
+		    }
+	
+		    model.addAttribute("paymentPage", paymentPage);
+		    model.addAttribute("currentPage", page);
+		    model.addAttribute("code", code); // để giữ lại giá trị code trong input search
+		    model.addAttribute("noResults", noResults);
+	
+		    return "page/paypal/adminpayment";
+		}
 	@GetMapping("/admin/payment/searchh")
     public String searchh(@RequestParam("name") String name, Model model) {
         List<StudentClass> studentClasses = service.findStudentClassesByUserName(name);
@@ -154,7 +157,7 @@ public class PaymentController {
 	    
 	    System.out.println("idList: " + idList);
 	    model.addAttribute("orderId", orderInfo);
-	    model.addAttribute("totalPrice", totalPriceint/100);
+model.addAttribute("totalPrice", totalPriceint/100);
 	    model.addAttribute("paymentTime", paymentTime);
 	    model.addAttribute("transactionId", transactionId);
 	    if(paymentStatus==1)
@@ -202,7 +205,7 @@ public class PaymentController {
 		return "page/paypal/paymentoffline";
 	}
 	 @PostMapping("/admin/payment/updateStatus")
-	    public String updateStatus(@ModelAttribute CashDto dto) 
+	    public void updateStatus(@ModelAttribute CashDto dto , HttpServletResponse response) 
 	 {
 	        System.out.println("selectedItems"  +dto);
 
@@ -223,9 +226,37 @@ public class PaymentController {
 	        }
 	    	List<Long> listData=service.getListStudentRegistered(dto.getUserId(), dto.getSubjectId());
 	    	service.updateItemsStatusToPayment(listData);
-	            return "redirect:/admin/paymentoffline";
+	    	
+	    	try {
+	            ByteArrayOutputStream baos = createPDF(dto); // Phương thức để tạo PDF
+	            response.setContentType("application/pdf");
+response.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
+	            response.getOutputStream().write(baos.toByteArray());
+	            response.getOutputStream().flush();
+	        } catch (IOException | DocumentException e) {
+	            e.printStackTrace(); // Xử lý lỗi tạo file PDF
+	        }
+
+	            
 	        
 	  }
-	 
+	 private ByteArrayOutputStream createPDF(CashDto dto) throws DocumentException, MalformedURLException, IOException {
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+         Document document = new Document();
+         PdfWriter.getInstance(document, baos);
+
+         document.open();
+         Image logo = Image.getInstance("uploads/logo.png"); // Ensure the path to the image is correct
+         logo.setAlignment(Image.ALIGN_CENTER); // Optional: Align the image to the center
+         document.add(logo);
+         document.add(new Paragraph("Invoice Details:"));
+         // Thêm thông tin từ DTO vào hóa đơn
+         document.add(new Paragraph("User ID: " + dto.getUserId()));
+         document.add(new Paragraph("Selected Items: " + dto.getSubjectId()));
+         // Thêm các thông tin khác về thanh toán, ví dụ như tổng tiền, ngày thanh toán, v.v.
+         document.close();
+
+         return baos;
+	 }
 	 
 }

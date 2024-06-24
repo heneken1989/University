@@ -23,6 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -213,19 +214,22 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	public Page<User> findByRole(String type, Pageable pageable) {
-		String currentUserRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
-		System.out.println("ADMIN: "+ currentUserRole);
-		if ("ALL".equals(type)) {
-			if ("ADMIN".equals(currentUserRole)) {
-                return userRepository.findAll(pageable); 
+        String currentUserRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
+        System.out.println("ADMIN: " + currentUserRole);
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        if ("ALL".equals(type)) {
+            if ("ADMIN".equals(currentUserRole)) {
+                return userRepository.findAll(sortedPageable);
+            } else {
+                return userRepository.findByRoleNot("ADMIN", sortedPageable);  // Other users can't see admin roles
             }
-			else {
-                return userRepository.findByRoleNot("ADMIN", pageable);  // Other users can't see admin roles
-            }
-		 } else {
-	            return userRepository.findByRole(type, pageable);
-	        }
-	}
+        } else {
+            return userRepository.findByRole(type, sortedPageable);
+        }
+    }
 
 //	public Page<User> findByRole(String role, Pageable pageable) {
 //		return userRepository.findByRole(role, pageable);

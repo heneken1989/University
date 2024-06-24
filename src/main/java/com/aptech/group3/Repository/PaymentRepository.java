@@ -19,4 +19,7 @@ public interface PaymentRepository extends JpaRepository<Paymenttt, Long> {
     
     Page<Paymenttt> findByStudent_CodeContaining(String code, Pageable pageable);
     List<Paymenttt> findByStudentName(@Param("code") String code);
+    Page<Paymenttt> findByStudentId(Long studentId, Pageable pageable);
+    
+    
 }

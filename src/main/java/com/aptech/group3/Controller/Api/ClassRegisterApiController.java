@@ -121,6 +121,10 @@ public List<StudentClass> ListClassByStudent(@RequestBody Map<String, Long> requ
 public ResponseEntity<String> CancelClassRegister(@RequestBody Map<String, Long> requestBody) {
 	 Long classId = requestBody.get("ClassId");
 	StudentClass studentclass = studentClassRepository.getById(classId);
+	if(studentclass.getStatus().equals(ClassStatus.UNPAID) || studentclass.getStatus().equals(ClassStatus.PAID))
+	{
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Unable to cancel this class");
+	}
 	ClassForSubject classs = studentclass.getClassforSubject();
 	List<StudentClass> waitingList = studentsubservice.findEarliestByStatus(ClassStatus.WAITINGLIST);
 	// if have waitinglist , transfer earliest Student in WaitingList to List , and
@@ -133,7 +137,6 @@ public ResponseEntity<String> CancelClassRegister(@RequestBody Map<String, Long>
 
 	// if have no WaitingList Student , - quantity of class by 1
 	else {
-		System.out.println("quantity fix");
 		// - quantity of CLass by 1
 		int quantity = classs.getCurrentQuantity();
 		quantity -= 1;

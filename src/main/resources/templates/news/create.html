@@ -1,171 +1,191 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{adminLayout/adminLayout}">
 <head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet" />
+    <!-- SweetAlert JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Create News</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
 
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css"
-	rel="stylesheet" />
-<!-- SweetAlert JS -->
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<meta charset="UTF-8">
-<title>Create News</title>
-<style>
-body {
-	font-family: Arial, sans-serif;
-}
+        .news-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
 
-.news-container {
-	max-width: 800px;
-	margin: auto;
-	padding: 20px;
-}
+        .news-container label {
+            font-size: 1em;
+            padding: 5px;
+            display: block;
+            margin: 5px 0px;
+            border: 1px solid #ddd;
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
 
-.news-container label {
-	font-size: 1em;
-	padding: 5px;
-	display: block;
-	margin: 5px 0px;
-	border: 1px solid #ddd;
-	background-color: #f1f1f1;
-	cursor: pointer;
-}
+        .news-container input[type="text"], .news-container textarea {
+            width: calc(100% - 20px);
+            margin: 5px 10px;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
 
-.news-container input[type="text"] {
-	width: calc(100% - 20px);
-	margin: 5px 10px;
-	padding: 10px;
-	font-size: 1em;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-}
+        .news-container input[type="file"] {
+            margin: 5px 10px;
+            padding: 10px;
+            font-size: 1em;
+        }
 
-.news-container input[type="file"] {
-	margin: 5px 10px;
-	padding: 10px;
-	font-size: 1em;
-}
+        .news-container button[type="submit"]:hover {
+            background-color: #afc9c3;
+        }
 
+        a {
+            text-decoration: none;
+            color: #333;
+        }
 
+        /* Tùy chỉnh kích thước font */
+        .ql-size-small {
+            font-size: 10px;
+        }
 
-.news-container button[type="submit"]:hover {
-	background-color: #afc9c3;
-}
+        .ql-size-large {
+            font-size: 18px;
+        }
 
-a {
-	text-decoration: none;
-	color: #333;
-}
+        .ql-size-huge {
+            font-size: 24px;
+        }
 
-/* Tùy chỉnh kích thước font */
-.ql-size-small {
-	font-size: 10px;
-}
+        /* Tùy chỉnh màu chữ và nền */
+        .ql-picker-options [data-prefix]:not([data-color])::before,
+        .ql-picker-options [data-color]::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            margin-right: 4px;
+            border-radius: 2px;
+        }
 
-.ql-size-large {
-	font-size: 18px;
-}
-
-.ql-size-huge {
-	font-size: 24px;
-}
-
-/* Tùy chỉnh màu chữ và nền */
-.ql-picker-options [data-prefix]:not([data-color])::before,
-	.ql-picker-options [data-color]::before {
-	content: '';
-	width: 12px;
-	height: 12px;
-	margin-right: 4px;
-	border-radius: 2px;
-}
-
-#editor {
-	height: 300px;
-	margin-bottom: 20px;
-}
-</style>
-<!-- Thư viện Quill.js -->
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
-	rel="stylesheet">
+        #editor {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <!-- Thư viện Quill.js -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 <body layout:fragment="content">
-	<div class="news-container">
-		<h1>Create News</h1>
-		<form id="newsForm" action="/admin/news/save" method="post"
-			th:object="${news}" enctype="multipart/form-data">
-			<!-- <label>Title:</label>
-        <input type="text" th:field="*{title}"/><br>
- -->
-			<div class=" input-group mb-5 ">
-				<div class="input-group ">
-					<div class="input-group-prepend">
-						<span style="width: 150px" th:text="#{notify.title}"
-							class="input-group-text" id="inputGroup-sizing-default">Title</span>
-					</div>
-					<input th:field="*{title}" class="form-control"
-						aria-label="Default" aria-describedby="inputGroup-sizing-default">
-				</div>
-				<p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
-					class="text-danger mt-1">Name Error</p>
-			</div>
+    <div class="news-container">
+        <h1>Create News</h1>
+        <form id="newsForm" action="/admin/news/save" method="post" th:object="${news}" enctype="multipart/form-data" novalidate>
+            <div class="input-group mb-5">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+<span style="width: 150px" th:text="#{notify.title}" class="input-group-text" id="inputGroup-sizing-default">Title</span>
+                    </div>
+                    <input th:field="*{title}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" required>
+                </div>
+                <p id="title-error" class="text-danger mt-1 d-none">Title is required</p>
+            </div>
 
+            <label>Content:</label>
+            <textarea id="question-form" name="content" required="required" th:field="*{content}" style="display: none;"></textarea>
+            <p id="content-error" class="text-danger mt-1 d-none">Content is required</p>
+            <br>
+            <div class="input-group mb-5 d-none">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span style="width: 150px" th:text="#{notify.createDate}" class="input-group-text" id="inputGroup-sizing-default">createDate</span>
+                    </div>
+                    <input type="date" th:field="*{createDate}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                </div>
+                <p th:if="${#fields.hasErrors('createDate')}" th:errors="*{createDate}" class="text-danger mt-1">Date Error</p>
+            </div>
 
-			<label>Content:</label>
-			<!-- Div chứa Quill.js editor -->
+            <div class="input-group mb-3">
+                <div class="input-group-prepend" style="margin-top:5px">
+                    <span class="input-group-text">Upload</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" name="imageFile" required class="custom-file-input" id="inputGroupFile01">
+                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                </div>
+                <p id="file-error" class="text-danger mt-1 d-none">Image is required</p>
+            </div>
 
-			<!-- Hidden textarea để chứa nội dung đã được Quill.js xử lý -->
-			<textarea id="question-form" name="content" th:field="*{content}"
-				style="display: none;"></textarea>
-			<br>
+            <button class="btn btn-primary" type="submit">Save</button>
+        </form>
+    </div>
 
+    <!-- Quill.js -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <!-- Plugin image-picker -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.image.min.js"></script>
+    <script>
+        CKEDITOR.replace('question-form');
 
-			<div class=" input-group mb-5 ">
-				<div class="input-group ">
-					<div class="input-group-prepend">
-						<span style="width: 150px" th:text="#{notify.createDate}"
-							class="input-group-text" id="inputGroup-sizing-default">createDate</span>
-					</div>
-					<input type="date" th:field="*{createDate}" class="form-control"
-						aria-label="Default" aria-describedby="inputGroup-sizing-default">
-				</div>
-				<p th:if="${#fields.hasErrors('createDate')}"
-					th:errors="*{createDate}" class="text-danger mt-1">Name Error</p>
-			</div>
+        document.getElementById('newsForm').addEventListener('submit', function(event) {
+            var form = this;
+            var valid = true;
 
+            // Ensure CKEditor content is set into the textarea
+            document.getElementById('question-form').value = CKEDITOR.instances['question-form'].getData();
 
+            // Check required fields
+            
+            var content = document.getElementById('question-form');
+            var file = form.querySelector('[name="imageFile"]');
 
+            if (!title.value.trim()) {
+                valid = false;
+                title.classList.add('is-invalid');
+document.getElementById('title-error').classList.remove('d-none');
+            } else {
+                title.classList.remove('is-invalid');
+                document.getElementById('title-error').classList.add('d-none');
+            }
 
-			<label>Image URL:</label> <input type="file" name="imageFile" /><br>
-			
-				
-					<button class="btn btn-primary" type="submit">Save</button>
-				
-		
-		</form>
-	</div>
+            if (!content.value.trim()) {
+                valid = false;
+                content.classList.add('is-invalid');
+                document.getElementById('content-error').classList.remove('d-none');
+            } else {
+                content.classList.remove('is-invalid');
+                document.getElementById('content-error').classList.add('d-none');
+            }
 
-	<!-- Quill.js -->
-	<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-	<!-- Plugin image-picker -->
-	<script src="https://cdn.quilljs.com/1.3.6/quill.image.min.js"></script>
-	<script>
+            if (!file.value.trim()) {
+                valid = false;
+                file.classList.add('is-invalid');
+                document.getElementById('file-error').classList.remove('d-none');
+            } else {
+                file.classList.remove('is-invalid');
+                document.getElementById('file-error').classList.add('d-none');
+            }
 
-CKEDITOR.replace('question-form');
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
 
-$('#newsForm').submit(function() {
-    // Ensure CKEditor content is set into the textarea
-    $('textarea[name="content"]').val(CKEDITOR.instances['question-form'].getData());
-    // No need to prevent default submission or use AJAX
-});
-
-    
-</script>
+        // Update file input label with selected file name
+        document.querySelector('.custom-file-input').addEventListener('change', function(event) {
+            var input = event.target;
+            var label = input.nextElementSibling;
+            label.innerText = input.files[0].name;
+            document.getElementById('file-error').classList.add('d-none');
+        });
+    </script>
 </body>
 </html>

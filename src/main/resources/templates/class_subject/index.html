@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <div layout:fragment="content" class="card text-center ml-3" >
+    <div layout:fragment="content" class="card text-center ml-3 " >
        
        <div style="width:100%" class="card-header">
         <h3 style="font-weight:bold; font-size:40px" th:text="#{class.list.head}">List Class</h3>
@@ -51,9 +51,9 @@
        </div> 
        
       <input th:if="${error=='UPDATED'}" class="show_success_toast" readonly type="hidden"  th:value="#{toast.success.update}"> 
-      <input th:if="${error=='CREATED'}" class="show_success_toast" readonly type="hidden"  th:value="#{toast.success.create}"> 
-        <table class="table  border card-body" id="class_for_subject_table">
-            <thead class="bg bg-primary">
+      <input th:if="${error=='CREATED'}" class="show_success_toast " readonly type="hidden"  th:value="#{toast.success.create}"> 
+        <table class="table  border card-body " id="class_for_subject_table">
+            <thead class="bg bg-primary" >
                 <tr>
                     <th>#</th>
                     <th  class="text-center" th:text="#{label.name}" >Name</th>
@@ -68,7 +68,7 @@
                 </tr>
             </thead>
             <tbody th:each="s, iterStat : ${data.content}" th:object="${s}">
-                <tr th:classappend="${s.id%2==0 ? 'table-active' : ''}">
+                <tr   th:classappend="${s.id%2==0 ? 'table-active' : ''}">
                     <td class="text-center" th:text="${iterStat.index + 1}"></td>
                     <td class="text-center" th:text="*{name}"></td>
                     <td class="text-center" th:text="*{quantity}"></td>

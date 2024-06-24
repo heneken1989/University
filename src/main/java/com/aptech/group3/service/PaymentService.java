@@ -16,4 +16,5 @@ public interface PaymentService {
     void save(Paymenttt payment);
     Page<Paymenttt> findAll(Pageable pageable);
     Page<Paymenttt> findByUserCode(String code, Pageable pageable);
+    Page<Paymenttt> findByStudentId(Long studentId, Pageable pageable);
 }

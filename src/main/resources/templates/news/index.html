@@ -1,129 +1,68 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{adminLayout/adminLayout}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{adminLayout/adminLayout}">
 <head>
     <meta charset="UTF-8">
-    <title>Quiz Manage</title>
-    <style>
-  
-        .sidebar {
-            width: 250px;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            background-color: #f2f2f2;
-            padding: 10px;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            padding: 10px;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        th, td {
-            border: 1px solid black;
-            text-align: center;
-            padding: 8px;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-        .create-news a
-        {
-        	font-size :24px;
-        	color:black;	
-        }
-		.create-news a:hover
-		{
-			color:lightblue;
-		}
-
-        
-        
-            .merged-cell {
-        background-color: lightblue; /* Set your desired background color */
-    }
-    </style>
+    <title>List News</title>
 </head>
-<body >
-<article layout:fragment="content"  >
-<div class="create-news">
-	<a th:href="@{/news/create}">Create News</a>
-</div>
-<br>
-<!-- <table class="table table-bordered schedule-table " style="height: 30vh">
+<body>
+<article layout:fragment="content">
+    <div style="width: 100%; color: rebeccapurple; font-family: 'georgia'; padding: 40px 0px 10px 0px; font-weight: 300;"
+         class="card-header">
+        <h3 style="font-weight: bold; margin-left: 35%; font-size: 40px; text-transform: uppercase;"> List News</h3>
+    </div>
 
-    <thead>
-    <tr>
+    <div class="create-news">
+        <a th:href="@{/admin/news/create}">Create News</a>
+    </div>
+    <br>
 
-        <th >Id</th>
-        <th >Title</th>
-        
-        <th >Image</th>
-        <th >createDate</th>
-         <th >Action</th>
-    </tr>
-    </thead>
-<tbody>
-
-    <tr th:each="item : ${newsList}">
-
-        <td th:text="${item.id}"></td>
-        <td th:text="${item.title}"></td>
-        
-        <td ><img style="height: 100px;width:100px" class="news-image" th:src="@{${item.image}}" ></td>
-        <td th:text="${item.createDate}"></td>
-                    <td>
-      
-        
-       <a class="btn btn-warning" th:href="@{/news/update/{id}(id=${item.id})}"  title="Update"
-        > <i class="fas fa-edit"></i></a>
-        
-               <a class="btn btn-warning" th:href="@{/news/delete/{id}(id=${item.id})}"  title="Delete"
-        > <i class="fas fa-trash"></i></a>
-
+    <table class="table border card-body" id="class_for_subject_table">
+        <thead class="bg bg-primary">
+        <tr>
+            <th class="title-margin">#</th>
+            <th class="title-margin">Title</th>
+            <th class="title-margin">Image</th>
+            <th class="title-margin">Create Date</th>
+            <th class="title-margin">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item, rowStat : ${newsPage.content}">
+            <td class="text-center" th:text="${rowStat.index + 1}"></td>
+            <td class="text-center" th:text="${item.title}"></td>
+            <td class="text-center" ><img style="height: 100px;width:100px" class="news-image" th:src="@{${'/getimage/' +item.image}}" ></td>
+            <td class="text-center" th:text="${#dates.format(item.createDate, 'dd-MM-yyyy')}"></td>
+            <td class="text-center">
+                <a class="btn btn-warning" th:href="@{/admin/news/update/{id}(id=${item.id})}" title="Update">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <a class="btn btn-danger" th:href="@{/admin/news/delete/{id}(id=${item.id})}" title="Delete"
+                   onclick="return confirm('Are you sure you want to delete this news item?');">
+                    <i class="fas fa-trash"></i>
+                </a>
             </td>
-    </tr>
-</tbody>
-</table> -->
+        </tr>
+        </tbody>
+    </table>
 
-
-        <table class="table  border card-body" id="class_for_subject_table">
-            <thead class="bg bg-primary">
-                <tr>
-                    <th class="title-margin">#</th>
-                    <th class="title-margin" >Title </th>
-				     <th class="title-margin">Image </th>
-				     <th class="title-margin" >createDate </th>
-				     <th class="title-margin">Action </th>
-				   
-
-                </tr>
-            </thead>
-            <tbody>
-				<tr th:each="item,rowStat : ${newsList}">
-				<td class="text-center" th:text="${rowStat.index + 1}"></td>
-					<td class="text-center" th:text="${item.title}" ></td>
-					
-					<td class="text-center" ><img style="height: 100px;width:100px" class="news-image" th:src="@{${item.image}}" ></td>
-					<td class="text-center" th:text="${item.createDate}"  ></td>
-					<td class="text-center"><a class="btn btn-warning" th:href="@{/admin/news/update/{id}(id=${item.id})}"  title="Update"
-        > <i class="fas fa-edit"></i></a>
+    <!-- Pagination -->
+     <div class="card-footer" >
+        <a th:data-s="${newsPage.number+1}" id="back_page_btn_admin_news"  th:classappend="${newsPage.first} ? 'disabled' : ''"  class="btn " 
+        style="border:solid 1px black; padding: 3px 10px ; margin-right:10px" th:text="#{label.back}"
+        > Previous</a>
         
-               <a class="btn btn-warning" th:href="@{/admin/news/delete/{id}(id=${item.id})}"  title="Delete"
-        > <i class="fas fa-trash"></i></a> </td>
-					
-					
-					
-			
+     <a th:each="pageNo : ${#numbers.sequence(0, newsPage.totalPages-1)}"
+   th:classappend="${pageNo == newsPage.number ? 'text-primary' : ''}"
+   class="btn change_page_href_admin_news"  style="border:solid 1px black; padding: 3px 10px ; margin:0px 5px"
+   th:text="${pageNo + 1}"
+>
+</a>
+        
+        <a th:data-s="${newsPage.number+1}" id="next_page_btn_admin_news"  th:classappend="${newsPage.last} ? 'disabled' : ''"  class="btn "  
+        style="border:solid 1px black; padding: 3px 10px ;margin-left:10px"  th:text="#{label.next}" > Next</a>
+        </div> 
 
-			</tbody>
-        </table>
 </article>
-      
 </body>
 </html>

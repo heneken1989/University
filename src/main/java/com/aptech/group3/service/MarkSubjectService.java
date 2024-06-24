@@ -3,6 +3,8 @@ package com.aptech.group3.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.aptech.group3.Dto.MarkApiDto;
@@ -19,7 +21,8 @@ import jakarta.servlet.ServletOutputStream;
 public interface MarkSubjectService {
 	
 
-	
+	public Page<MarkSubject> getListMarkSubjectByClassId(Long classId, Pageable pageable);
+	public Page<MarkSubject> getMarksByStudentId(Long studentId, Pageable pageable) ;
 	
 	public List<MarkApiDto> getListMarkDto(Long studentId);
 	public MarkDetailDto getMarkDetailDto( Long studentId,Long ClassId);

@@ -40,6 +40,8 @@ public class PaymentServiceImpl implements PaymentService {
     {
     	 repo.save(payment);
     }
-    
+    public Page<Paymenttt> findByStudentId(Long studentId, Pageable pageable) {
+        return repo.findByStudentId(studentId, pageable);
+    }
     
 }

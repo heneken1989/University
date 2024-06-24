@@ -22,6 +22,7 @@ import com.aptech.group3.Dto.SemesterEditDto;
 import com.aptech.group3.Dto.SemeterDto;
 import com.aptech.group3.Dto.SubjectCreateDto;
 import com.aptech.group3.Dto.SubjectEditDto;
+import com.aptech.group3.Repository.SemesterRepository;
 import com.aptech.group3.entity.Semeter;
 import com.aptech.group3.model.CustomUserDetails;
 import com.aptech.group3.service.SemesterService;
@@ -35,6 +36,9 @@ import jakarta.validation.Valid;
 public class SemeterController {
 	@Autowired
 	SemesterService smService;
+	
+	@Autowired
+	SemesterRepository smRepo;
 	
 	@GetMapping("/listsemester")
 	public String Semester(Model model,@RequestParam(name = "error", required = false) ActionStatus error,
@@ -62,7 +66,12 @@ public class SemeterController {
 		// Validate SemeterDto manually if necessary
 	    if (data.getDaystart() == null || data.getDayend() == null) {
 	        bindingResult.rejectValue("daystart", "error.data", "Date must not be null");
+	        
 	        model.addAttribute("data", data);
+	        return "semester/create";
+	    }else if(data.getName() == 0) {
+	    	bindingResult.rejectValue("name", "error.data", "Semester name must not be null");
+	    	model.addAttribute("data", data);
 	        return "semester/create";
 	    }
 		
@@ -79,10 +88,14 @@ public class SemeterController {
 	}
 	
 	@GetMapping("/updatesemester/{id}")
-	public String showupdateSemester(@PathVariable("id") int id, Model model) {
+	public String showupdateSemester(@PathVariable(name = "id") int id, Model model) {
 		
 		Semeter semester = smService.getSemesterById(id);
 		
+		List<Semeter> small= smService.findAll();
+		
+		model.addAttribute("small",small);
+		//Semeter sm2 = smRepo.getById(null)
 		model.addAttribute("semester",semester);
 		return "semester/update";
 	}
@@ -92,9 +105,13 @@ public class SemeterController {
 			@RequestParam(name = "id") Long id, RedirectAttributes rm,@AuthenticationPrincipal CustomUserDetails currentUser
 			, HttpServletRequest request) {
 	
-		if (semester.getDay_start() == null || semester.getDay_end() == null) {
-			result.rejectValue("daystart", "error.data", "Date must not be null");
+		if (semester.getDay_start() == null || semester.getDay_end() == null ) {
+			result.rejectValue("day_start", "error.data", "Date must not be null");
 	        model.addAttribute("data", semester);
+	        return "semester/update";
+	    }else if(semester.getName() == 0) {
+	    	result.rejectValue("name", "error.data", "Semester name must not be null");
+	    	model.addAttribute("data", semester);
 	        return "semester/update";
 	    }
 				
