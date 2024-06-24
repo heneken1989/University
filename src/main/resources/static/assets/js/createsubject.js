@@ -116,6 +116,32 @@ $("#select_type_create_subject").on("change",()=>{
 
 
 
+/*$("#credit_create_subject").on("change",()=>{
+let value=	$("#credit_create_subject").val();
+	$("#credit_action_proper").show();
+let str="";
+
+
+if($("#select_type_create_subject").val()=="BOTH"){
+	str+= `<option th:value="10"> Select create for action</option>`;
+}else{
+	str=`<option th:value="0">0</option>`;
+}
+
+for(i=0; i<value-1;i++){
+str+=`<option th:value="${i+1}">${i+1}</option>	`;
+}
+
+$("#creditAction_create_subject_new").html(str);
+if($("#select_type_create_subject").val()=="BOTH"){
+	$("#credit_action_proper").show();
+}
+
+})*/
+
+
+
+
 $("#credit_create_subject").on("change", () => {
     let value = $("#credit_create_subject").val();
     //$("#credit_action_proper").show();
@@ -125,7 +151,7 @@ $("#credit_create_subject").on("change", () => {
     if ($("#select_type_create_subject").val() == "BOTH" && value ==1) {
 		alert("ko dc chon 1");
 		$("#credit_action_proper").show();
-        str += `<option value="10">Select create for action</option>`;
+        str += `<option value="1">Select create for action</option>`;
     } else {
 		$("#credit_action_proper").hide();
         str = `<option value="0">0</option>`;
@@ -138,10 +164,32 @@ $("#credit_create_subject").on("change", () => {
     $("#creditAction_create_subject_new").html(str);
 });
 
+
+
+
 $("#select_level_subject").on("change",()=>{
 	$("#form_sort_level").submit()
 })
 
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Function to handle delete confirmation
+    function handleDeleteLinkClick(event) {
+        event.preventDefault(); // Prevent the default action
+
+        var userConfirmed = confirm("Are you sure you want to delete this item?");
+
+        if (userConfirmed) {
+            window.location.href = this.href; // Redirect to the delete URL
+        }
+    }
+
+    // Attach the event listener to all delete links
+    var deleteLinks = document.querySelectorAll('.delete-link');
+    deleteLinks.forEach(function(link) {
+        link.addEventListener('click', handleDeleteLinkClick);
+    });
+});
 
 
 /*$("status").on("change",async(e) =>{

@@ -302,6 +302,7 @@ public class ClassSubjectController {
 			} else {
 				nextSemeter = SemesterService.getByYearAndName(current.getYear() + 1, current.getName() - 1);
 			}
+			model.addAttribute("error", 1);
 			model.addAttribute("semester", nextSemeter);
 			model.addAttribute("data", data);
 			Subject classCheck = subjectService.findbyId(data.getSubject_id()).orElse(null);

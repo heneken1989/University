@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.aptech.group3.Dto.SubjectCreateDto;
 import com.aptech.group3.Dto.SubjectDto;
+import com.aptech.group3.Dto.SubjectEditDto;
 import com.aptech.group3.entity.ClassForSubject;
 import com.aptech.group3.entity.RequiredSubject;
 import com.aptech.group3.entity.Subject;
@@ -47,7 +48,7 @@ public interface SubjectService {
 		public Subject create(SubjectCreateDto data);
 		//public void createrequired(RequiredSubjectDto reqdata);
 		public void saveSubjectWithRequiredSubjects(Subject subject, Set<RequiredSubject> requiredSubjects);
-		public void updatesubject(SubjectCreateDto dto);
+		public void updatesubject(SubjectEditDto dto);
 		/* public boolean CheckNameExists(String name); */
 		public Page<SubjectDto> getListPage(Long fieldId,Long levelId, Pageable pageable);
 		
@@ -57,7 +58,7 @@ public interface SubjectService {
 		
 		public boolean CheckNameExists(String name);
 		public boolean existsByName(String name);
-    
+		public void deleteSubject(Long id);
 
 
 }

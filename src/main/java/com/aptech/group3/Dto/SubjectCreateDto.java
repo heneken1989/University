@@ -14,7 +14,10 @@ public class SubjectCreateDto {
 	 private Long id;
 	 
 	 @NotEmpty(message="{admin.subject.name.error}")
+	 @Pattern(regexp = "^[a-zA-Z0-9]{4,12}$",
+     message = "name must be of 4 to 12 length with no special characters")
     private String name;
+	 
 	 @NotNull(message="{admin.subject.credit.error}")  
 	    private int credit;
 	    

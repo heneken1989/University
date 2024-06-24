@@ -4,109 +4,74 @@
 	layout:decorate="~{adminLayout/adminLayout}">
 <head>
 <meta charset="ISO-8859-1">
-<title>Create Semester</title>
-<style>
-.subject-level {
-	cursor: pointer;
-	background-color: #d1e5f0;
-	color: Black;
-	padding: 10px;
-	margin-bottom: 10px;
-	border-radius: 5px;
-	font-size: 25px;
-	font-weight: bold;
-	text-align: center;
-}
-
-.subject-level:hover {
-	background-color: #d1e5f0;
-}
-
-.hidden {
-	display: none;
-}
-</style>
+<title>Semester Update</title>
 </head>
 <body>
-	<article layout:fragment="content"
-		class="d-flex align-items-center flex-column">
-		<h2>Create New Semester</h2>
-		<div th:if="${error}" class="alert alert-info" id="error"
-			style="height: 50px; background: white;">
-			<p th:text="${error}" class="error" style="text-align: center"></p>
-		</div>
-		<div th:if="${message}" class="alert alert-info">
-			<p th:text="${message}"></p>
-		</div>
 
-		<div th:if="${errorMessage}" class="error-message">
-			<p style="color: red" th:text="${errorMessage}"></p>
-		</div>
+	<div layout:fragment="content" class="card text-center ml-3">
 
 
-		<form th:action="@{/admin/semester/create}" method="post" style="width: 70%"
-			th:object="${data}" id="semester_form_create">
+		<div class="card-body">
+			<form method="post" th:object="${semester}"
+				th:action="@{/admin/semester/updateSemester/*{id}}"
+				id="update_semester_form">
+				<input type="hidden" th:field="*{id}" />
 
-<div>
+				<div>
 
-<div class="input-group mb-5">
-				<div class="input-group-prepend" style="width: 150px">
-				
-					<label style="width: 100%" class="input-group-text" for="name">Semester</label>
-				</div>
-
-					<select id="select_semester" name="name" class="form-control" required>
-					<option th:value="0">Select Semester</option>
-					<option th:value="1">1</option>
-					<option th:value="2">2</option>
-				</select> <br>
-			</div>
-
-			<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"class="text-danger mt-1">Name Error</p>
-</div>
-			
-			<!-- <span>Name: </span><input type="number" name="name" /><br>  -->
-
-
-			<!-- <span>Year</span><input
-				type="number" name="year" /><br> -->
-			<div>
-				<div class="input-group mb-3">
-					<div class="input-group-prepend" style="width: 150px">
-						<label style="width: 100%" class="input-group-text"
-							for="day_start">Date Start</label>
+					<div class="input-group mb-5">
+						<div class="input-group-prepend" style="width: 150px">
+							<label style="width: 100%" class="input-group-text" for="name">Semester</label>
+						</div>
+						<select id="select_semester_semnew" name="name" class="form-control"
+							required>
+							<option th:value="0">Select Semester</option>
+							<option th:value="1">1</option>
+							<option th:value="2">2</option>
+						</select> <br>
 					</div>
-					<input type="date" class="form-control" th:field="*{daystart}"
-						id="day_start" placeholder="Date_Start" name="daystart"/>
-						
+
+					<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+						class="text-danger mt-1">Name Error</p>
 				</div>
-<p th:if="${#fields.hasErrors('daystart')}" th:errors="*{daystart}"class="text-danger mt-1">Name Error</p>
-			</div>
-			<br>
-			<!-- <span>Date Start</span><input type="date" class="form-control" aria-label="Default"/> -->
-			<div>
-				<div class="input-group mb-3">
-					<div class="input-group-prepend" style="width: 150px">
-						<label style="width: 100%" class="input-group-text" for="day_end">Date
-							End</label>
+
+				<div>
+					<div class="input-group mb-3">
+						<div class="input-group-prepend" style="width: 150px">
+							<label style="width: 100%" class="input-group-text"
+								for="day_start">Date Start</label>
+						</div>
+						<input type="date" class="form-control" th:field="*{day_start}"
+							id="day_start_semnew" placeholder="Date_Start" name="day_start" />
 					</div>
-					<input type="date" class="form-control" th:field="*{dayend}"
-						id="day_end" placeholder="Date_End" name="dayend"/>
-						
+					<p th:if="${#fields.hasErrors('day_start')}"
+						th:errors="*{day_start}" class="text-danger mt-1">Date Start
+						Error</p>
 				</div>
 
-			</div>
+				<div>
+					<div class="input-group mb-3">
+						<div class="input-group-prepend" style="width: 150px">
+							<label style="width: 100%" class="input-group-text" for="day_end">Date
+								End</label>
+						</div>
+						<input type="date" class="form-control" th:field="*{day_end}"
+							id="day_end_semnew" placeholder="Date_End" name="day_end" />
+					</div>
+				</div>
 
 
-			 <button type="submit" class="btn btn-primary mt-5">Create</button> 
-		</form>
-		
-		
-		<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const dateInput = document.getElementById('day_start');
-        const dateEndInput = document.getElementById('day_end');
-        const semesterSelect = document.getElementById('select_semester');
+
+				<button type="submit" class="btn btn-primary">Update</button>
+			</form>
+		</div>
+	</div>
+
+	<script>
+	document.addEventListener('DOMContentLoaded', function () {
+        const dateInput = document.getElementById('day_start_semnew');
+        const dateEndInput = document.getElementById('day_end_semnew');
+        const semesterSelect = document.getElementById('select_semester_semnew');
              
         semesterSelect.addEventListener('change', () => {
             // Use the current date instead of a fixed example date
@@ -149,8 +114,8 @@
     
   //day end
     document.addEventListener('DOMContentLoaded', function () {
-        const dayStartInput = document.getElementById('day_start');
-        const dayEndInput = document.getElementById('day_end');
+        const dayStartInput = document.getElementById('day_start_semnew');
+        const dayEndInput = document.getElementById('day_end_semnew');
 
         dayStartInput.addEventListener('change', function () {
             // Update min attribute of day_end input
@@ -180,12 +145,7 @@
             }
         });
     });
-
-
-
 </script>
-			 
-	</article>
-	
+
 </body>
 </html>

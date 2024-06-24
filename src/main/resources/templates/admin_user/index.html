@@ -9,14 +9,14 @@
 	
 </script>
 <body>
-	<div layout:fragment="content" class="card text-center ml-3">
+	<div layout:fragment="content" class="card text-center ml-3" style="width: 98%;">
 		<div
 			style="width: 100%; color: rebeccapurple; font-family: 'georgia'; padding: 40px 0px 10px 0px; font-weight: 300;"
 			class="card-header">
 
 			<h3
-				style="font-weight: bold; font-size: 40px; text-transform: uppercase;"
-				th:text="#{user.list.title}+ ' '+${type}"></h3>
+				style="font-weight: bold; font-size: 40px; margin-bottom:-100px; text-transform: uppercase;"
+				th:text="#{user.list.title}+ ' '+${type}" ></h3>
 				
 				  <!-- Toast container -->
             <div id="toastContainer" style="position: absolute; top: 0; right: 0; z-index: 1050;"></div>
@@ -114,9 +114,20 @@
 
 					<tr th:classappend="${s.id%2==0 ? 'table-active' : ''}">
 						<td class="text-center" th:text="${iterStat.index + 1}"></td>
-						<td class="text-center"><img
-							style="max-width: 50px; max-height: 50px; display: block; margin: auto;"
-							th:src="@{/getimage/{avatar}(avatar=${s.avatar})}" /></td>
+						
+						<td class="text-center">
+							<th:block th:if="${s.avatar != null}">
+								<img style="max-width: 50px; max-height: 50px; display: block; margin: auto;"
+								th:src="@{/getimage/{avatar}(avatar=${s.avatar})}"alt="User Avatar" />
+							</th:block>
+							
+							<th:block th:if="${s.avatar == null}">
+							    <img style="max-width: 50px; max-height: 50px; display: block; margin: auto;"
+							     th:src="@{/getimage/nobita.jpg}" alt="Default Avatar" />
+							</th:block>
+						</td>
+							
+							
 						<td class="text-center" th:text="*{name}"></td>
 						<td class="text-center" th:text="*{email}"></td>
 						<td class="text-center" th:text="*{phone}"></td>

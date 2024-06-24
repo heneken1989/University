@@ -2,6 +2,7 @@ package com.aptech.group3.service;
 
 import java.util.List;
 
+import com.aptech.group3.Dto.SemesterEditDto;
 import com.aptech.group3.Dto.SemeterDto;
 import com.aptech.group3.Dto.TimeTableDto;
 import com.aptech.group3.entity.Semeter;
@@ -16,4 +17,5 @@ public interface SemesterService {
 
 	//du
 	public Semeter create(SemeterDto dto);
+	public void updateSemester(SemesterEditDto dto);
 }

@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.aptech.group3.Dto.SemesterEditDto;
 import com.aptech.group3.Dto.SemeterDto;
 import com.aptech.group3.Dto.TimeTableDto;
 import com.aptech.group3.Repository.SemesterRepository;
@@ -99,53 +101,92 @@ public class SemesterServiceImpl implements SemesterService {
 	//du 
 	
 	private Date adjustToMonday(Date date) {
-	    Calendar calendar = Calendar.getInstance();
-	    calendar.setTime(date);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
 
-	    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-	    if (dayOfWeek != Calendar.MONDAY) {
-	        int daysToAdd = (Calendar.MONDAY - dayOfWeek + 7) % 7;
-	        daysToAdd = (daysToAdd == 0) ? 7 : daysToAdd; // if it's already Monday, move to the next Monday
-	        calendar.add(Calendar.DAY_OF_MONTH, daysToAdd);
-	    }
+		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+		if (dayOfWeek != Calendar.MONDAY) {
+			int daysToAdd = (Calendar.MONDAY - dayOfWeek + 7) % 7;
+			daysToAdd = (daysToAdd == 0) ? 7 : daysToAdd; // if it's already Monday, move to the next Monday
+			calendar.add(Calendar.DAY_OF_MONTH, daysToAdd);
+		}
 
-	    return calendar.getTime();
+		return calendar.getTime();
 	}
 	
 	
 		public Semeter create(SemeterDto dto) {
-			Semeter sm = new Semeter();		
-			/* Date newsem = dto.getDaystart(); */
-			Date newsem = adjustToMonday(dto.getDaystart());
-			
-			Date endsem = dto.getDayend();
-			
-			
-			// Validation: day_end should not be before day_start
-	        if (endsem.before(newsem)) {
-	            throw new IllegalArgumentException("day_end cannot be before day_start");
-	        }
-			Date daystart = new Date();
-			daystart.setTime(newsem.getTime() - 14*86400000);
-			
-			
-			Date closedate = new Date();
-			closedate.setTime(newsem.getTime() - 2*86400000);
+		Semeter sm = new Semeter();
+		/* Date newsem = dto.getDaystart(); */
+		Date newsem = dto.getDaystart();
+		
+		 // Check if the day_start is a Monday
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(newsem);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        if (dayOfWeek != Calendar.MONDAY) {
+            throw new IllegalArgumentException("day_start must be a Monday");
+        }
 
-			sm.setName(dto.getName());
-			sm.setYear(BaseMethod.toCalendar(dto.getDaystart()).get(Calendar.YEAR));
-			/* sm.setStartRegisDate(dto.getStartRegisDate()); */
-			sm.setStartRegisDate(daystart);
-			
-			
-			
-			sm.setCloseRegisDate(closedate);
-			sm.setDay_start(dto.getDaystart());
-			sm.setDay_end(dto.getDayend());
-			
-			Semeter newsm = sr.save(sm);
-			return newsm;
-		}
+		Date endsem = dto.getDayend();
+
+		 
+		Date daystart = new Date();
+		daystart.setTime(newsem.getTime() - 14 * 86400000);
+
+		Date closedate = new Date();
+		closedate.setTime(newsem.getTime() - 2 * 86400000);
+
+		sm.setName(dto.getName());
+		sm.setYear(BaseMethod.toCalendar(dto.getDaystart()).get(Calendar.YEAR));
+		/* sm.setStartRegisDate(dto.getStartRegisDate()); */
+		sm.setStartRegisDate(daystart);
+
+		sm.setCloseRegisDate(closedate);
+		sm.setDay_start(dto.getDaystart());
+		sm.setDay_end(dto.getDayend());
+
+		Semeter newsm = sr.save(sm);
+		return newsm;
+	}
 	
+
+	public void updateSemester(SemesterEditDto dto) {
+		Optional<Semeter> smUpdate = sr.findById(dto.getId());
+		
+
+		if (smUpdate.isPresent()) {
+			
+			
+			
+			Date newsem = dto.getDay_start();
+
+			 // Check if the day_start is a Monday
+	        Calendar calendar = Calendar.getInstance();
+	        calendar.setTime(newsem);
+	        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+	        if (dayOfWeek != Calendar.MONDAY) {
+	            throw new IllegalArgumentException("day_start must be a Monday");
+	        }
+	        
+			Date endsem = dto.getDay_end();
+
+			Date daystart = new Date();
+			daystart.setTime(newsem.getTime() - 14 * 86400000);
+
+			Date closedate = new Date();
+			closedate.setTime(newsem.getTime() - 2 * 86400000);
+			Semeter sm = smUpdate.get();
+			sm.setName(dto.getName());
+			sm.setStartRegisDate(daystart);
+
+			sm.setCloseRegisDate(closedate);
+			sm.setDay_start(dto.getDay_start());
+			sm.setDay_end(dto.getDay_end());
+			sm.setYear(BaseMethod.toCalendar(dto.getDay_start()).get(Calendar.YEAR));
+			
+			sr.save(sm);
+		}
+	}
 	
 }

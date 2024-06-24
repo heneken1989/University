@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.aptech.group3.Dto.SubjectCreateDto;
 import com.aptech.group3.Dto.SubjectDto;
+import com.aptech.group3.Dto.SubjectEditDto;
 import com.aptech.group3.Repository.FiledRepository;
 import com.aptech.group3.Repository.RequiredSubjectRepository;
 import com.aptech.group3.Repository.SubjectLevelRepository;
@@ -136,10 +137,9 @@ public class SubjectServiceImpl implements SubjectService {
 			subject.setCredit(data.getCredit());
 			subject.setType(data.getType());
 			subject.setCreditAction(data.getCreditAction()); 
+
 			
 			fieldRepo.findById(data.getField_id()).ifPresent(subject::setField);
-			
-		
 			LevelRepo.findById(data.getSubjectlevel_id()).ifPresent(subject::setSubjectlevel);
 		
 			Subject newsub =subjectRepo.save(subject);
@@ -162,7 +162,7 @@ public class SubjectServiceImpl implements SubjectService {
 		 * 
 		 * reqsubRepo.findById(0); reqsubRepo.findById(0); reqsubRepo.save(req); }
 		 */
-		 public void updatesubject(SubjectCreateDto dto) {
+		 public void updatesubject(SubjectEditDto dto) {
 			 Optional <Subject> subOptional = subjectRepo.findById(dto.getId());
 			 
 			 if(subOptional.isPresent()) {
@@ -170,7 +170,9 @@ public class SubjectServiceImpl implements SubjectService {
 				 sub.setName(dto.getName());
 				 sub.setType(dto.getType());
 				 sub.setCredit(dto.getCredit());
-					/* sub.setCreditAction(dto.getCreditAction()); */
+					 sub.setCreditAction(dto.getCreditAction()); 
+					 //fieldRepo.findById(dto.getField_id()).ifPresent(subject::setField);
+						//LevelRepo.findById(dto.getSubjectlevel_id()).ifPresent(subject::setSubjectlevel);
 				 subjectRepo.save(sub);
 				
 			 }else {
@@ -218,5 +220,10 @@ public class SubjectServiceImpl implements SubjectService {
 		        return subjectRepo.existsByName(name);
 		    }
 		   
+		   public void deleteSubject(Long id) {
+			   subjectRepo.findById(id).ifPresent(subject ->{
+				   subjectRepo.delete(subject);
+			   });
+		   }
 		    
 }

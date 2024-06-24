@@ -65,9 +65,11 @@
       <div  layout:fragment="content"></div>
     </section>
     <!-- /.content -->
+       <div  th:replace="adminLayout/adminFooter :: footer"></div> 
   </div>
+ 
+  
   <!-- /.content-wrapper -->
-  <div  th:replace="adminLayout/adminFooter :: footer"></div> 
 
 
 </div>
@@ -115,7 +117,7 @@
  
   <!-- thanh nhúng js -->
 
-	<script th:src="@{ztoaster.min.js}"></script>
+	<script th:src="@{toaster.min.js}"></script>
  	<script  th:src="@{/assets/js/mark.js}"></script>
 	<script th:src="@{/webjars/select2/4.0.13/js/select2.min.js}"></script>
 	<script  th:src="@{/assets/js/profile.js}"></script>
