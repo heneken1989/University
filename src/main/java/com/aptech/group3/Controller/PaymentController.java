@@ -1,8 +1,10 @@
 package com.aptech.group3.Controller;
 
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -181,82 +183,97 @@ model.addAttribute("totalPrice", totalPriceint/100);
 	    }
 	    return paymentStatus == 1 ? "ordersuccess" : "orderfail";
 	}
-	
 	@GetMapping("/admin/paymentoffline")
-	public String paymentoffline (Model model,@RequestParam(name = "codee", required = false) String se) {
-		List<StudentClass> classss= new ArrayList<StudentClass>();
-		CashDto dto=new CashDto();
-		if (se != null) {
-			classss = service.findStudentClassesByUserName(se);
-			if(classss.size()!=0)
-			{
-				dto.setUserId(classss.get(0).getStudent().getId());
-			}
+	public String paymentoffline(Model model, @RequestParam(name = "codee", required = false) String se) {
+	    List<StudentClass> classss = new ArrayList<StudentClass>();
+	    CashDto dto = new CashDto();
+	    if (se != null) {
+	        classss = service.findStudentClassesByUserName(se);
+	        if (classss.size() != 0) {
+	            dto.setUserId(classss.get(0).getStudent().getId());
+	        }
 	        if (classss.isEmpty()) {
 	            model.addAttribute("noResults", true);
 	        }
 	    }
-		
-		
-		
-		model.addAttribute("offline",classss);
-		
-		model.addAttribute("dto",dto);
-		return "page/paypal/paymentoffline";
+
+	    model.addAttribute("offline", classss);
+	    model.addAttribute("dto", dto);
+	    return "page/paypal/paymentoffline";
 	}
-	 @PostMapping("/admin/payment/updateStatus")
-	    public void updateStatus(@ModelAttribute CashDto dto , HttpServletResponse response) 
-	 {
-	        System.out.println("selectedItems"  +dto);
 
-	    	 User student = userservice.findById(dto.getUserId());
-	    	
-	    	for (Long classId : dto.getSubjectId()) 
-	    	{
-	            ClassForSubject classForSubject = classforsubjectservice.findById(classId);
-	            Paymenttt payment = new Paymenttt();
-	            int classCredit = classForSubject.getSubject().getCredit();
-	            payment.setStudent(student);
-	            payment.setClassforSubject(classForSubject);
-	            int classPayment = classCredit * 3000000;
-	            payment.setCash(classPayment);
-	            payment.setPayments("Ofline");
-	            payment.setDate(new Date());
-	            paymentservice.save(payment);
-	        }
-	    	List<Long> listData=service.getListStudentRegistered(dto.getUserId(), dto.getSubjectId());
-	    	service.updateItemsStatusToPayment(listData);
-	    	
-	    	try {
-	            ByteArrayOutputStream baos = createPDF(dto); // Phương thức để tạo PDF
-	            response.setContentType("application/pdf");
-response.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
-	            response.getOutputStream().write(baos.toByteArray());
-	            response.getOutputStream().flush();
-	        } catch (IOException | DocumentException e) {
-	            e.printStackTrace(); // Xử lý lỗi tạo file PDF
-	        }
+	@PostMapping("/admin/payment/updateStatus")
+	public void updateStatus(@ModelAttribute CashDto dto, HttpServletResponse response) {
+	    System.out.println("selectedItems" + dto);
 
-	            
-	        
-	  }
-	 private ByteArrayOutputStream createPDF(CashDto dto) throws DocumentException, MalformedURLException, IOException {
-         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-         Document document = new Document();
-         PdfWriter.getInstance(document, baos);
+	    User student = userservice.findById(dto.getUserId());
 
-         document.open();
-         Image logo = Image.getInstance("uploads/logo.png"); // Ensure the path to the image is correct
-         logo.setAlignment(Image.ALIGN_CENTER); // Optional: Align the image to the center
-         document.add(logo);
-         document.add(new Paragraph("Invoice Details:"));
-         // Thêm thông tin từ DTO vào hóa đơn
-         document.add(new Paragraph("User ID: " + dto.getUserId()));
-         document.add(new Paragraph("Selected Items: " + dto.getSubjectId()));
-         // Thêm các thông tin khác về thanh toán, ví dụ như tổng tiền, ngày thanh toán, v.v.
-         document.close();
+	    for (Long classId : dto.getSubjectId()) {
+	        ClassForSubject classForSubject = classforsubjectservice.findById(classId);
+	        Paymenttt payment = new Paymenttt();
+	        int classCredit = classForSubject.getSubject().getCredit();
+	        payment.setStudent(student);
+	        payment.setClassforSubject(classForSubject);
+	        int classPayment = classCredit * 3000000;
+	        payment.setCash(classPayment);
+	        payment.setPayments("Offline");
+	        payment.setDate(new Date());
+	        paymentservice.save(payment);
+	    }
+	    List<Long> listData = service.getListStudentRegistered(dto.getUserId(), dto.getSubjectId());
+	    service.updateItemsStatusToPayment(listData);
 
-         return baos;
-	 }
+	    try {
+	        ByteArrayOutputStream baos = createPDF(dto); // Phương thức để tạo PDF
+	        response.setContentType("application/pdf");
+	        response.setHeader("Content-Disposition", "attachment; filename=tuitionbill.pdf");
+	        response.getOutputStream().write(baos.toByteArray());
+	        response.getOutputStream().flush();
+	    } catch (IOException | DocumentException e) {
+	        e.printStackTrace(); // Xử lý lỗi tạo file PDF
+	    }
+	    
+	}
+
+	private ByteArrayOutputStream createPDF(CashDto dto) throws DocumentException, MalformedURLException, IOException {
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    Document document = new Document();
+	    PdfWriter.getInstance(document, baos);
+	    
+	    document.open();
+	    User student =userservice.findById(dto.getUserId());
+	    // Add logo image
+	    Image logo = Image.getInstance("uploads/logo.png");
+	    logo.setAlignment(Image.ALIGN_CENTER);
+	    logo.scaleToFit(500, 500);
+	    document.add(logo);
+	    Font redFont = new Font(Font.FontFamily.HELVETICA, 28, Font.NORMAL, BaseColor.RED);
+	    // Add invoice details
+	    document.add(new Paragraph("Tuition bill" ,redFont));
+	    
+	    document.add(new Paragraph("User Name: " + student.getName()));
+	    document.add(new Paragraph("User Code: " + student.getCode()));
+
+	    List<Long> selectedSubjects = dto.getSubjectId();
+	    int totalAmount = 0;
+	    for (Long subjectId : selectedSubjects) {
+	        ClassForSubject classForSubject = classforsubjectservice.findById(subjectId);
+	        String subjectName = classForSubject.getSubject().getName();
+	        int credit = classForSubject.getSubject().getCredit();
+	        int cash = credit * 3000000;
+	        totalAmount += cash;
+	        document.add(new Paragraph("Subject: " + subjectName ));
+	        document.add(new Paragraph("Credit: " + credit ));
+	        document.add(new Paragraph("Cash: " + cash + " VND"));
+	    }
+
+	    document.add(new Paragraph("Total Amount: " + totalAmount + " VND"));
+	    document.add(new Paragraph("Date: " + new Date().toString()));
+
+	    document.close();
+
+	    return baos;
+	}
+	
 	 
 }

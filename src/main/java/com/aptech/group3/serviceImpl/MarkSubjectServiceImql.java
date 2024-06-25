@@ -254,7 +254,7 @@ public class MarkSubjectServiceImql implements MarkSubjectService {
 				markdto.setClassStatus(check.get(0).getClassSubject().getStatus());
 				markdto.setSubjectName(check.get(0).getSubject().getName());
 				markdto.setTeacherName(check.get(0).getClassSubject().getTeacher().getName());
-				if(check.size()==3) {
+				if(check.size()>=3) {
 					markdto.setFinalMark((float) (dto.getNormalMark()*0.2+ dto.getMiddleMark()*0.3+dto.getFiinalMark()*0.5));
 				}
 				
@@ -305,7 +305,7 @@ public class MarkSubjectServiceImql implements MarkSubjectService {
 				List<Float> markArray = new ArrayList<Float>();
 				List<MarkSubject> check= markRepo.findByUserIdAndClassForSubjectId(studentId, e.getClassforSubject().getId());
 				
-				if(check.size()==3) {
+				if(check.size()>=3) {
 				
 					check.forEach(c->{
 						if(c.getStyle().equals("normalMark")) {

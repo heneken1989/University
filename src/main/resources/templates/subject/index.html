@@ -113,7 +113,7 @@ th {
 			</tbody>
 		</table>
 		<div class="card-footer">
-			<a th:data-s="${data.number+1}" id="back_page_btn_subject"
+			<a th:data-s="${data.number+1}" id="back_page_btn_subject_du"
 				th:classappend="${data.first} ? 'disabled' : ''" class="btn "
 				style="border: solid 1px black; padding: 3px 10px; margin-right: 10px">
 				Previous</a> <a
@@ -122,7 +122,7 @@ th {
 				class="btn change_page_href_subject"
 				style="border: solid 1px black; padding: 3px 10px; margin: 0px 5px"
 				th:text="${pageNo + 1}"> </a> <a th:data-s="${data.number+1}"
-				id="next_page_btn_subject"
+				id="next_page_btn_subject_du"
 				th:classappend="${data.last} ? 'disabled' : ''" class="btn "
 				style="border: solid 1px black; padding: 3px 10px; margin-left: 10px">
 				Next</a>

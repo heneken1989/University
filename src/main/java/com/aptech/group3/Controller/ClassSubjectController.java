@@ -72,14 +72,23 @@ public class ClassSubjectController {
 	private StudentClassService studentClassService;
 
 	@PostMapping("/update/status")
-	public String updateStatusAction(HttpServletRequest request, RedirectAttributes rm) {
+	public String updateStatusAction(HttpServletRequest request,
+			@RequestParam(name = "semester", required = false) Long se,
+			RedirectAttributes rm) {
 		String[] listField = new String[] {};
 		List<Long> listData = new ArrayList<Long>();
 		ClassSubject status = ClassSubject.valueOf(request.getParameter("type_update"));
 
+		
+		String redirectUrl;
+		if(se==null) {
+			redirectUrl="redirect:/admin/class/update/status";
+		}else {
+			redirectUrl="redirect:/admin/class/update/status?semester="+se;	
+		}
 		if (request.getParameterValues("class[]") == null) {
 			rm.addAttribute("error",ActionStatus.ERROR_NULL);
-			return "redirect:/admin/class/update/status";
+			return redirectUrl;
 		} else {
 			listField = request.getParameterValues("class[]");
 			for (int i = 0; i < listField.length; i++) {
@@ -101,7 +110,7 @@ public class ClassSubjectController {
 			// redirect if list class have any class have status not registing
 			if (exit.get()) {
 				rm.addAttribute( "error",ActionStatus.ERROR_TYPE_LEARNING);
-				return "redirect:/admin/class/update/status";
+				return redirectUrl;
 			}
 			//if > min quantity delete list waiting list
 			//if< min  delete all student registered class, delete class, delete room registed
@@ -133,7 +142,7 @@ public class ClassSubjectController {
 			
 			if (exit.get()) {
 				rm.addAttribute("error",ActionStatus.ERROR_TYPE_REGISTERED);
-				return "redirect:/admin/class/update/status";
+				return redirectUrl;
 			}
 			
 			//if student paid > min delete unpaid set student status llearning
@@ -157,7 +166,7 @@ public class ClassSubjectController {
 
 		classSubjectService.updateClassStatus(status, listData);
 		rm.addAttribute("error",ActionStatus.UPDATED);
-		return "redirect:/admin/class/update/status";
+		return redirectUrl;
 	}
 
 	@GetMapping("/update/status")

@@ -120,14 +120,14 @@ $("#back_page_btn").attr("href",`/admin/user/list?page=${Number(currentPageAdmin
 
 
 
-/*next corent page admin_user*/
-let currentPageSubject= $("#next_page_btn_subject").attr("data-s")
+/*next corent page subject*/
+let currentPageSubject= $("#next_page_btn_subject_du").attr("data-s")
 if(!level){
-$("#next_page_btn_subject").attr("href",`/admin/subject/list?page=${Number(currentPageSubject)+1}`)
-$("#back_page_btn_subject").attr("href",`/admin/subject/list?page=${Number(currentPageSubject)-1}`)
+$("#next_page_btn_subject_du").attr("href",`/admin/subject/list?page=${Number(currentPageSubject)+1}`)
+$("#back_page_btn_subject_du").attr("href",`/admin/subject/list?page=${Number(currentPageSubject)-1}`)
 }else{
-	$("#next_page_btn_subject").attr("href",`/admin/subject/list?level=${level}&page=${Number(currentPageSubject)+1}`)
-	$("#back_page_btn_subject").attr("href",`/admin/subject/list?level=${level}&page=${Number(currentPageSubject)+-1}`)
+	$("#next_page_btn_subject_du").attr("href",`/admin/subject/list?level=${level}&page=${Number(currentPageSubject)+1}`)
+	$("#back_page_btn_subject_du").attr("href",`/admin/subject/list?level=${level}&page=${Number(currentPageSubject)+-1}`)
 }
 
 

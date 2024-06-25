@@ -70,6 +70,7 @@ import com.aptech.group3.service.SubjectService;
 import com.aptech.group3.serviceImpl.JwtTokenProvider;
 import com.aptech.group3.serviceImpl.StudentClassServiceImpl;
 import com.aptech.group3.serviceImpl.UserServiceImpl;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,7 +164,7 @@ public List<QuizExam> ListQuizAlreeadyApplied(@RequestParam Long classId,@Authen
 
 @PostMapping("/api/Quiz/Submit")
 @ResponseBody
-public void QuizSubmit(@RequestBody Map<String, Object> requestBody) {
+public float QuizSubmit(@RequestBody Map<String, Object> requestBody) {
 	
 	String typeRequet = requestBody.get("type").toString();
 	Long quizExamId = Long.valueOf(requestBody.get("quizExamId").toString());
@@ -218,13 +219,13 @@ public void QuizSubmit(@RequestBody Map<String, Object> requestBody) {
     	saveMarkClass.setClassSubject(exam.getClassForSubject());
     	if(exam.getQuiz().getType().equals("1"))
     	{
-    		saveMarkClass.setStyle("normalMark");
+    		saveMarkClass.setStyle("finalMark");
     	}
     	else if (exam.getQuiz().getType().equals("2")) {
     		saveMarkClass.setStyle("middleMark");
 		}
        	else if (exam.getQuiz().getType().equals("3")) {
-    		saveMarkClass.setStyle("finalMark");
+    		saveMarkClass.setStyle("normalMark");
 		}
     	markSubjectRepository.save(saveMarkClass);
 		
@@ -277,7 +278,7 @@ public void QuizSubmit(@RequestBody Map<String, Object> requestBody) {
 		     }
 	}
 	
-	
+	return markFloat;
 	
 }
 
